@@ -30,7 +30,11 @@ public class Jumper : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
+		//Set collision flags:
+		setCollisionFlags();
+
+
 		//Animation:
 		//Debug.Log("OnGround:"+onGround);
 		if ( onGround ) {
@@ -45,6 +49,7 @@ public class Jumper : MonoBehaviour {
 			sprite.scale = new Vector3( -1, sprite.scale.y, sprite.scale.z );
 		}
 
+		//Controls:
 		flag_jump = false;
 		flag_left = false;
 		flag_right = false;
@@ -90,6 +95,77 @@ public class Jumper : MonoBehaviour {
 		}
 	}
 
+
+
+	//Set collision flags:
+	public void setCollisionFlags () {
+		Vector2 position = transform.position;
+		BoxCollider2D myCollider2d = GetComponent<BoxCollider2D>();
+		Vector2 size = myCollider2d.size;
+		Vector2 center = myCollider2d.center + position;
+		//The rectangle formed by the collider:
+		Rect rect = new Rect( center.x - size.x/2, center.y - size.y/2, size.x, size.y );
+		//
+		Debug.DrawLine( new Vector3(rect.xMax, rect.yMax, -1), new Vector3(rect.xMin, rect.yMin, -1) );
+
+		//We need 12 raycasts: one from each edge and one from the middle:
+		//Note: this could bug //TODO: not bug
+		RaycastHit2D []hits = new RaycastHit2D[0];
+		//DOWN 1:
+		Debug.DrawLine( new Vector3(rect.xMin+0.1f, rect.yMax, -1), new Vector3(rect.xMin+0.1f, rect.yMin, -1) );
+
+		//
+		bool hitBottom = false;
+		bool hitTop = false;
+		bool hitLeft = false;
+		bool hitRight = false;
+
+		//Bottom:
+		/*
+		if ( hitTest(new Vector2(rect.xMin, rect.y),
+		             new Vector2(rect.xMin, rect.yMin-0.1f)) ) {
+			hitBottom = true;
+		}
+		if ( hitTest(new Vector2(rect.xMax, rect.y),
+		             new Vector2(rect.xMax, rect.yMin-0.1f)) ) {
+			hitBottom = true;
+		} 
+		*/
+
+		
+		//Left:
+		if ( hitTest(new Vector2(rect.xMax, rect.yMin),
+		             new Vector2(rect.xMin - 0.1f, rect.yMin)) ) {
+			hitLeft = true;
+		}
+		if ( hitTest(new Vector2(rect.xMax, rect.yMax),
+		             new Vector2(rect.xMin - 0.1f, rect.yMax)) ) {
+			hitLeft = true;
+		}
+
+		
+		//Right:
+		if ( hitTest(new Vector2(rect.xMin, rect.yMin),
+		             new Vector2(rect.xMax + 0.1f, rect.yMin)) ) {
+			hitRight = true;
+		}
+		if ( hitTest(new Vector2(rect.xMin, rect.yMax),
+		             new Vector2(rect.xMax + 0.1f, rect.yMax)) ) {
+			hitRight = true;
+		}
+	}
+	private bool hitTest ( Vector2 source, Vector2 dest ) {
+		//Debug.DrawLine( new Vector3(source.x, source.y, -1), new Vector3(dest.x, dest.y, -1) );
+		RaycastHit2D []hits = new RaycastHit2D[0];
+		hits = Physics2D.LinecastAll( source, dest, 9 ); //Layer 9 is the player, ignore this layer
+		return hits.Length >= 1;
+	}
+	
+	
+	
+
+
+
 	public void moveLeft() {
 		move (-Vector2.right);
 	}
@@ -127,37 +203,44 @@ public class Jumper : MonoBehaviour {
 		}
 	}
 
-	
+
 	void OnCollisionEnter2D ( Collision2D collision ) {
 		//Debug.Log("Collision enter!");
 		foreach (ContactPoint2D contact in collision.contacts) {
 			if ( contact.collider.gameObject.layer == 8) {
 				Kill ();
 			}
-			if ( contact.normal.y > 0 ) {
+			if ( contact.normal.y > 0.1f ) {
 				onGround = true;
-			}
-		}
-	}
-	void OnCollisionStay2D ( Collision2D collision ) {
-		//Debug.Log("Collision enter!");
-		foreach (ContactPoint2D contact in collision.contacts) {
-			if ( contact.normal.y > 0 ) {
-				onGround = true;
-				break;
-			}
-		}
-	}
-	void OnCollisionExit2D ( Collision2D collision ) {
-		//Debug.Log("Collision enter!");
-		foreach (ContactPoint2D contact in collision.contacts) {
-			if ( contact.normal.y > 0 ) {
-				onGround = false;
-				break;
 			}
 		}
 	}
 
+	void OnCollisionStay2D ( Collision2D collision ) {
+		//Debug.Log("Collision enter!");
+		foreach (ContactPoint2D contact in collision.contacts) {
+			Debug.DrawLine( new Vector3(contact.point.x, contact.point.y, -1), new Vector3(contact.normal.x + contact.point.x, contact.normal.y+contact.point.y, -1) );
+
+			if ( contact.normal.y > 0.1f ) {
+				onGround = true;
+				//break;
+			}
+		}
+	}
+	/*
+	void OnCollisionExit2D ( Collision2D collision ) {
+		//Debug.Log("Collision enter!");
+		foreach (ContactPoint2D contact in collision.contacts) {
+			if ( contact.normal.y > 0 ) {
+				//onGround = false;
+				break;
+			}
+		}
+	}
+	*/
+
+
+	//Kill this jumper
 	void Kill () {
 		if ( isDead ) {
 			return;
