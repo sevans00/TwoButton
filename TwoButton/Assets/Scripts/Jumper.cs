@@ -16,7 +16,6 @@ public class Jumper : MonoBehaviour {
 	private float walkAccelleration = 0.9f;
 	private float turnMultiplier = 1.2f;
 	private float MAX_SPEED = 10.0f;
-	private float GROUND_FRICTION = 0.4f;
 
 	public bool flag_left = false;
 	public bool flag_right = false;
@@ -31,10 +30,6 @@ public class Jumper : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-		//Set collision flags:
-		setCollisionFlags();
-
-
 		//Animation:
 		//Debug.Log("OnGround:"+onGround);
 		if ( onGround ) {
@@ -95,72 +90,6 @@ public class Jumper : MonoBehaviour {
 		}
 	}
 
-
-
-	//Set collision flags:
-	public void setCollisionFlags () {
-		Vector2 position = transform.position;
-		BoxCollider2D myCollider2d = GetComponent<BoxCollider2D>();
-		Vector2 size = myCollider2d.size;
-		Vector2 center = myCollider2d.center + position;
-		//The rectangle formed by the collider:
-		Rect rect = new Rect( center.x - size.x/2, center.y - size.y/2, size.x, size.y );
-		//
-		Debug.DrawLine( new Vector3(rect.xMax, rect.yMax, -1), new Vector3(rect.xMin, rect.yMin, -1) );
-
-		//We need 12 raycasts: one from each edge and one from the middle:
-		//Note: this could bug //TODO: not bug
-		RaycastHit2D []hits = new RaycastHit2D[0];
-		//DOWN 1:
-		Debug.DrawLine( new Vector3(rect.xMin+0.1f, rect.yMax, -1), new Vector3(rect.xMin+0.1f, rect.yMin, -1) );
-
-		//
-		bool hitBottom = false;
-		bool hitTop = false;
-		bool hitLeft = false;
-		bool hitRight = false;
-
-		//Bottom:
-		/*
-		if ( hitTest(new Vector2(rect.xMin, rect.y),
-		             new Vector2(rect.xMin, rect.yMin-0.1f)) ) {
-			hitBottom = true;
-		}
-		if ( hitTest(new Vector2(rect.xMax, rect.y),
-		             new Vector2(rect.xMax, rect.yMin-0.1f)) ) {
-			hitBottom = true;
-		} 
-		*/
-
-		
-		//Left:
-		if ( hitTest(new Vector2(rect.xMax, rect.yMin),
-		             new Vector2(rect.xMin - 0.1f, rect.yMin)) ) {
-			hitLeft = true;
-		}
-		if ( hitTest(new Vector2(rect.xMax, rect.yMax),
-		             new Vector2(rect.xMin - 0.1f, rect.yMax)) ) {
-			hitLeft = true;
-		}
-
-		
-		//Right:
-		if ( hitTest(new Vector2(rect.xMin, rect.yMin),
-		             new Vector2(rect.xMax + 0.1f, rect.yMin)) ) {
-			hitRight = true;
-		}
-		if ( hitTest(new Vector2(rect.xMin, rect.yMax),
-		             new Vector2(rect.xMax + 0.1f, rect.yMax)) ) {
-			hitRight = true;
-		}
-	}
-	private bool hitTest ( Vector2 source, Vector2 dest ) {
-		//Debug.DrawLine( new Vector3(source.x, source.y, -1), new Vector3(dest.x, dest.y, -1) );
-		RaycastHit2D []hits = new RaycastHit2D[0];
-		hits = Physics2D.LinecastAll( source, dest, 9 ); //Layer 9 is the player, ignore this layer
-		return hits.Length >= 1;
-	}
-	
 	
 	
 

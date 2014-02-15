@@ -23,25 +23,25 @@ public class Jumper2 : MonoBehaviour {
 
 	public float JUMP_SPEED = 25.0f;
 
-	private float walkAccelleration = 0.9f;
-	private float turnMultiplier = 1.2f;
+	protected float walkAccelleration = 0.9f;
+	protected float turnMultiplier = 1.2f;
 	public float MAX_SPEED = 20.0f;
 
 	public float WALL_SLIDE_SPEED = 10f;
 
-	private bool flag_left = false;
-	private bool flag_right = false;
-	private bool flag_jump = false;
+	protected bool flag_left = false;
+	protected bool flag_right = false;
+	protected bool flag_jump = false;
 
 	//For wall-jumping
-	private float last_jump_time = 0f;
+	protected float last_jump_time = 0f;
 
 	//Double-jumping:
 	public int MaxJumps = 1;
-	private int jumpCount = 0;
+	protected int jumpCount = 0;
 
 	//Avoid triggering death too many times:
-	private bool isDead = false;
+	protected bool isDead = false;
 	
 	// Use this for initialization
 	void Start () {
@@ -50,21 +50,7 @@ public class Jumper2 : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void FixedUpdate () {
-
-		//Animation:
-		if ( onGround ) {
-			sprite.SetSprite("jumper_idle");
-		} else {
-			sprite.SetSprite("jumper_jump");
-		}
-		if ( spritePhysics.velocity.x > 0) {
-			sprite.scale = new Vector3( 1, sprite.scale.y, sprite.scale.z );
-		}
-		if ( spritePhysics.velocity.x < 0 ) {
-			sprite.scale = new Vector3( -1, sprite.scale.y, sprite.scale.z );
-		}
-
+	virtual protected void FixedUpdate () {
 		//Controls:
 		flag_jump = false;
 		flag_left = false;
@@ -121,7 +107,7 @@ public class Jumper2 : MonoBehaviour {
 		//Do wall slide and/or jump:
 		if ( !onGround && Game.instance.left && spritePhysics.hitLeft ) {
 //			Debug.Log("Slide left");
-			sprite.SetSprite("jumper_slide");
+//			sprite.SetSprite("jumper_slide");
 			sprite.scale = new Vector3( 1, sprite.scale.y, sprite.scale.z );
 			//Slide up/down:
 			spritePhysics.velocity.y = Mathf.Max(spritePhysics.velocity.y, -WALL_SLIDE_SPEED);
@@ -135,7 +121,7 @@ public class Jumper2 : MonoBehaviour {
 		}
 		if ( !onGround && Game.instance.right && spritePhysics.hitRight ) {
 //			Debug.Log("Slide right");
-			sprite.SetSprite("jumper_slide");
+//			sprite.SetSprite("jumper_slide");
 			sprite.scale = new Vector3( -1, sprite.scale.y, sprite.scale.z );
 			//Slide up/down:
 			spritePhysics.velocity.y = Mathf.Max(spritePhysics.velocity.y, -WALL_SLIDE_SPEED);
@@ -149,8 +135,6 @@ public class Jumper2 : MonoBehaviour {
 		}
 
 
-
-
 		//Clamp x speed:
 		if ( Mathf.Abs( spritePhysics.velocity.x ) > MAX_SPEED ) {
 			float sign = 1f;
@@ -159,6 +143,15 @@ public class Jumper2 : MonoBehaviour {
 			}
 			spritePhysics.velocity = new Vector2(sign*MAX_SPEED, spritePhysics.velocity.y);
 		}
+
+		//Call Sprite physics to do the actual movement and set flags for next update:
+		spritePhysics.DoFixedUpdate();
+		//Animate the sprite:
+		GetComponent<CharacterAnimator>().DoFixedUpdate();
+	}
+
+	public void OnWalkedOffEdge() {
+		jumpCount++; //Walking off the edge counts as a jump
 	}
 
 	public void moveLeft() {
@@ -167,7 +160,7 @@ public class Jumper2 : MonoBehaviour {
 	public void moveRight() {
 		move ( Vector2.right);
 	}
-	private void move( Vector2 direction ) {
+	protected void move( Vector2 direction ) {
 		float sign = signOf(direction.x);
 		float currentSign = signOf(spritePhysics.velocity.x);
 		float v = walkAccelleration;
@@ -176,7 +169,7 @@ public class Jumper2 : MonoBehaviour {
 		}
 		spritePhysics.velocity += direction * v;
 	}
-	private float signOf ( float number ) {
+	protected float signOf ( float number ) {
 		if ( number == 0 ) {
 			return 0;
 		}
@@ -186,7 +179,7 @@ public class Jumper2 : MonoBehaviour {
 		return 1;
 	}
 
-	public void jump() {
+	virtual public void jump() {
 		jumpCount++;
 		spritePhysics.velocity = new Vector2(spritePhysics.velocity.x, JUMP_SPEED );
 		last_jump_time = Time.time;

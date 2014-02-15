@@ -23,6 +23,10 @@ public class Game : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		if ( Input.GetKeyDown(KeyCode.Escape) ) {
+			showCharacterSelectScreen();
+		}
+
 		if ( Input.GetKeyDown(KeyCode.A) ) {
 			LeftDown();
 		}
@@ -56,6 +60,11 @@ public class Game : MonoBehaviour {
 
 	}
 
+	public void showCharacterSelectScreen() {
+		CharacterSelectScreen.instance.ToggleCharacterSelectScreen();
+	}
+
+	
 	public void LeftUp () {
 		left = false;
 	}
@@ -83,6 +92,15 @@ public class Game : MonoBehaviour {
 		GameObject jumper = Instantiate(JumperPrefab, SpawnPoint.position, Quaternion.identity) as GameObject;
 		Camera.main.GetComponent<CameraFollow>().target = jumper.transform;
 	}
+
+
+	public void pause() {
+
+	}
+	public void unpause() {
+		
+	}
+
 
 
 }

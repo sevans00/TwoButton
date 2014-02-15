@@ -30,7 +30,8 @@ public class SpritePhysics : MonoBehaviour {
 	}
 
 	// Fixed Update is called once per physics step:
-	void FixedUpdate () {
+	//Call this function to perform sprite physics during the Fixed Update of a sprite - will perform movement and set flags
+	public void DoFixedUpdate () {
 		//Reset flags:
 		hitTop = false;
 		hitBottom = false;
@@ -86,6 +87,7 @@ public class SpritePhysics : MonoBehaviour {
 			rayhitDownRight = Physics2D.Raycast( bottomRight, -Vector2.up, bottomPadding+(Mathf.Abs(gravity.y)*Time.deltaTime), layermask );
 			if ( (rayhitDownLeft.collider == null) && ( rayhitDownRight.collider == null)) {
 				onGround = false;
+				BroadcastMessage("OnWalkedOffEdge");
 			} else {
 				//Right step-up:
 				if ( velocity.x > 0 ) {
