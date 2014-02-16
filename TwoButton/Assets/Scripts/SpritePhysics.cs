@@ -221,8 +221,12 @@ public class SpritePhysics : MonoBehaviour {
 		}
 	}
 	private void registerHit ( RaycastHit2D hit, HitDirection direction ) {
+		if ( hit.collider != null ) {
+			Debug.Log("Broadcast message!");
+			hit.collider.gameObject.BroadcastMessage("OnSpritePhysicsCollision", collider2D, SendMessageOptions.DontRequireReceiver);
+		}
 		if ( hit.collider.gameObject.layer == 8 ) {
-			BroadcastMessage("Kill"); //Kill!
+			BroadcastMessage("Kill", SendMessageOptions.DontRequireReceiver); //Kill!
 			return;
 		}
 		switch ( direction ) {

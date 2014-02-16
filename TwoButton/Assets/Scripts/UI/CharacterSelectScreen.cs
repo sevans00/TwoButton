@@ -38,6 +38,9 @@ public class CharacterSelectScreen : MonoBehaviour {
 
 	public void SelectNewCharacter( GameObject newJumperPrefab ) {
 		//Set the new character:
+		if ( newJumperPrefab == null ) {
+			return;
+		}
 		Game.instance.JumperPrefab = newJumperPrefab;
 
 		//Kill the old character:

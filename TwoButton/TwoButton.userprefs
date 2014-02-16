@@ -1,12 +1,11 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\EverRun.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Game.cs">
     <Files>
-      <File FileName="Assets\Scripts\Puff.cs" Line="7" Column="21" />
-      <File FileName="Assets\Scripts\Game.cs" Line="64" Column="61" />
-      <File FileName="Assets\Scripts\SpritePhysics.cs" Line="90" Column="23" />
-      <File FileName="Assets\Scripts\Jumper2.cs" Line="150" Column="53" />
-      <File FileName="Assets\Scripts\EverRun.cs" Line="32" Column="3" />
+      <File FileName="Assets\Scripts\Game.cs" Line="101" Column="5" />
+      <File FileName="Assets\Scripts\SpritePhysics.cs" Line="226" Column="73" />
+      <File FileName="Assets\Scripts\Jumper2.cs" Line="51" Column="2" />
+      <File FileName="Assets\Scripts\CrumbleBlock.cs" Line="28" Column="37" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
