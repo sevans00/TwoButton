@@ -1,10 +1,24 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
+//Everrun - will always move in the direction of last motion
 public class EverRun : Jumper2 {
 
-	// Update is called once per frame
+	// FixedUpdate is called once per physics step
 	override protected void FixedUpdate () {
+		//This big if section is to do changing direction at the peak of a jump when jumping in one direction and releasing the button in the same direction as the jump.
+		if ( flag_jump && (!Game.instance.left || !Game.instance.right) ) {
+			if ( Game.instance.leftTime > Game.instance.rightTime ) {
+				if ( Game.instance.right ) {
+					Game.instance.leftTime = 0f;
+				}
+			} else { 
+				if ( Game.instance.left ) {
+					Game.instance.rightTime = 0f;
+				}
+			}
+		}
 		//Controls:
 		flag_jump = false;
 		flag_left = false;
@@ -15,12 +29,10 @@ public class EverRun : Jumper2 {
 		}
 		if ( Game.instance.left && Game.instance.right ) {
 			flag_jump = true;
-			if ( Game.instance.leftTime > Game.instance.rightTime ) {
-				flag_right = true;
-				Game.instance.rightTime = 0;
-			} else {
+			if ( Game.instance.leftTime < Game.instance.rightTime ) {
 				flag_left = true;
-				Game.instance.leftTime = 0;
+			} else {
+				flag_right = true;
 			}
 		} else {
 			if ( Game.instance.leftTime > Game.instance.rightTime ) {
