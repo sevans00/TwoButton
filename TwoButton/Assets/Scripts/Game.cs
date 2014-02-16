@@ -88,18 +88,13 @@ public class Game : MonoBehaviour {
 	}
 	IEnumerator doGameOver() {
 		yield return new WaitForSeconds(0.8f);
-		resetTileMap();
-		Debug.Log("NEW PLAYER!");
+		if ( GameObject.FindObjectOfType<LevelTileMap>() != null ) {
+			GameObject.FindObjectOfType<LevelTileMap>().ResetLevel();
+		} else {
+			Debug.LogWarning("Game.cs could not find a LevelTileMap to reset all tiles!");
+		}
 		GameObject jumper = Instantiate(JumperPrefab, SpawnPoint.position, Quaternion.identity) as GameObject;
 		Camera.main.GetComponent<CameraFollow>().target = jumper.transform;
-	}
-
-	//Currently I have no idea how to do this:
-	public void resetTileMap() {
-		tk2dTileMap tilemap = GameObject.FindObjectOfType<tk2dTileMap>();
-		Debug.Log(tilemap.renderData);
-		//tilemap.Build();
-		//tilemap.Build();
 	}
 
 	public void pause() {
