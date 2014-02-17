@@ -88,7 +88,11 @@ public class Jumper2 : MonoBehaviour {
 		}
 		//Halt movement if on ground and not moving either way:
 		if ( onGround && !flag_left && !flag_right ) {
-			spritePhysics.velocity = new Vector2(0, spritePhysics.velocity.y);
+			if ( spritePhysics.hitBottomLayer == LayerMask.NameToLayer("Ice") ) { //ICE
+				//No slowdown!
+			} else {
+				spritePhysics.velocity = new Vector2(0, spritePhysics.velocity.y);
+			}
 		}
 		//Ground jump:
 		if ( onGround && flag_jump ) {
@@ -104,36 +108,7 @@ public class Jumper2 : MonoBehaviour {
 			}
 		}
 
-		//Do wall slide and/or jump:
-		if ( !onGround && Game.instance.left && spritePhysics.hitLeft ) {
-//			Debug.Log("Slide left");
-//			sprite.SetSprite("jumper_slide");
-			sprite.scale = new Vector3( 1, sprite.scale.y, sprite.scale.z );
-			//Slide up/down:
-			spritePhysics.velocity.y = Mathf.Max(spritePhysics.velocity.y, -WALL_SLIDE_SPEED);
-			//Jump:
-			if ( Game.instance.right && Game.instance.rightTime > Game.instance.leftTime && last_jump_time < Game.instance.rightTime ) {
-//				Debug.Log("Jump from left");
-				//Game.instance.leftTime = Time.time; //We're going right now!
-				//Game.instance.LeftUp();
-				jumpDirection(Vector2.up + Vector2.right);
-			}
-		}
-		if ( !onGround && Game.instance.right && spritePhysics.hitRight ) {
-//			Debug.Log("Slide right");
-//			sprite.SetSprite("jumper_slide");
-			sprite.scale = new Vector3( -1, sprite.scale.y, sprite.scale.z );
-			//Slide up/down:
-			spritePhysics.velocity.y = Mathf.Max(spritePhysics.velocity.y, -WALL_SLIDE_SPEED);
-			//Jump:
-			if ( Game.instance.left && Game.instance.leftTime > Game.instance.rightTime && last_jump_time < Game.instance.leftTime ) {
-//				Debug.Log("Jump from right");
-				//Game.instance.rightTime = Time.time; //We're going left now!
-				//Game.instance.RightUp();
-				jumpDirection(Vector2.up - Vector2.right);
-			}
-		}
-
+		doWallSlide();
 
 		//Clamp x speed:
 		if ( Mathf.Abs( spritePhysics.velocity.x ) > MAX_SPEED ) {
@@ -165,7 +140,9 @@ public class Jumper2 : MonoBehaviour {
 		float currentSign = signOf(spritePhysics.velocity.x);
 		float v = walkAccelleration;
 		if ( currentSign != 0 && currentSign != sign ) {
-			v *= turnMultiplier;
+			if ( spritePhysics.hitBottomLayer != LayerMask.NameToLayer("Ice") ) { //Turning is harder on ice
+				v *= turnMultiplier;
+			}
 		}
 		spritePhysics.velocity += direction * v;
 	}
@@ -196,41 +173,34 @@ public class Jumper2 : MonoBehaviour {
 		}
 	}
 
-	
-	/*
-	void OnCollisionEnter2D ( Collision2D collision ) {
-		//Debug.Log("Collision enter!");
-		foreach (ContactPoint2D contact in collision.contacts) {
-			if ( contact.collider.gameObject.layer == 8) {
-				Kill ();
+	virtual public void doWallSlide() {
+		//Do wall slide and/or jump:
+		if ( !onGround && Game.instance.left && spritePhysics.hitLeft ) {
+			sprite.scale = new Vector3( 1, sprite.scale.y, sprite.scale.z ); //Face away from wall
+			//Slide up/down:
+			if ( spritePhysics.hitLeftLayer != LayerMask.NameToLayer("Ice") ) {
+				spritePhysics.velocity.y = Mathf.Max(spritePhysics.velocity.y, -WALL_SLIDE_SPEED);
 			}
-			if ( contact.normal.y > 0.1f ) {
-				onGround = true;
+			//Jump:
+			if ( Game.instance.right && Game.instance.rightTime > Game.instance.leftTime && last_jump_time < Game.instance.rightTime ) {
+				jumpDirection(Vector2.up + Vector2.right);
+			}
+		}
+		if ( !onGround && Game.instance.right && spritePhysics.hitRight ) {
+			sprite.scale = new Vector3( -1, sprite.scale.y, sprite.scale.z ); //Face away from wall
+			//Slide up/down:
+			if ( spritePhysics.hitLeftLayer != LayerMask.NameToLayer("Ice") ) {
+				spritePhysics.velocity.y = Mathf.Max(spritePhysics.velocity.y, -WALL_SLIDE_SPEED);
+			}
+			//Jump:
+			if ( Game.instance.left && Game.instance.leftTime > Game.instance.rightTime && last_jump_time < Game.instance.leftTime ) {
+				jumpDirection(Vector2.up - Vector2.right);
 			}
 		}
 	}
 
-	void OnCollisionStay2D ( Collision2D collision ) {
-		//Debug.Log("Collision enter!");
-		foreach (ContactPoint2D contact in collision.contacts) {
-			Debug.DrawLine( new Vector3(contact.point.x, contact.point.y, -1), new Vector3(contact.normal.x + contact.point.x, contact.normal.y+contact.point.y, -1) );
 
-			if ( contact.normal.y > 0.1f ) {
-				onGround = true;
-				//break;
-			}
-		}
-	}
-	void OnCollisionExit2D ( Collision2D collision ) {
-		//Debug.Log("Collision enter!");
-		foreach (ContactPoint2D contact in collision.contacts) {
-			if ( contact.normal.y > 0 ) {
-				//onGround = false;
-				break;
-			}
-		}
-	}
-	*/
+
 
 
 	//Kill this jumper

@@ -97,11 +97,20 @@ public class Game : MonoBehaviour {
 		Camera.main.GetComponent<CameraFollow>().target = jumper.transform;
 	}
 
-	public void pause() {
+	public void EndLevel () {
+		pause();
+		Debug.Log("Level Complete!");
+	}
 
+	private float timeScale = -1;
+	public void pause() {
+		if ( timeScale == -1 ) {
+			timeScale = Time.timeScale;
+		}
+		Time.timeScale = 0;
 	}
 	public void unpause() {
-		
+		Time.timeScale = timeScale;
 	}
 
 

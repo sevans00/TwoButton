@@ -2,7 +2,8 @@
 using System.Collections;
 
 //The base physics movement class
-//Modified from: http://blog.svampson.se/post/15966101553/2d-platformer-physics-in-unity3d
+//Ideas from: http://blog.svampson.se/post/15966101553/2d-platformer-physics-in-unity3d
+[RequireComponent (typeof (BoxCollider2D))]
 public class SpritePhysics : MonoBehaviour {
 
 	public Vector2 velocity = new Vector2( 0, 0 );
@@ -15,6 +16,11 @@ public class SpritePhysics : MonoBehaviour {
 	public bool hitBottom = false;
 	public bool hitLeft = false;
 	public bool hitRight = false;
+	
+	public int hitTopLayer = -1;
+	public int hitBottomLayer = -1;
+	public int hitLeftLayer = -1;
+	public int hitRightLayer = -1;
 
 	public enum HitDirection { //Relative to this
 		Undefined,
@@ -29,6 +35,21 @@ public class SpritePhysics : MonoBehaviour {
 		
 	}
 
+	//Return a list of points representing the rectangle of the sprite physics:
+	public Vector2[] GetColliderBounds () {
+		Vector2 position = transform.position;
+		BoxCollider2D myCollider2d = GetComponent<BoxCollider2D>();
+		Vector2 size = myCollider2d.size;
+		Vector2 center = myCollider2d.center + position;
+		//The rectangle formed by the collider:
+		Rect rect = new Rect( center.x - size.x/2, center.y - size.y/2, size.x, size.y );
+		Vector2 bottomLeft = new Vector2(rect.xMin, rect.yMin);
+		Vector2 bottomRight = new Vector2(rect.xMax, rect.yMin);
+		Vector2 topLeft = new Vector2(rect.xMin, rect.yMax);
+		Vector2 topRight = new Vector2(rect.xMax, rect.yMax);
+		return new Vector2[] { bottomLeft, bottomRight, topLeft, topRight };
+	}
+
 	// Fixed Update is called once per physics step:
 	//Call this function to perform sprite physics during the Fixed Update of a sprite - will perform movement and set flags
 	public void DoFixedUpdate () {
@@ -37,6 +58,11 @@ public class SpritePhysics : MonoBehaviour {
 		hitBottom = false;
 		hitLeft = false;
 		hitRight = false;
+		//Layer flags:
+		hitTopLayer = -1;
+		hitBottomLayer = -1;
+		hitLeftLayer = -1;
+		hitRightLayer = -1;
 		//Update gravity:
 		if ( !onGround ) {
 			velocity += gravity; //TODO: should this be only if not on ground?
@@ -52,6 +78,10 @@ public class SpritePhysics : MonoBehaviour {
 
 	//Detects current and future collisions and clips velocity if velocity will cause overlap
 	void detectCollisions() {
+		//Ignore triggers:
+		bool raycastsHitTriggers = Physics2D.raycastsHitTriggers;
+		Physics2D.raycastsHitTriggers = false;
+
 		Vector2 position = transform.position;
 		BoxCollider2D myCollider2d = GetComponent<BoxCollider2D>();
 		Vector2 size = myCollider2d.size;
@@ -73,7 +103,6 @@ public class SpritePhysics : MonoBehaviour {
 		int layer = 9; //Player layer (we want to ignore this)
 		int layermask = 1 << layer;
 		layermask = ~(layermask);
-
 		
 		//-------------- VERTICAL HITTESTS ------------
 		RaycastHit2D rayhitDownLeft;
@@ -97,6 +126,9 @@ public class SpritePhysics : MonoBehaviour {
 							transform.position = new Vector3(transform.position.x, rayhitDownRight.point.y);
 						}
 					}
+					if ( rayhitDownLeft.collider != null ) {
+						registerHit(rayhitDownLeft, HitDirection.Bottom);
+					}
 				}
 				//Left step-up:
 				if ( velocity.x < 0 ) {
@@ -106,20 +138,23 @@ public class SpritePhysics : MonoBehaviour {
 							transform.position = new Vector3(transform.position.x, rayhitDownLeft.point.y);
 						}
 					}
+					if ( rayhitDownRight.collider != null ) {
+						registerHit(rayhitDownRight, HitDirection.Bottom);
+					}
 				}
 			}
 		}
 		//Falling hittest:
 		if ( velocity.y < 0 ) {
 			rayhitDownLeft = Physics2D.Raycast( bottomLeft, -Vector2.up, bottomPadding+(Mathf.Abs(velocity.y)*Time.deltaTime), layermask );
-			if ( rayhitDownLeft.collider != null ) {
+			rayhitDownRight = Physics2D.Raycast( bottomRight, -Vector2.up, bottomPadding+(Mathf.Abs(velocity.y)*Time.deltaTime), layermask );
+			if ( rayhitDownLeft.collider != null && (rayhitDownRight.collider == null || rayhitDownLeft.point.y >= rayhitDownRight.point.y) ) {
 				velocity.y = 0;
 				transform.position = new Vector3(transform.position.x, rayhitDownLeft.point.y);
 				onGround = true;
 				registerHit(rayhitDownLeft, HitDirection.Bottom);
 			}
-			rayhitDownRight = Physics2D.Raycast( bottomRight, -Vector2.up, bottomPadding+(Mathf.Abs(velocity.y)*Time.deltaTime), layermask );
-			if ( rayhitDownRight.collider != null ) {
+			if ( rayhitDownRight.collider != null && (rayhitDownLeft.collider == null || rayhitDownLeft.point.y <= rayhitDownRight.point.y) ) {
 				velocity.y = 0;
 				transform.position = new Vector3(transform.position.x, rayhitDownRight.point.y);
 				onGround = true;
@@ -129,13 +164,13 @@ public class SpritePhysics : MonoBehaviour {
 		//Jumping hittest:
 		if ( velocity.y > 0 ) {
 			rayhitUpLeft = Physics2D.Raycast( topLeft, Vector2.up, topPadding+(velocity.y*Time.deltaTime), layermask );
-			if ( rayhitUpLeft.collider != null ) {
+			rayhitUpRight = Physics2D.Raycast( topRight, Vector2.up, topPadding+(velocity.y*Time.deltaTime), layermask );
+			if ( rayhitUpLeft.collider != null && (rayhitUpRight.collider == null || rayhitUpLeft.point.y <= rayhitUpRight.point.y) ) {
 				velocity.y = 0;
 				transform.position = new Vector3(transform.position.x, rayhitUpLeft.point.y - size.y);
 				registerHit(rayhitUpLeft, HitDirection.Top);
 			}
-			rayhitUpRight = Physics2D.Raycast( topRight, Vector2.up, topPadding+(velocity.y*Time.deltaTime), layermask );
-			if ( rayhitUpRight.collider != null ) {
+			if ( rayhitUpRight.collider != null && (rayhitUpLeft.collider == null || rayhitUpLeft.point.y >= rayhitUpRight.point.y) ) {
 				velocity.y = 0;
 				transform.position = new Vector3(transform.position.x, rayhitUpRight.point.y - size.y);
 				registerHit(rayhitUpRight, HitDirection.Top);
@@ -152,13 +187,13 @@ public class SpritePhysics : MonoBehaviour {
 		//Right movement hittest:
 		if ( velocity.x > 0 ) {
 			rayhitRightTop = Physics2D.Raycast( topMiddle, Vector2.right, hwidth +(Mathf.Abs(velocity.x)*Time.deltaTime), layermask );
-			if ( rayhitRightTop.collider != null ) {
+			rayhitRightBottom = Physics2D.Raycast( bottomMiddle, Vector2.right, hwidth + (Mathf.Abs(velocity.x)*Time.deltaTime), layermask );
+			if ( rayhitRightTop.collider != null && (rayhitRightBottom.collider == null || rayhitRightTop.point.x <= rayhitRightBottom.point.x) ) {
 				velocity.x = 0;
 				transform.position = new Vector3(rayhitRightTop.point.x-hwidth, transform.position.y);
 				registerHit(rayhitRightTop, HitDirection.Right);
 			}
-			rayhitRightBottom = Physics2D.Raycast( bottomMiddle, Vector2.right, hwidth + (Mathf.Abs(velocity.x)*Time.deltaTime), layermask );
-			if ( rayhitRightBottom.collider != null ) {
+			if ( rayhitRightBottom.collider != null && (rayhitRightTop.collider == null || rayhitRightTop.point.x >= rayhitRightBottom.point.x) ) {
 				velocity.x = 0;
 				transform.position = new Vector3(rayhitRightBottom.point.x-hwidth, transform.position.y);
 				registerHit(rayhitRightBottom, HitDirection.Right);
@@ -167,13 +202,13 @@ public class SpritePhysics : MonoBehaviour {
 		//Left movement hittest:
 		if ( velocity.x < 0 ) {
 			rayhitLeftTop = Physics2D.Raycast( topMiddle, -Vector2.right, hwidth +(Mathf.Abs(velocity.x)*Time.deltaTime), layermask );
-			if ( rayhitLeftTop.collider != null ) {
+			rayhitLeftBottom = Physics2D.Raycast( bottomMiddle, -Vector2.right, hwidth +(Mathf.Abs(velocity.x)*Time.deltaTime), layermask );
+			if ( rayhitLeftTop.collider != null && (rayhitLeftBottom.collider == null || rayhitRightTop.point.x >= rayhitRightBottom.point.x)  ) {
 				velocity.x = 0;
 				transform.position = new Vector3(rayhitLeftTop.point.x+hwidth, transform.position.y);
 				registerHit(rayhitLeftTop, HitDirection.Left);
 			}
-			rayhitLeftBottom = Physics2D.Raycast( bottomMiddle, -Vector2.right, hwidth +(Mathf.Abs(velocity.x)*Time.deltaTime), layermask );
-			if ( rayhitLeftBottom.collider != null ) {
+			if ( rayhitLeftBottom.collider != null && (rayhitLeftTop.collider == null || rayhitRightTop.point.x <= rayhitRightBottom.point.x)  ) {
 				velocity.x = 0;
 				transform.position = new Vector3(rayhitLeftBottom.point.x+hwidth, transform.position.y);
 				registerHit(rayhitLeftBottom, HitDirection.Left);
@@ -219,20 +254,35 @@ public class SpritePhysics : MonoBehaviour {
 			               bottomMiddle+(Vector2.up*bottomPadding) - Vector2.right, Color.red );
 
 		}
+
+		//Restore raycastsHitTriggers:
+		Physics2D.raycastsHitTriggers = raycastsHitTriggers;
 	}
+
+	//Register a hit
 	private void registerHit ( RaycastHit2D hit, HitDirection direction ) {
 		if ( hit.collider != null ) { //Hey, a collision happened!
 			hit.collider.gameObject.BroadcastMessage("OnSpritePhysicsCollision", collider2D, SendMessageOptions.DontRequireReceiver);
 		}
-		if ( hit.collider.gameObject.layer == 8 ) {
+		if ( hit.collider.gameObject.layer == 8 ) { //Kill layer
 			BroadcastMessage("Kill", SendMessageOptions.DontRequireReceiver); //Kill!
 			return;
 		}
+
+		int hitLayer = hit.collider.gameObject.layer;
 		switch ( direction ) {
-		case HitDirection.Top: hitTop = true; break;
-		case HitDirection.Bottom: hitBottom = true; break;
-		case HitDirection.Left: hitLeft = true; break;
-		case HitDirection.Right: hitRight = true; break;
+		case HitDirection.Top: hitTop = true;
+			hitTopLayer = hitLayer;
+			break;
+		case HitDirection.Bottom: hitBottom = true;
+			hitBottomLayer = hitLayer;
+			break;
+		case HitDirection.Left: hitLeft = true;
+			hitLeftLayer = hitLayer;
+			break;
+		case HitDirection.Right: hitRight = true; 
+			hitRightLayer = hitLayer;
+			break;
 		}
 	}
 
@@ -246,9 +296,7 @@ public class SpritePhysics : MonoBehaviour {
 		hits = Physics2D.LinecastAll( source, dest, 9 ); //Layer 9 is the player, ignore this layer
 		return hits.Length >= 1;
 	}
-
-
-
+	
 
 
 
@@ -280,7 +328,7 @@ public class SpritePhysics : MonoBehaviour {
 	void updatePosition() {
 		Vector3 velocity3 = new Vector3( velocity.x ,
 		                                 velocity.y  );
-		if ( velocity3.sqrMagnitude != 0 ) {
+		if ( velocity3.sqrMagnitude != 0 ) { //SqrMagnitude is faster
 			transform.position = Vector3.MoveTowards(transform.position, transform.position + velocity3, Time.deltaTime*velocity3.magnitude);
 		}
 	}
