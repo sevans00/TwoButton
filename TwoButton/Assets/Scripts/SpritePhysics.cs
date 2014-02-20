@@ -16,11 +16,13 @@ public class SpritePhysics : MonoBehaviour {
 	public bool hitBottom = false;
 	public bool hitLeft = false;
 	public bool hitRight = false;
-	
+	public bool hitElevator = false;
+
 	public int hitTopLayer = -1;
 	public int hitBottomLayer = -1;
 	public int hitLeftLayer = -1;
 	public int hitRightLayer = -1;
+
 
 	public enum HitDirection { //Relative to this
 		Undefined,
@@ -58,6 +60,7 @@ public class SpritePhysics : MonoBehaviour {
 		hitBottom = false;
 		hitLeft = false;
 		hitRight = false;
+		hitElevator = false;
 		//Layer flags:
 		hitTopLayer = -1;
 		hitBottomLayer = -1;
@@ -110,10 +113,12 @@ public class SpritePhysics : MonoBehaviour {
 		RaycastHit2D rayhitUpLeft;
 		RaycastHit2D rayhitUpRight;
 
-		//Walking hittest: //NOTE: Stepups currently do not broadcast hits
+		//Walking hittest: //NOTE: Stepups now broadcast hits
 		if ( velocity.y == 0 ) {
-			rayhitDownLeft = Physics2D.Raycast( bottomLeft, -Vector2.up, bottomPadding+(Mathf.Abs(gravity.y)*Time.deltaTime), layermask );
-			rayhitDownRight = Physics2D.Raycast( bottomRight, -Vector2.up, bottomPadding+(Mathf.Abs(gravity.y)*Time.deltaTime), layermask );
+			//float downDistance = Mathf.Abs(gravity.y);
+			float downDistance = 2f;
+			rayhitDownLeft = Physics2D.Raycast( bottomLeft, -Vector2.up, bottomPadding+(downDistance*Time.deltaTime), layermask );
+			rayhitDownRight = Physics2D.Raycast( bottomRight, -Vector2.up, bottomPadding+(downDistance*Time.deltaTime), layermask );
 			if ( (rayhitDownLeft.collider == null) && ( rayhitDownRight.collider == null)) {
 				onGround = false;
 				BroadcastMessage("OnWalkedOffEdge");
@@ -126,9 +131,9 @@ public class SpritePhysics : MonoBehaviour {
 							transform.position = new Vector3(transform.position.x, rayhitDownRight.point.y);
 						}
 					}
-					if ( rayhitDownLeft.collider != null ) {
-						registerHit(rayhitDownLeft, HitDirection.Bottom);
-					}
+				}
+				if ( rayhitDownLeft.collider != null ) {
+					registerHit(rayhitDownLeft, HitDirection.Bottom);
 				}
 				//Left step-up:
 				if ( velocity.x < 0 ) {
@@ -138,9 +143,9 @@ public class SpritePhysics : MonoBehaviour {
 							transform.position = new Vector3(transform.position.x, rayhitDownLeft.point.y);
 						}
 					}
-					if ( rayhitDownRight.collider != null ) {
-						registerHit(rayhitDownRight, HitDirection.Bottom);
-					}
+				}
+				if ( rayhitDownRight.collider != null ) {
+					registerHit(rayhitDownRight, HitDirection.Bottom);
 				}
 			}
 		}
@@ -184,6 +189,31 @@ public class SpritePhysics : MonoBehaviour {
 		RaycastHit2D rayhitLeftBottom;
 		RaycastHit2D rayhitRightBottom;
 		float hwidth = size.x/2f; //Half width
+
+		//Zero movement hittest:
+		if ( velocity.x == 0 ) {
+			float flexSpace = 0.5f;
+			rayhitLeftTop = Physics2D.Raycast( topMiddle, -Vector2.right, hwidth +(flexSpace*Time.deltaTime), layermask );
+			rayhitLeftBottom = Physics2D.Raycast( bottomMiddle, -Vector2.right, hwidth +(flexSpace*Time.deltaTime), layermask );
+			rayhitRightTop = Physics2D.Raycast( topMiddle, Vector2.right, hwidth +(flexSpace*Time.deltaTime), layermask );
+			rayhitRightBottom = Physics2D.Raycast( bottomMiddle, Vector2.right, hwidth + (flexSpace*Time.deltaTime), layermask );
+			if ( rayhitLeftTop.collider != null && (rayhitLeftBottom.collider == null || rayhitRightTop.point.x >= rayhitRightBottom.point.x)  ) {
+				transform.position = new Vector3(rayhitLeftTop.point.x+hwidth, transform.position.y);
+				registerHit(rayhitLeftTop, HitDirection.Left);
+			}
+			if ( rayhitLeftBottom.collider != null && (rayhitLeftTop.collider == null || rayhitRightTop.point.x <= rayhitRightBottom.point.x)  ) {
+				transform.position = new Vector3(rayhitLeftBottom.point.x+hwidth, transform.position.y);
+				registerHit(rayhitLeftBottom, HitDirection.Left);
+			}
+			if ( rayhitRightTop.collider != null && (rayhitRightBottom.collider == null || rayhitRightTop.point.x <= rayhitRightBottom.point.x) ) {
+				transform.position = new Vector3(rayhitRightTop.point.x-hwidth, transform.position.y);
+				registerHit(rayhitRightTop, HitDirection.Right);
+			}
+			if ( rayhitRightBottom.collider != null && (rayhitRightTop.collider == null || rayhitRightTop.point.x >= rayhitRightBottom.point.x) ) {
+				transform.position = new Vector3(rayhitRightBottom.point.x-hwidth, transform.position.y);
+				registerHit(rayhitRightBottom, HitDirection.Right);
+			}
+		}
 		//Right movement hittest:
 		if ( velocity.x > 0 ) {
 			rayhitRightTop = Physics2D.Raycast( topMiddle, Vector2.right, hwidth +(Mathf.Abs(velocity.x)*Time.deltaTime), layermask );
@@ -214,6 +244,7 @@ public class SpritePhysics : MonoBehaviour {
 				registerHit(rayhitLeftBottom, HitDirection.Left);
 			}
 		}
+
 
 
 		//Debug drawing code - to see an approximation of the linecasts, change to true:
@@ -283,6 +314,15 @@ public class SpritePhysics : MonoBehaviour {
 		case HitDirection.Right: hitRight = true; 
 			hitRightLayer = hitLayer;
 			break;
+		}
+		if ( hit.collider.gameObject.layer == LayerMask.NameToLayer("Elevator") && !hitElevator) {
+			//Debug.Log("Hit elevator!");
+			hitElevator = true;
+			ElevatorBlock elevator = hit.collider.gameObject.GetComponent<ElevatorBlock>();
+			this.transform.position += elevator.currentDirection * elevator.speed * Time.deltaTime;
+			if ( elevator.currentDirection.Equals ( Vector3.down ) && direction == HitDirection.Bottom ) {
+				onGround = true;
+			}
 		}
 	}
 

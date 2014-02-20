@@ -13,18 +13,26 @@ public class Game : MonoBehaviour {
 	public float rightTime = 0;
 	public bool right = false;
 
+	public bool jump = false;
 
-
-
+	
+	private InteractiveTile [] tiles;
 	// Use this for initialization
 	void Start () {
 		Game.instance = this;
+		tiles = GameObject.FindObjectsOfType<InteractiveTile>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		if ( Input.GetKeyDown(KeyCode.Escape) ) {
 			showCharacterSelectScreen();
+		}
+
+		if ( Input.GetKey(KeyCode.W) ) {
+			jump = true;
+		} else {
+			jump = false;
 		}
 
 		if ( Input.GetKeyDown(KeyCode.A) ) {
@@ -43,17 +51,26 @@ public class Game : MonoBehaviour {
 		if ( Input.touchCount > 0 ) {
 			//Multitouch:
 			foreach ( Touch touch in Input.touches ) {
-				if ( touch.phase == TouchPhase.Began && touch.position.x > Screen.width / 2 ) {
-					RightDown();
+
+				//Jumping check:
+				if ( touch.position.y < Screen.height - Screen.height / 3 ) {//
+					//Regular moving code
+					if ( touch.phase == TouchPhase.Began && touch.position.x > Screen.width / 2 ) {
+						RightDown();
+					}
+					if ( touch.phase == TouchPhase.Ended && touch.position.x > Screen.width / 2 ) {
+						RightUp();
+					}
+					if ( touch.phase == TouchPhase.Began && touch.position.x < Screen.width / 2 ) {
+						LeftDown();
+					}
+					if ( touch.phase == TouchPhase.Ended && touch.position.x < Screen.width / 2 ) {
+						LeftUp();
+					}
 				}
-				if ( touch.phase == TouchPhase.Ended && touch.position.x > Screen.width / 2 ) {
-					RightUp();
-				}
-				if ( touch.phase == TouchPhase.Began && touch.position.x < Screen.width / 2 ) {
-					LeftDown();
-				}
-				if ( touch.phase == TouchPhase.Ended && touch.position.x < Screen.width / 2 ) {
-					LeftUp();
+				//Jumping:
+				if ( touch.position.y > Screen.height - Screen.height / 3 ) {
+					jump = true;
 				}
 			}
 		}
@@ -88,18 +105,32 @@ public class Game : MonoBehaviour {
 	}
 	IEnumerator doGameOver() {
 		yield return new WaitForSeconds(0.8f);
-		if ( GameObject.FindObjectOfType<LevelTileMap>() != null ) {
-			GameObject.FindObjectOfType<LevelTileMap>().ResetLevel();
-		} else {
-			Debug.LogWarning("Game.cs could not find a LevelTileMap to reset all tiles!");
-		}
+		ResetLevel();
 		GameObject jumper = Instantiate(JumperPrefab, SpawnPoint.position, Quaternion.identity) as GameObject;
 		Camera.main.GetComponent<CameraFollow>().target = jumper.transform;
+	}
+
+	//Reset the level by resetting all objects inside it
+	public void ResetLevel () {
+		foreach ( InteractiveTile tile in tiles ) {
+			tile.Reset();
+		}
 	}
 
 	public void EndLevel () {
 		pause();
 		Debug.Log("Level Complete!");
+		NextLevel();
+	}
+	public void NextLevel () {
+		Debug.Log("Next Level!");
+		int level = Application.loadedLevel + 1;
+		if ( level >= Application.levelCount ) {
+			level = 0;
+		}
+		Debug.Log("Do Level! "+level);
+		unpause();
+		Application.LoadLevel(level);
 	}
 
 	private float timeScale = -1;

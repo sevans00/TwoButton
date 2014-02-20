@@ -27,7 +27,7 @@ public class Jumper2 : MonoBehaviour {
 	protected float turnMultiplier = 1.2f;
 	public float MAX_SPEED = 20.0f;
 
-	public float WALL_SLIDE_SPEED = 10f;
+	public float WALL_SLIDE_SPEED = 5f;
 
 	protected bool flag_left = false;
 	protected bool flag_right = false;
@@ -73,6 +73,9 @@ public class Jumper2 : MonoBehaviour {
 			if ( Game.instance.right ) {
 				flag_right = true;
 			}
+		}
+		if ( Game.instance.jump ) { //Jump flag
+			flag_jump = true;
 		}
 
 
@@ -173,9 +176,45 @@ public class Jumper2 : MonoBehaviour {
 		}
 	}
 
+	//Wall slide:
+	protected float lastWallSlideTime = 0f;
 	virtual public void doWallSlide() {
+		
+		if ( lastWallSlideTime > Time.time - 0.1f ) {
+			//Jump:
+			if ( !onGround && spritePhysics.hitRight ) //Game.instance.right && 
+			if ( Game.instance.left && Game.instance.leftTime > Game.instance.rightTime && last_jump_time < Game.instance.leftTime ) {
+				jumpDirection(Vector2.up - Vector2.right);
+			}
+			//Jump:
+			if ( !onGround && spritePhysics.hitLeft ) //Game.instance.left && 
+				if ( Game.instance.right && Game.instance.rightTime > Game.instance.leftTime && last_jump_time < Game.instance.rightTime ) {
+				jumpDirection(Vector2.up + Vector2.right);
+			}
+		}
+
 		//Do wall slide and/or jump:
-		if ( !onGround && Game.instance.left && spritePhysics.hitLeft ) {
+		if ( !onGround && spritePhysics.hitLeft ) { //Game.instance.left && 
+			sprite.scale = new Vector3( 1, sprite.scale.y, sprite.scale.z ); //Face away from wall
+			//Slide up/down:
+			if ( spritePhysics.hitLeftLayer != LayerMask.NameToLayer("Ice") ) {
+				spritePhysics.velocity.y = Mathf.Max(spritePhysics.velocity.y, -WALL_SLIDE_SPEED);
+			}
+			lastWallSlideTime = Time.time;
+		}
+		if ( !onGround && spritePhysics.hitRight ) { //Game.instance.right && 
+			sprite.scale = new Vector3( -1, sprite.scale.y, sprite.scale.z ); //Face away from wall
+			//Slide up/down:
+			if ( spritePhysics.hitLeftLayer != LayerMask.NameToLayer("Ice") ) {
+				spritePhysics.velocity.y = Mathf.Max(spritePhysics.velocity.y, -WALL_SLIDE_SPEED);
+			}
+			lastWallSlideTime = Time.time;
+		}
+	}
+	//First wall slide code:
+	virtual public void doEasyWallSlide() {
+		//Do wall slide and/or jump:
+		if ( !onGround && spritePhysics.hitLeft ) { //Game.instance.left && 
 			sprite.scale = new Vector3( 1, sprite.scale.y, sprite.scale.z ); //Face away from wall
 			//Slide up/down:
 			if ( spritePhysics.hitLeftLayer != LayerMask.NameToLayer("Ice") ) {
@@ -186,7 +225,7 @@ public class Jumper2 : MonoBehaviour {
 				jumpDirection(Vector2.up + Vector2.right);
 			}
 		}
-		if ( !onGround && Game.instance.right && spritePhysics.hitRight ) {
+		if ( !onGround && spritePhysics.hitRight ) { //Game.instance.right && 
 			sprite.scale = new Vector3( -1, sprite.scale.y, sprite.scale.z ); //Face away from wall
 			//Slide up/down:
 			if ( spritePhysics.hitLeftLayer != LayerMask.NameToLayer("Ice") ) {
@@ -198,6 +237,8 @@ public class Jumper2 : MonoBehaviour {
 			}
 		}
 	}
+
+
 
 
 

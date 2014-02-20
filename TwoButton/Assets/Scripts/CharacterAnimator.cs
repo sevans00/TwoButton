@@ -37,10 +37,10 @@ public class CharacterAnimator : MonoBehaviour {
 
 
 		//Wallslide:
-		if ( !spritePhysics.onGround && (Game.instance.right && spritePhysics.hitRight) ) {
+		if ( !spritePhysics.onGround && (spritePhysics.hitRight) ) { //Game.instance.right && 
 			SetSprite(slide_spriteName);
 		}
-		if ( !spritePhysics.onGround && (Game.instance.left && spritePhysics.hitLeft) ) {
+		if ( !spritePhysics.onGround && (spritePhysics.hitLeft) ) { //Game.instance.left && 
 			SetSprite(slide_spriteName);
 		}
 	}

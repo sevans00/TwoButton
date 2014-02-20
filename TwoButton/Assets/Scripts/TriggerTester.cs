@@ -10,7 +10,7 @@ public class TriggerTester : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		BoxCollider2D bcollider = GetComponent<BoxCollider2D>();
+		//BoxCollider2D bcollider = GetComponent<BoxCollider2D>();
 
 	}
 

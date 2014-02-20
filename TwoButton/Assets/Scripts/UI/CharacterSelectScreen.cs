@@ -16,6 +16,12 @@ public class CharacterSelectScreen : MonoBehaviour {
 	void Start() {
 		HideCharacterSelectScreen();
 	}
+
+	void Update () {
+		if ( Input.GetKeyDown(KeyCode.Escape) ) {
+			Application.Quit();
+		}
+	}
 	
 	public void ToggleCharacterSelectScreen () {
 		if ( gameObject.activeSelf ) {
