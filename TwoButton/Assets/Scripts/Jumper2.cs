@@ -24,6 +24,7 @@ public class Jumper2 : MonoBehaviour {
 	public float JUMP_SPEED = 25.0f;
 
 	protected float walkAccelleration = 0.9f;
+	protected float airAccelleration = 2.0f; //
 	protected float turnMultiplier = 1.2f;
 	public float MAX_SPEED = 20.0f;
 
@@ -142,6 +143,9 @@ public class Jumper2 : MonoBehaviour {
 		float sign = signOf(direction.x);
 		float currentSign = signOf(spritePhysics.velocity.x);
 		float v = walkAccelleration;
+		if ( !onGround ) {
+			v = airAccelleration;
+		}
 		if ( currentSign != 0 && currentSign != sign ) {
 			if ( spritePhysics.hitBottomLayer != LayerMask.NameToLayer("Ice") ) { //Turning is harder on ice
 				v *= turnMultiplier;

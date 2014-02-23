@@ -22,6 +22,11 @@ public class Game : MonoBehaviour {
 		Game.instance = this;
 		tiles = GameObject.FindObjectsOfType<InteractiveTile>();
 	}
+
+	void OnLevelWasLoaded () {
+		//Debug.Log("Level loaded!");
+		//SpawnPoint = GameObject.FindObjectOfType<SpawnPoint>().transform;
+	}
 	
 	// Update is called once per frame
 	void Update () {
