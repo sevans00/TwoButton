@@ -34,7 +34,6 @@ public class ToggleSwitch : InteractiveTile {
 		Toggle();
 	}
 
-	
 	override public void Reset () {
 		Pressed = starting_Pressed;
 		if ( !Pressed ) {

@@ -21,7 +21,7 @@ public class CharacterAnimator : MonoBehaviour {
 
 	public void DoFixedUpdate() {
 		//Ground or jump:
-		if ( spritePhysics.onGround ) {
+		if ( spritePhysics != null && spritePhysics.onGround ) {
 			sprite.SetSprite(idle_spriteName);
 		} else {
 			sprite.SetSprite(jump_spriteName);

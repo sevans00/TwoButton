@@ -15,22 +15,34 @@ public class Game : MonoBehaviour {
 
 	public bool jump = false;
 
+
+	public GUIMenu guiMenu;
 	
 	private InteractiveTile [] tiles;
 	// Use this for initialization
 	void Start () {
 		Game.instance = this;
-		tiles = GameObject.FindObjectsOfType<InteractiveTile>();
+		DontDestroyOnLoad(gameObject);
+		OnLevelWasLoaded();
 	}
 
 	void OnLevelWasLoaded () {
+		if ( GameObject.FindObjectOfType<SpawnPoint>() == null ) {
+			Debug.LogError("Error: Could not find spawn point!");
+			return;
+		}
 		//Debug.Log("Level loaded!");
-		//SpawnPoint = GameObject.FindObjectOfType<SpawnPoint>().transform;
+		SpawnPoint = GameObject.FindObjectOfType<SpawnPoint>().transform;
+		//Caching things:
+		tiles = GameObject.FindObjectsOfType<InteractiveTile>();
+		//Spawn player:
+		spawnPlayer();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		if ( Input.GetKeyDown(KeyCode.Escape) ) {
+			//guiMenu.showGUI();
 			showCharacterSelectScreen();
 		}
 
@@ -40,37 +52,23 @@ public class Game : MonoBehaviour {
 			jump = false;
 		}
 
-		if ( Input.GetKeyDown(KeyCode.A) ) {
-			LeftDown();
-		}
-		if ( Input.GetKeyUp(KeyCode.A) ) {
-			LeftUp();
-		}
-		if ( Input.GetKeyDown(KeyCode.D) ) {
-			RightDown();
-		}
-		if ( Input.GetKeyUp(KeyCode.D) ) {
-			RightUp();
-		}
 
+		
+		bool rightnew = false;
+		bool leftnew = false;
 		if ( Input.touchCount > 0 ) {
 			//Multitouch:
 			foreach ( Touch touch in Input.touches ) {
 
 				//Jumping check:
-				if ( touch.position.y < Screen.height - Screen.height / 3 ) {//
+				if ( touch.position.y < Screen.height - Screen.height / 3 ) {
 					//Regular moving code
-					if ( touch.phase == TouchPhase.Began && touch.position.x > Screen.width / 2 ) {
-						RightDown();
+					if ( touch.position.x > Screen.width / 2 ) {
+						rightnew = true;
 					}
-					if ( touch.phase == TouchPhase.Ended && touch.position.x > Screen.width / 2 ) {
-						RightUp();
-					}
-					if ( touch.phase == TouchPhase.Began && touch.position.x < Screen.width / 2 ) {
-						LeftDown();
-					}
-					if ( touch.phase == TouchPhase.Ended && touch.position.x < Screen.width / 2 ) {
-						LeftUp();
+					//Regular moving code
+					if ( touch.position.x < Screen.width / 2 ) {
+						leftnew = true;
 					}
 				}
 				//Jumping:
@@ -79,8 +77,28 @@ public class Game : MonoBehaviour {
 				}
 			}
 		}
+		
+		//Keyboard for debugging:
+		if ( Input.GetKey(KeyCode.A) ) {
+			leftnew = true;
+		}
+		if ( Input.GetKey(KeyCode.D) ) {
+			rightnew = true;
+		}
+
+
+		//Actually set left and right:
+		if ( !right && rightnew ) {
+			RightDown();
+		}
+		right = rightnew;
+		if ( !left && leftnew ) {
+			LeftDown();
+		}
+		left = leftnew;
 
 	}
+
 
 	public void showCharacterSelectScreen() {
 		CharacterSelectScreen.instance.ToggleCharacterSelectScreen();
@@ -111,6 +129,10 @@ public class Game : MonoBehaviour {
 	IEnumerator doGameOver() {
 		yield return new WaitForSeconds(0.8f);
 		ResetLevel();
+		spawnPlayer();
+	}
+	//Spawn player:
+	public void spawnPlayer (){
 		GameObject jumper = Instantiate(JumperPrefab, SpawnPoint.position, Quaternion.identity) as GameObject;
 		Camera.main.GetComponent<CameraFollow>().target = jumper.transform;
 	}
@@ -138,9 +160,9 @@ public class Game : MonoBehaviour {
 		Application.LoadLevel(level);
 	}
 
-	private float timeScale = -1;
+	private float timeScale = 1;
 	public void pause() {
-		if ( timeScale == -1 ) {
+		if ( timeScale != 0 ) {
 			timeScale = Time.timeScale;
 		}
 		Time.timeScale = 0;

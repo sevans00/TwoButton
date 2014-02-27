@@ -168,7 +168,7 @@ public class Jumper2 : MonoBehaviour {
 		spritePhysics.velocity = new Vector2(spritePhysics.velocity.x, JUMP_SPEED );
 		last_jump_time = Time.time;
 	}
-	public void jumpDirection( Vector2 direction ) {
+	virtual public void jumpDirection( Vector2 direction ) {
 //		jumpCount = 1; //Uncomment to make walljumps reset double jump
 		direction.Normalize();
 		spritePhysics.velocity = new Vector2(spritePhysics.velocity.x + JUMP_SPEED*direction.x, JUMP_SPEED*direction.y );

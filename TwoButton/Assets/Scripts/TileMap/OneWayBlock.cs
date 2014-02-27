@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[RequireComponent (typeof (BoxCollider2D))]
 //A one-way block
 public class OneWayBlock : MonoBehaviour {
 
