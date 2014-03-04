@@ -3,7 +3,9 @@ using System.Collections;
 
 public class JumperSMB : Jumper2 {
 
-
+	private bool onGroundLastFrame = false;
+	private float lastLandingTime = 0f;
+	
 	private bool inputRight = false;
 	private bool inputLeft = false;
 	private float rightTime = 0f;
@@ -15,8 +17,8 @@ public class JumperSMB : Jumper2 {
 	private bool leftJump = false;
 	private bool rightJumpLastFrame = false;
 	private bool leftJumpLastFrame = false;
-	private bool controllableHeightJumps = true;
-
+	private bool controllableHeightJumps = false;
+	
 	private bool inputJump = false;
 	private float jumpTime = 0f;
 
@@ -139,7 +141,9 @@ public class JumperSMB : Jumper2 {
 
 		
 
-
+		if ( !onGroundLastFrame && onGround ) {
+			lastLandingTime = Time.time;
+		}
 
 		//Ground jump:
 		/*if ( onGround && ( (inputLeft && inputRight) || jumpnew ) ) {
@@ -147,8 +151,7 @@ public class JumperSMB : Jumper2 {
 			onGround = false;
 			jump();
 		}*/
-		Debug.Log("LEFTJUMP:"+leftJump+" RIGHTJUMP:"+rightJump);
-		if ( onGround && ( (inputLeft && inputRight) || jumpnew ) ) {
+		if ( onGround && ( (inputLeft && inputRight && (rightTime >= lastLandingTime || leftTime >= lastLandingTime)) || jumpnew ) ) {
 			//if ( onGround && jumpnew ) {
 			if ( leftTime > rightTime ) {
 				leftJump = true;
@@ -181,6 +184,7 @@ public class JumperSMB : Jumper2 {
 		bool wallSlide_left = false;
 		if ( !onGround && spritePhysics.hitLeft ) { //inputLeft && 
 			wallSlide_left = true;
+			lastWallSlideTime = Time.time;
 			sprite.scale = new Vector3( 1, sprite.scale.y, sprite.scale.z ); //Face away from wall
 			//Slide up/down:
 			if ( inputLeft && spritePhysics.hitLeftLayer != LayerMask.NameToLayer("Ice") ) {
@@ -191,6 +195,7 @@ public class JumperSMB : Jumper2 {
 		}
 		if ( !onGround && spritePhysics.hitRight ) { //inputRight && 
 			wallSlide_right = true;
+			lastWallSlideTime = Time.time;
 			sprite.scale = new Vector3( -1, sprite.scale.y, sprite.scale.z ); //Face away from wall
 			//Slide up/down:
 			if ( inputRight && spritePhysics.hitLeftLayer != LayerMask.NameToLayer("Ice") ) {
@@ -259,16 +264,16 @@ public class JumperSMB : Jumper2 {
 
 
 
-
-		/*
 		//Wall Jump:
 		if ( wallSlide_right ) {
-			if ( inputLeft && leftTime > rightTime && last_jump_time < leftTime ) {
+			if ( inputLeft && leftTime > rightTime && last_jump_time < leftTime && leftTime >= lastWallSlideTime ) {
+				leftJump = true;
 				jumpDirection(Vector2.up - Vector2.right);
 			}
 		}
 		if ( wallSlide_left ) {
-			if ( inputRight && rightTime > leftTime && last_jump_time < rightTime ) {
+			if ( inputRight && rightTime > leftTime && last_jump_time < rightTime && rightTime >= lastWallSlideTime ) {
+				rightJump = true;
 				jumpDirection(Vector2.up + Vector2.right);
 			}
 		}
@@ -278,30 +283,6 @@ public class JumperSMB : Jumper2 {
 		}
 
 
-		/*
-		if ( wallSlide_right ) {
-			if ( inputLeft && last_jump_time < leftTime ) {
-				if ( inputRight ) {
-					jumpDirection(new Vector2( -1f, 1f ), JUMP_SPEED * 0.7f);
-				} else {
-					jumpDirection(new Vector2( 0f, 1f ), JUMP_SPEED * 0.7f);
-				}
-				//jumpDirection(Vector2.up - Vector2.right, JUMP_SPEED * 0.7f);
-				//jump2(JUMP_SPEED * 0.7f);
-			}
-		}
-		if ( wallSlide_left ) {
-			if ( inputRight && last_jump_time < rightTime ) {
-				if ( inputLeft ) {
-					jumpDirection(new Vector2( 1f, 1f ), JUMP_SPEED * 0.7f);
-				} else {
-					jumpDirection(new Vector2( 0f, 1f ), JUMP_SPEED * 0.7f);
-				}
-				//jumpDirection(Vector2.up + Vector2.right, JUMP_SPEED * 0.7f);
-				//jump2(JUMP_SPEED * 0.7f);
-			}
-		}
-		*/
 
 
 
@@ -309,9 +290,7 @@ public class JumperSMB : Jumper2 {
 
 
 
-
-
-
+		onGroundLastFrame = onGround;
 
 		//Clamp x speed:
 		if ( Mathf.Abs( spritePhysics.velocity.x ) > MAX_SPEED ) {
