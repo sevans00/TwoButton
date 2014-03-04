@@ -23,9 +23,10 @@ public class Jumper2 : MonoBehaviour {
 
 	public float JUMP_SPEED = 25.0f;
 
-	protected float walkAccelleration = 0.9f;
-	protected float airAccelleration = 2.0f; //
-	protected float turnMultiplier = 1.2f;
+	public float walkAccelleration = 0.9f;
+	public float airAccelleration = 2.0f; //
+	public float turnMultiplier = 1.2f;
+	public float airTurnMultiplier = 1.2f;
 	public float MAX_SPEED = 20.0f;
 
 	public float WALL_SLIDE_SPEED = 5f;
@@ -45,7 +46,7 @@ public class Jumper2 : MonoBehaviour {
 	protected bool isDead = false;
 	
 	// Use this for initialization
-	void Start () {
+	virtual protected void Start () {
 		sprite = GetComponent<tk2dSprite>();
 		spritePhysics = GetComponent<SpritePhysics>();
 	}
@@ -148,7 +149,11 @@ public class Jumper2 : MonoBehaviour {
 		}
 		if ( currentSign != 0 && currentSign != sign ) {
 			if ( spritePhysics.hitBottomLayer != LayerMask.NameToLayer("Ice") ) { //Turning is harder on ice
-				v *= turnMultiplier;
+				if ( onGround ) {
+					v *= turnMultiplier;
+				} else { 
+					v *= airTurnMultiplier;
+				}
 			}
 		}
 		spritePhysics.velocity += direction * v;

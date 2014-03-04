@@ -1,14 +1,36 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class JumperExp : Jumper2 {
+public class JumperSMB : Jumper2 {
+
 
 	private bool inputRight = false;
 	private bool inputLeft = false;
 	private float rightTime = 0f;
 	private float leftTime = 0f;
+	private float rightTimeUp = 0f;
+	private float leftTimeUp = 0f;
 
-	public float wall_pushoff_percent = 0.5f;
+	private bool rightJump = false;
+	private bool leftJump = false;
+	private bool rightJumpLastFrame = false;
+	private bool leftJumpLastFrame = false;
+	private bool controllableHeightJumps = true;
+
+	private bool inputJump = false;
+	private float jumpTime = 0f;
+
+	private float timeHeldRightAwayFromWall = 0f;
+	private float timeHeldLeftAwayFromWall = 0f;
+	private float totalStickToWallTime = 0.5f; //CONSTANT
+
+	private bool stickingToLeftWall = false;
+	private bool stickingToRightWall = false;
+
+	private bool doing_walljump_stickyfriction = false;
+	private float walljump_stickyfriction_time = 0f;
+	private float total_walljump_stickyfriction_time = 0.15f; //The little "mini-animation" of character preparing to launch
+	private float max_walljump_betweenbutton_time = 0.0f; //MaxTime between alternate button presses (make it easier to walljump)
 
 	protected override void Start ()
 	{
@@ -20,9 +42,12 @@ public class JumperExp : Jumper2 {
 	}
 	
 
+	delegate void WalljumpDelegate ();
+	WalljumpDelegate walljumpDelegate;
 
 	// Update is called once per frame
 	override protected void FixedUpdate () {
+
 		//SET INPUT FLAGS:
 		//Keys:
 		bool rightnew = false;
@@ -56,40 +81,60 @@ public class JumperExp : Jumper2 {
 		if ( Input.GetKey(KeyCode.W) ) {
 			jumpnew = true;
 		}
+
+
+
+
+
+		//Reset ground jumping overrides:
+		if ( (!rightnew || !leftnew) && rightJump) {
+			rightJump = false;
+		}
+		if ( (!leftnew || !rightnew) && leftJump ) {
+			leftJump = false;
+		}
+		//Do ground jumping overrides: //But if we release the other button mid jump, we've got our input back
+		if ( rightnew && rightJump && leftnew ) {
+			rightnew = false;
+		}
+		if ( leftnew && leftJump && rightnew ) {
+			leftnew = false;
+		}
+
+
+
+
+
 		//Actually set left and right:
-		if ( !inputRight && rightnew ) {
+		if ( !inputRight && rightnew ) { //This is the frame where right went down
 			rightTime = Time.time;
 		}
-		if ( !inputLeft && leftnew ) {
+		if ( !inputLeft && leftnew ) { //This is the frame where left went down
 			leftTime = Time.time;
+		}
+		if ( inputRight && !rightnew ) { //This is the frame where right went up
+			rightTimeUp = Time.time;
+		}
+		if ( inputLeft && !leftnew ) { //This is the frame where left went up
+			leftTimeUp = Time.time;
 		}
 		inputRight = rightnew;
 		inputLeft = leftnew;
+
+
 
 		//Reset jumpcount if on ground
 		if ( onGround ) {
 			jumpCount = 0;
 		}
 
-		//Wall slide:
-		bool wallSlide_right = false;
-		bool wallSlide_left = false;
-		if ( !onGround && spritePhysics.hitLeft ) { //Game.instance.left && 
-			wallSlide_left = true;
-			sprite.scale = new Vector3( 1, sprite.scale.y, sprite.scale.z ); //Face away from wall
-			//Slide up/down:
-			if ( spritePhysics.hitLeftLayer != LayerMask.NameToLayer("Ice") ) {
-				spritePhysics.velocity.y = Mathf.Max(spritePhysics.velocity.y, -WALL_SLIDE_SPEED);
-			}
-		}
-		if ( !onGround && spritePhysics.hitRight ) { //Game.instance.right && 
-			wallSlide_right = true;
-			sprite.scale = new Vector3( -1, sprite.scale.y, sprite.scale.z ); //Face away from wall
-			//Slide up/down:
-			if ( spritePhysics.hitLeftLayer != LayerMask.NameToLayer("Ice") ) {
-				spritePhysics.velocity.y = Mathf.Max(spritePhysics.velocity.y, -WALL_SLIDE_SPEED);
-			}
-		}
+
+
+
+
+
+
+
 
 
 		
@@ -97,24 +142,110 @@ public class JumperExp : Jumper2 {
 
 
 		//Ground jump:
+		/*if ( onGround && ( (inputLeft && inputRight) || jumpnew ) ) {
+		//if ( onGround && jumpnew ) {
+			onGround = false;
+			jump();
+		}*/
+		Debug.Log("LEFTJUMP:"+leftJump+" RIGHTJUMP:"+rightJump);
 		if ( onGround && ( (inputLeft && inputRight) || jumpnew ) ) {
+			//if ( onGround && jumpnew ) {
+			if ( leftTime > rightTime ) {
+				leftJump = true;
+				inputLeft = false;
+			}
+			if ( leftTime < rightTime ) {
+				rightJump = true;
+				inputRight = false;
+			}
 			onGround = false;
 			jump();
 		}
+		if ( controllableHeightJumps ) {
+			//Ground Jump Height Control:
+			if ( !onGround && !leftJump && leftJumpLastFrame && spritePhysics.velocity.y > 0 ) {
+				spritePhysics.velocity.y = -spritePhysics.gravity.y;
+			}
+			if ( !onGround && !rightJump && rightJumpLastFrame && spritePhysics.velocity.y > 0 ) {
+				spritePhysics.velocity.y = -spritePhysics.gravity.y;
+			}
+		}
+		leftJumpLastFrame = leftJump;
+		rightJumpLastFrame = rightJump;
 
 
+
+
+		//Wall slide:
+		bool wallSlide_right = false;
+		bool wallSlide_left = false;
+		if ( !onGround && spritePhysics.hitLeft ) { //inputLeft && 
+			wallSlide_left = true;
+			sprite.scale = new Vector3( 1, sprite.scale.y, sprite.scale.z ); //Face away from wall
+			//Slide up/down:
+			if ( inputLeft && spritePhysics.hitLeftLayer != LayerMask.NameToLayer("Ice") ) {
+				spritePhysics.velocity.y = Mathf.Max(spritePhysics.velocity.y, -WALL_SLIDE_SPEED);
+			}
+		} else {
+			timeHeldRightAwayFromWall = 0f;
+		}
+		if ( !onGround && spritePhysics.hitRight ) { //inputRight && 
+			wallSlide_right = true;
+			sprite.scale = new Vector3( -1, sprite.scale.y, sprite.scale.z ); //Face away from wall
+			//Slide up/down:
+			if ( inputRight && spritePhysics.hitLeftLayer != LayerMask.NameToLayer("Ice") ) {
+				spritePhysics.velocity.y = Mathf.Max(spritePhysics.velocity.y, -WALL_SLIDE_SPEED);
+			}
+		} else {
+			timeHeldLeftAwayFromWall = 0f;
+		}
+		//Wall slide stickyness:
+		stickingToLeftWall = true;
+		stickingToRightWall = true;
+		if ( inputRight && wallSlide_left && !inputLeft ) {
+			timeHeldRightAwayFromWall += Time.deltaTime;
+			if ( timeHeldRightAwayFromWall > totalStickToWallTime ) {
+				stickingToLeftWall = false;
+			}
+			if ( Time.time - leftTimeUp <= max_walljump_betweenbutton_time ) {//Time-delayed walljump here:
+				//doLeftWalljump();
+			}
+		}
+		if ( inputLeft && wallSlide_right && !inputRight ) {
+			timeHeldLeftAwayFromWall += Time.deltaTime;
+			if ( timeHeldLeftAwayFromWall > totalStickToWallTime ) { //Slow descent
+				stickingToRightWall = false;
+			}
+			if ( Time.time - rightTimeUp <= max_walljump_betweenbutton_time ) { //Time-delayed walljump here:
+				//doRightWalljump();
+			}
+		}
 		//Ground / Air Horizontal Movement:
 		if ( inputLeft ) {
 //			Debug.Log("Move left");
-			moveLeft();
+			if ( wallSlide_right ) {
+				if ( !stickingToRightWall ) {
+					moveLeft();
+				}
+			} else {
+				moveLeft();
+			}
 		}
 		if ( inputRight ) {
 //			Debug.Log("Move right");
-			moveRight();
+			if ( wallSlide_left ) {
+				if ( !stickingToLeftWall ) {
+					moveRight();
+					wallSlide_right = false; //
+				}
+			} else {
+				moveRight();
+				wallSlide_left = false; //
+			}
 		}
 
 
-		//Halt movement if on ground and not moving either way:
+		//Halt horizontal movement if on ground and not moving either way:
 		if ( onGround && !inputLeft && !inputRight ) {
 			if ( spritePhysics.hitBottomLayer == LayerMask.NameToLayer("Ice") ) { //ICE
 				//No slowdown!
@@ -127,11 +258,31 @@ public class JumperExp : Jumper2 {
 
 
 
+
+
+		/*
 		//Wall Jump:
+		if ( wallSlide_right ) {
+			if ( inputLeft && leftTime > rightTime && last_jump_time < leftTime ) {
+				jumpDirection(Vector2.up - Vector2.right);
+			}
+		}
+		if ( wallSlide_left ) {
+			if ( inputRight && rightTime > leftTime && last_jump_time < rightTime ) {
+				jumpDirection(Vector2.up + Vector2.right);
+			}
+		}
+
+		if ( controllableHeightJumps ) {
+			//Not implemented for wallslide yet
+		}
+
+
+		/*
 		if ( wallSlide_right ) {
 			if ( inputLeft && last_jump_time < leftTime ) {
 				if ( inputRight ) {
-					jumpDirection(new Vector2( -wall_pushoff_percent, 1f ), JUMP_SPEED * 0.7f);
+					jumpDirection(new Vector2( -1f, 1f ), JUMP_SPEED * 0.7f);
 				} else {
 					jumpDirection(new Vector2( 0f, 1f ), JUMP_SPEED * 0.7f);
 				}
@@ -142,7 +293,7 @@ public class JumperExp : Jumper2 {
 		if ( wallSlide_left ) {
 			if ( inputRight && last_jump_time < rightTime ) {
 				if ( inputLeft ) {
-					jumpDirection(new Vector2( wall_pushoff_percent, 1f ), JUMP_SPEED * 0.7f);
+					jumpDirection(new Vector2( 1f, 1f ), JUMP_SPEED * 0.7f);
 				} else {
 					jumpDirection(new Vector2( 0f, 1f ), JUMP_SPEED * 0.7f);
 				}
@@ -150,6 +301,7 @@ public class JumperExp : Jumper2 {
 				//jump2(JUMP_SPEED * 0.7f);
 			}
 		}
+		*/
 
 
 
@@ -175,6 +327,21 @@ public class JumperExp : Jumper2 {
 		GetComponent<CharacterAnimator>().DoFixedUpdate();
 	}
 
+
+	//WALL JUMPING:
+	public void doRightWalljump () {
+		spritePhysics.velocity.y = 0f;
+		jumpDirection(new Vector2( -1f, 1f ), JUMP_SPEED);
+	}
+	public void doLeftWalljump () {
+		spritePhysics.velocity.y = 0f;
+		jumpDirection(new Vector2( 1f, 1f ), JUMP_SPEED);
+	}
+
+
+
+
+
 	public void jump2( float speed ) {
 		jumpCount++;
 		spritePhysics.velocity = new Vector2(spritePhysics.velocity.x, speed );
@@ -182,10 +349,11 @@ public class JumperExp : Jumper2 {
 	}
 	public void jumpDirection( Vector2 direction, float speed ) {
 //		jumpCount = 1; //Uncomment to make walljumps reset double jump
-		//direction.Normalize();
+		direction.Normalize();
 		spritePhysics.velocity = new Vector2(spritePhysics.velocity.x + speed*direction.x, speed*direction.y );
 		last_jump_time = Time.time;
 	}
+
 
 	//Wall slide:
 	override public void doWallSlide() {
