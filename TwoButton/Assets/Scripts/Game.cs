@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using MadLevelManager;
+using UnityEngine;
 using System.Collections;
 
 public class Game : MonoBehaviour {
@@ -15,9 +16,10 @@ public class Game : MonoBehaviour {
 
 	public bool jump = false;
 
-
 	public GUIMenu guiMenu;
 	
+	public float spawnTime = 0f;
+
 	private InteractiveTile [] tiles;
 	// Use this for initialization
 	void Start () {
@@ -27,25 +29,25 @@ public class Game : MonoBehaviour {
 	}
 
 	void OnLevelWasLoaded () {
+		//Debug.Log("Level loaded!");
 		if ( GameObject.FindObjectOfType<SpawnPoint>() == null ) {
-			Debug.LogError("Error: Could not find spawn point!");
+			Debug.LogWarning("Warning - Game could not find spawn point");
 			return;
 		}
-		//Debug.Log("Level loaded!");
 		SpawnPoint = GameObject.FindObjectOfType<SpawnPoint>().transform;
 		//Caching things:
 		tiles = GameObject.FindObjectsOfType<InteractiveTile>();
+
 		//Spawn player:
-		spawnPlayer();
+		if ( SpawnPoint != null ) {
+			spawnPlayer();	
+		} else {
+			Debug.LogWarning("Warning - Game could not find spawn point");
+		}
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if ( Input.GetKeyDown(KeyCode.Escape) ) {
-			//guiMenu.showGUI();
-			showCharacterSelectScreen();
-		}
-
 		if ( Input.GetKey(KeyCode.W) ) {
 			jump = true;
 		} else {
@@ -99,11 +101,6 @@ public class Game : MonoBehaviour {
 
 	}
 
-
-	public void showCharacterSelectScreen() {
-		CharacterSelectScreen.instance.ToggleCharacterSelectScreen();
-	}
-
 	
 	public void LeftUp () {
 		left = false;
@@ -131,10 +128,19 @@ public class Game : MonoBehaviour {
 		ResetLevel();
 		spawnPlayer();
 	}
+	//Reset level:
+	public void RestartLevel() {
+		GameObject currentPlayer = GameObject.FindWithTag("Player");
+		if ( currentPlayer != null ) {
+			currentPlayer.SendMessage("Kill");
+		}
+	}
+
 	//Spawn player:
 	public void spawnPlayer (){
 		GameObject jumper = Instantiate(JumperPrefab, SpawnPoint.position, Quaternion.identity) as GameObject;
 		Camera.main.GetComponent<CameraFollow>().target = jumper.transform;
+		spawnTime = Time.time;
 	}
 
 	//Reset the level by resetting all objects inside it
@@ -147,10 +153,21 @@ public class Game : MonoBehaviour {
 	public void EndLevel () {
 		pause();
 		Debug.Log("Level Complete!");
+		float timeElapsed = Time.time - spawnTime;
+		string formattedTime = string.Empty+Mathf.Ceil(timeElapsed % 60);
+		MadLevelProfile.SetLevelString(MadLevel.currentLevelName, "ElapsedTime", formattedTime);
+		MadLevelProfile.SetCompleted(MadLevel.currentLevelName, true);
 		NextLevel();
 	}
 	public void NextLevel () {
 		Debug.Log("Next Level!");
+		unpause();
+		if ( MadLevel.HasNext(MadLevel.Type.Level) ) {
+			MadLevel.LoadNext(MadLevel.Type.Level);
+		} else {
+			MadLevel.LoadFirst();
+		}
+		/*
 		int level = Application.loadedLevel + 1;
 		if ( level >= Application.levelCount ) {
 			level = 0;
@@ -158,6 +175,7 @@ public class Game : MonoBehaviour {
 		Debug.Log("Do Level! "+level);
 		unpause();
 		Application.LoadLevel(level);
+		*/
 	}
 
 	private float timeScale = 1;

@@ -7,6 +7,7 @@ using System.Collections;
 public class CharacterSelectScreen : MonoBehaviour {
 
 	public static CharacterSelectScreen instance;
+	public InLevelMenu inLevelMenu;
 
 	//Initialization
 	void Awake () {
@@ -18,9 +19,7 @@ public class CharacterSelectScreen : MonoBehaviour {
 	}
 
 	void Update () {
-		if ( Input.GetKeyDown(KeyCode.Escape) ) {
-			Application.Quit();
-		}
+
 	}
 	
 	public void ToggleCharacterSelectScreen () {
@@ -33,13 +32,9 @@ public class CharacterSelectScreen : MonoBehaviour {
 
 	public void ShowCharacterSelectScreen () {
 		gameObject.SetActive(true);
-		Game.instance.pause();
 	}
 	public void HideCharacterSelectScreen () {
 		gameObject.SetActive(false);
-		if ( Game.instance != null ) {
-			Game.instance.unpause();
-		}
 	}
 
 	public void SelectNewCharacter( GameObject newJumperPrefab ) {
@@ -55,7 +50,7 @@ public class CharacterSelectScreen : MonoBehaviour {
 			currentPlayer.SendMessage("Kill");
 		}
 
-		HideCharacterSelectScreen();
+		inLevelMenu.Hide();
 	}
 
 
