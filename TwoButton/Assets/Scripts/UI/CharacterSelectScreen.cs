@@ -15,7 +15,7 @@ public class CharacterSelectScreen : MonoBehaviour {
 	}
 
 	void Start() {
-		HideCharacterSelectScreen();
+		//HideCharacterSelectScreen();
 	}
 
 	void Update () {

@@ -266,14 +266,26 @@ public class JumperSMB : Jumper2 {
 
 		//Wall Jump:
 		if ( wallSlide_right ) {
-			if ( inputLeft && leftTime > rightTime && last_jump_time < leftTime && leftTime >= lastWallSlideTime ) {
-				leftJump = true;
+			if ( inputRight && rightTime >= lastWallSlideTime ) {
+				jumpDirection(Vector2.up - Vector2.right);
+			}
+			if ( inputLeft && leftTime >= lastWallSlideTime ) {
+				if ( inputRight ) {
+					leftJump = true;
+				}
 				jumpDirection(Vector2.up - Vector2.right);
 			}
 		}
 		if ( wallSlide_left ) {
-			if ( inputRight && rightTime > leftTime && last_jump_time < rightTime && rightTime >= lastWallSlideTime ) {
-				rightJump = true;
+			if ( inputLeft && leftTime >= lastWallSlideTime ) {
+				jumpDirection(Vector2.up + Vector2.right);
+			}
+			//if ( false && inputRight && rightTime > leftTime && last_jump_time < rightTime && rightTime >= lastWallSlideTime ) {
+				//rightJump = true;
+			if ( inputRight && rightTime >= lastWallSlideTime ) {
+				if ( inputLeft ) {
+					rightJump = true;
+				}
 				jumpDirection(Vector2.up + Vector2.right);
 			}
 		}
