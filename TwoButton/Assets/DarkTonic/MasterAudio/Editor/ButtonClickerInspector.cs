@@ -17,7 +17,7 @@ public class ButtonClickerInspector : Editor
 		
 		var ma = MasterAudio.Instance;
 		if (ma != null) {
-			GUIHelper.ShowHeaderTexture(ma.logoTexture);
+			DTGUIHelper.ShowHeaderTexture(MasterAudioInspectorResources.logoTexture);
 		}
 		
 		ButtonClicker sounds = (ButtonClicker)target;
@@ -84,7 +84,7 @@ public class ButtonClickerInspector : Editor
 			}
 
 			if (noMatch) {
-				GUIHelper.ShowRedError("Sound Type found no match. Choose one from 'All Sound Types'.");
+				DTGUIHelper.ShowRedError("Sound Type found no match. Choose one from 'All Sound Types'.");
 			}
 
 			if (groupIndex.HasValue) {

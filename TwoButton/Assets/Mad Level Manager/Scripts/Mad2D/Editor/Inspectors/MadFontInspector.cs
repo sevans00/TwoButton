@@ -41,6 +41,9 @@ public class MadFontInspector : Editor {
     
     
     MadFont script;
+
+    private Color primaryColor = Color.white;
+    private Color secondaryColor = Color.black;
     
     // ===========================================================
     // Methods for/from SuperClass/Interfaces
@@ -52,6 +55,10 @@ public class MadFontInspector : Editor {
     
     void OnEnable() {
         script = target as MadFont;
+        if (script.created) {
+            primaryColor = script.material.GetColor("_PrimaryColor");
+            secondaryColor = script.material.GetColor("_SecondaryColor");
+        }
     
         inputType = serializedObject.FindProperty("inputType");
         
@@ -90,7 +97,7 @@ public class MadFontInspector : Editor {
 //        EditorGUILayout.TextArea(font.dimensions);
     }
     
-    void GUICreator(bool recreate) {
+    void GUICreator(bool created) {
         serializedObject.Update();
         MadGUI.PropertyField(inputType, "Input Type");
         
@@ -106,16 +113,35 @@ public class MadFontInspector : Editor {
         }
         
         MadGUI.PropertyField(forceWhite, "Force White Color", "Forces this font to be rendered with white color only.");
+        MadGUI.ConditionallyEnabled(!forceWhite.boolValue, () => {
+            EditorGUI.BeginChangeCheck();
+            primaryColor = EditorGUILayout.ColorField("Primary Color", primaryColor);
+            secondaryColor = EditorGUILayout.ColorField("Primary Color", secondaryColor);
+            if (EditorGUI.EndChangeCheck()) {
+                if (created) {
+                    SetColors();
+                }
+            }
+        });
         
         serializedObject.ApplyModifiedProperties();
         
         GUI.enabled = canCreate;
-        if (GUILayout.Button(recreate ? "Recreate" : "Create")) {
-            var builder = new MadFontBuilder(target as MadFont);
+        if (GUILayout.Button(created ? "Recreate" : "Create")) {
+            var builder = new MadFontBuilder(script);
             builder.white = forceWhite.boolValue;
             builder.Build();
+
+            if (!forceWhite.boolValue && script.created) {
+                SetColors();
+            }
         }
         GUI.enabled = true;
+    }
+
+    private void SetColors() {
+        script.material.SetColor("_PrimaryColor", primaryColor);
+        script.material.SetColor("_SecondaryColor", secondaryColor);
     }
     
     bool GUIBitmapFontCreator() {

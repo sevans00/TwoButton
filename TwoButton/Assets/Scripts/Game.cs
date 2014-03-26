@@ -38,6 +38,7 @@ public class Game : MonoBehaviour {
 		//Caching things:
 		tiles = GameObject.FindObjectsOfType<InteractiveTile>();
 
+
 		//Spawn player:
 		if ( SpawnPoint != null ) {
 			spawnPlayer();	
@@ -155,6 +156,7 @@ public class Game : MonoBehaviour {
 		Debug.Log("Level Complete!");
 		float timeElapsed = Time.time - spawnTime;
 		string formattedTime = string.Empty+Mathf.Ceil(timeElapsed % 60);
+		
 		MadLevelProfile.SetLevelString(MadLevel.currentLevelName, "ElapsedTime", formattedTime);
 		MadLevelProfile.SetCompleted(MadLevel.currentLevelName, true);
 		NextLevel();

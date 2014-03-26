@@ -24,10 +24,9 @@ public class MadFreeDraggableInspector : Editor {
     // Fields
     // ===========================================================
     
-    SerializedProperty dragArea;
-    SerializedProperty dragStartPosition;
+    SerializedProperty dragBounds;
     
-    SerializedProperty scaling;
+    SerializedProperty scaleMode;
     SerializedProperty scalingMin;
     SerializedProperty scalingMax;
     
@@ -39,6 +38,8 @@ public class MadFreeDraggableInspector : Editor {
     SerializedProperty scaleEasingType;
     SerializedProperty scaleEasingDuration;
 
+    MadFreeDraggable script;
+
     // ===========================================================
     // Methods for/from SuperClass/Interfaces
     // ===========================================================
@@ -48,10 +49,11 @@ public class MadFreeDraggableInspector : Editor {
     // ===========================================================
 
     void OnEnable() {
-        dragArea = serializedObject.FindProperty("dragArea");
-        dragStartPosition = serializedObject.FindProperty("dragStartPosition");
+        script = target as MadFreeDraggable;
+
+        dragBounds = serializedObject.FindProperty("dragBounds");
         
-        scaling = serializedObject.FindProperty("scaling");
+        scaleMode = serializedObject.FindProperty("scaleMode");
         scalingMin = serializedObject.FindProperty("scalingMin");
         scalingMax = serializedObject.FindProperty("scalingMax");
         
@@ -67,16 +69,27 @@ public class MadFreeDraggableInspector : Editor {
     public override void OnInspectorGUI() {
         serializedObject.UpdateIfDirtyOrScript();
     
-        MadGUI.PropertyField(dragArea, "Drag Area");
-        MadGUI.PropertyFieldVector2(dragStartPosition, "Drag Start Position");
+        MadGUI.PropertyField(dragBounds, "Drag Area");
+
+        EditorGUILayout.Space();
+
+        MadGUI.ConditionallyEnabled(HasBackground(), () => {
+            if (MadGUI.Button("Resize Drag Area To Background", Color.yellow)) {
+                ResizeDragAreaToBackground();
+            }
+        });
+
+        EditorGUILayout.Space();
         
-        MadGUI.PropertyField(scaling, "Allow Scaling");
-        MadGUI.ConditionallyEnabled(scaling.boolValue, () => {
+        MadGUI.PropertyFieldEnumPopup(scaleMode, "Allow Scaling");
+        MadGUI.ConditionallyEnabled(script.scaleMode == MadFreeDraggable.ScaleMode.Free, () => {
             MadGUI.Indent(() => {
                 MadGUI.PropertyField(scalingMin, "Scaling Min");
                 MadGUI.PropertyField(scalingMax, "Scaling Max");
             });
         });
+
+        EditorGUILayout.Space();
         
         MadGUI.PropertyField(moveEasing, "Move Easing");
         MadGUI.ConditionallyEnabled(moveEasing.boolValue, () => {
@@ -85,6 +98,8 @@ public class MadFreeDraggableInspector : Editor {
                 MadGUI.PropertyField(moveEasingDuration, "Duration");
             });
         });
+
+        EditorGUILayout.Space();
         
         MadGUI.PropertyField(scaleEasing, "Scale Easing");
         MadGUI.ConditionallyEnabled(scaleEasing.boolValue, () => {
@@ -95,6 +110,22 @@ public class MadFreeDraggableInspector : Editor {
         });
         
         serializedObject.ApplyModifiedProperties();
+    }
+
+    private void ResizeDragAreaToBackground() {
+        var background = MadTransform.FindChildWithName<MadSprite>(script.transform, "background");
+
+        MadUndo.RecordObject2(script, "Resize Drag Area");
+
+        Rect spriteBounds = background.GetTransformedBounds();
+        script.dragBounds = new Bounds(spriteBounds.center, new Vector2(spriteBounds.xMax - spriteBounds.xMin, spriteBounds.yMax - spriteBounds.yMin));
+
+        EditorUtility.SetDirty(script);
+    }
+
+    private bool HasBackground() {
+        var background = MadTransform.FindChildWithName<MadSprite>(script.transform, "background");
+        return background != null;
     }
 
     // ===========================================================

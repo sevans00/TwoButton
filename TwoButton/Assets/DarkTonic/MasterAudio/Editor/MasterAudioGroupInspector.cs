@@ -25,22 +25,16 @@ public class MasterAudioGroupInspector : Editor {
 			return;
 		}
 		
-		var isInProjectView = GUIHelper.IsPrefabInProjectView(_group);
+		var isInProjectView = DTGUIHelper.IsPrefabInProjectView(_group);
 		
-		if (_group.logoTexture != null) {
-			GUIHelper.ShowHeaderTexture(_group.logoTexture);
+		if (MasterAudioInspectorResources.logoTexture != null) {
+			DTGUIHelper.ShowHeaderTexture(MasterAudioInspectorResources.logoTexture);
 		}
 		
 		var newVol = EditorGUILayout.Slider("Group Master Volume", _group.groupMasterVolume, 0f, 1f);
 		if (newVol != _group.groupMasterVolume) {
 			UndoHelper.RecordObjectPropertyForUndo(_group, "change Group Master Volume");
 			_group.groupMasterVolume = newVol;
-		}
-		
-		var newRetrigger = EditorGUILayout.IntSlider("Retrigger Percentage", _group.retriggerPercentage, 0, 100);
-		if (newRetrigger != _group.retriggerPercentage) {
-			UndoHelper.RecordObjectPropertyForUndo(_group, "change Retrigger Percentage");
-			_group.retriggerPercentage = newRetrigger;
 		}
 		
 		var newVarSequence = (MasterAudioGroup.VariationSequence) EditorGUILayout.EnumPopup("Variation Sequence", _group.curVariationSequence);
@@ -73,41 +67,110 @@ public class MasterAudioGroupInspector : Editor {
 			_group.curVariationMode = newVarMode;
 		}
 		
-		if (_group.curVariationMode == MasterAudioGroup.VariationMode.LoopedChain) {
-			GUIHelper.ShowColorWarning("*In this mode, only one Variation can be played at a time.");
-			EditorGUI.indentLevel = 1;
-			
-			var newLoopMode = (MasterAudioGroup.ChainedLoopLoopMode) EditorGUILayout.EnumPopup("Loop Mode", _group.chainLoopMode);
-			if (newLoopMode != _group.chainLoopMode) {
-				UndoHelper.RecordObjectPropertyForUndo(_group, "change Loop Mode");
-				_group.chainLoopMode = newLoopMode;
-			}
-			
-			if (_group.chainLoopMode == MasterAudioGroup.ChainedLoopLoopMode.NumberOfLoops) {
-				var newLoopCount = EditorGUILayout.IntSlider("Number of Loops", _group.chainLoopNumLoops, 1, 500);
-				if (newLoopCount != _group.chainLoopNumLoops) {
-					UndoHelper.RecordObjectPropertyForUndo(_group, "change Number of Loops");
-					_group.chainLoopNumLoops = newLoopCount;
+		EditorGUI.indentLevel = 1;
+		
+		switch (_group.curVariationMode) {
+			case MasterAudioGroup.VariationMode.Normal:
+				var newRetrigger = EditorGUILayout.IntSlider("Retrigger Percentage", _group.retriggerPercentage, 0, 100);
+				if (newRetrigger != _group.retriggerPercentage) {
+					UndoHelper.RecordObjectPropertyForUndo(_group, "change Retrigger Percentage");
+					_group.retriggerPercentage = newRetrigger;
 				}
-			}
-			
-			var newDelayMin = EditorGUILayout.Slider("Clip Change Delay Min", _group.chainLoopDelayMin, 0f, 20f);
-			if (newDelayMin != _group.chainLoopDelayMin) {
-				if (_group.chainLoopDelayMax < newDelayMin) {
-					_group.chainLoopDelayMax = newDelayMin;
+	
+				var newLimitPoly = EditorGUILayout.Toggle("Limit Polyphony", _group.limitPolyphony);
+				if (newLimitPoly != _group.limitPolyphony) {
+					UndoHelper.RecordObjectPropertyForUndo(_group, "toggle Limit Polyphony");
+					_group.limitPolyphony = newLimitPoly;
 				}
-				UndoHelper.RecordObjectPropertyForUndo(_group, "change Chained Clip Delay Min");
-				_group.chainLoopDelayMin = newDelayMin;
-			}
-			
-			var newDelayMax = EditorGUILayout.Slider("Clip Change Delay Max", _group.chainLoopDelayMax, 0f, 20f);
-			if (newDelayMax != _group.chainLoopDelayMax) {
-				if (newDelayMax < _group.chainLoopDelayMin) {
-					newDelayMax = _group.chainLoopDelayMin;
+				if (_group.limitPolyphony) {
+					int maxVoices = 0;
+					for (var i = 0; i < _group.groupVariations.Count; i++) {
+						var variation = _group.groupVariations[i];
+						maxVoices += variation.weight;
+					}
+					
+					var newVoiceLimit = EditorGUILayout.IntSlider("Polyphony Voice Limit", _group.voiceLimitCount, 1, maxVoices);
+					if (newVoiceLimit != _group.voiceLimitCount) {
+						UndoHelper.RecordObjectPropertyForUndo(_group, "change Polyphony Voice Limit");
+						_group.voiceLimitCount = newVoiceLimit;
+					}
 				}
-				UndoHelper.RecordObjectPropertyForUndo(_group, "change Chained Clip Delay Max");
-				_group.chainLoopDelayMax = newDelayMax;
-			}
+				
+				var newLimitMode = (MasterAudioGroup.LimitMode) EditorGUILayout.EnumPopup("Replay Limit Mode", _group.limitMode);
+				if (newLimitMode != _group.limitMode) {
+					UndoHelper.RecordObjectPropertyForUndo(_group, "change Replay Limit Mode");
+					_group.limitMode = newLimitMode;
+				}
+				
+				switch (_group.limitMode) {
+					case MasterAudioGroup.LimitMode.FrameBased:
+						var newFrameLimit = EditorGUILayout.IntSlider("Min Frames Between", _group.limitPerXFrames, 1, 120);
+						if (newFrameLimit != _group.limitPerXFrames) {
+							UndoHelper.RecordObjectPropertyForUndo(_group, "change Min Frames Between");
+							_group.limitPerXFrames = newFrameLimit;
+						}
+						break;
+					case MasterAudioGroup.LimitMode.TimeBased:
+						var newMinTime = EditorGUILayout.Slider("Min Seconds Between", _group.minimumTimeBetween, 0.1f, 10f);
+						if (newMinTime != _group.minimumTimeBetween) {
+							UndoHelper.RecordObjectPropertyForUndo(_group, "change Min Seconds Between");
+							_group.minimumTimeBetween = newMinTime;
+						}
+						break;
+				}
+				break;
+			case MasterAudioGroup.VariationMode.LoopedChain:
+				DTGUIHelper.ShowColorWarning("*In this mode, only one Variation can be played at a time.");
+				
+				var newLoopMode = (MasterAudioGroup.ChainedLoopLoopMode) EditorGUILayout.EnumPopup("Loop Mode", _group.chainLoopMode);
+				if (newLoopMode != _group.chainLoopMode) {
+					UndoHelper.RecordObjectPropertyForUndo(_group, "change Loop Mode");
+					_group.chainLoopMode = newLoopMode;
+				}
+				
+				if (_group.chainLoopMode == MasterAudioGroup.ChainedLoopLoopMode.NumberOfLoops) {
+					var newLoopCount = EditorGUILayout.IntSlider("Number of Loops", _group.chainLoopNumLoops, 1, 500);
+					if (newLoopCount != _group.chainLoopNumLoops) {
+						UndoHelper.RecordObjectPropertyForUndo(_group, "change Number of Loops");
+						_group.chainLoopNumLoops = newLoopCount;
+					}
+				}
+				
+				var newDelayMin = EditorGUILayout.Slider("Clip Change Delay Min", _group.chainLoopDelayMin, 0f, 20f);
+				if (newDelayMin != _group.chainLoopDelayMin) {
+					if (_group.chainLoopDelayMax < newDelayMin) {
+						_group.chainLoopDelayMax = newDelayMin;
+					}
+					UndoHelper.RecordObjectPropertyForUndo(_group, "change Chained Clip Delay Min");
+					_group.chainLoopDelayMin = newDelayMin;
+				}
+				
+				var newDelayMax = EditorGUILayout.Slider("Clip Change Delay Max", _group.chainLoopDelayMax, 0f, 20f);
+				if (newDelayMax != _group.chainLoopDelayMax) {
+					if (newDelayMax < _group.chainLoopDelayMin) {
+						newDelayMax = _group.chainLoopDelayMin;
+					}
+					UndoHelper.RecordObjectPropertyForUndo(_group, "change Chained Clip Delay Max");
+					_group.chainLoopDelayMax = newDelayMax;
+				}
+				break;
+			case MasterAudioGroup.VariationMode.Dialog:
+				DTGUIHelper.ShowColorWarning("*In this mode, only one Variation can be played at a time.");
+
+				var newUseDialog = EditorGUILayout.Toggle("Dialog Custom Fade?", _group.useDialogFadeOut);
+				if (newUseDialog != _group.useDialogFadeOut) {
+					UndoHelper.RecordObjectPropertyForUndo(_group, "toggle Dialog Custom Fade?");
+					_group.useDialogFadeOut = newUseDialog;
+				}
+			
+				if (_group.useDialogFadeOut) {
+					var newFadeTime = EditorGUILayout.Slider("Custom Fade Out Time", _group.dialogFadeOutTime, 0.1f, 20f);
+					if (newFadeTime != _group.dialogFadeOutTime) {
+						UndoHelper.RecordObjectPropertyForUndo(_group, "change Custom Fade Out Time");
+						_group.dialogFadeOutTime = newFadeTime;
+					}
+				}
+				break;			
 		}
 		
 		EditorGUI.indentLevel = 0;
@@ -118,50 +181,6 @@ public class MasterAudioGroupInspector : Editor {
 				_group.useClipAgePriority = newContinual;
 			}
 		}
-
-		if (_group.curVariationMode == MasterAudioGroup.VariationMode.Normal) {
-			var newLimitPoly = EditorGUILayout.Toggle("Limit Polyphony", _group.limitPolyphony);
-			if (newLimitPoly != _group.limitPolyphony) {
-				UndoHelper.RecordObjectPropertyForUndo(_group, "toggle Limit Polyphony");
-				_group.limitPolyphony = newLimitPoly;
-			}
-			if (_group.limitPolyphony) {
-				int maxVoices = 0;
-				for (var i = 0; i < _group.groupVariations.Count; i++) {
-					var variation = _group.groupVariations[i];
-					maxVoices += variation.weight;
-				}
-				
-				var newVoiceLimit = EditorGUILayout.IntSlider("Polyphony Voice Limit", _group.voiceLimitCount, 1, maxVoices);
-				if (newVoiceLimit != _group.voiceLimitCount) {
-					UndoHelper.RecordObjectPropertyForUndo(_group, "change Polyphony Voice Limit");
-					_group.voiceLimitCount = newVoiceLimit;
-				}
-			}
-			
-			var newLimitMode = (MasterAudioGroup.LimitMode) EditorGUILayout.EnumPopup("Replay Limit Mode", _group.limitMode);
-			if (newLimitMode != _group.limitMode) {
-				UndoHelper.RecordObjectPropertyForUndo(_group, "change Replay Limit Mode");
-				_group.limitMode = newLimitMode;
-			}
-			
-			switch (_group.limitMode) {
-			case MasterAudioGroup.LimitMode.FrameBased:
-				var newFrameLimit = EditorGUILayout.IntSlider("Min Frames Between", _group.limitPerXFrames, 1, 120);
-				if (newFrameLimit != _group.limitPerXFrames) {
-					UndoHelper.RecordObjectPropertyForUndo(_group, "change Min Frames Between");
-					_group.limitPerXFrames = newFrameLimit;
-				}
-				break;
-			case MasterAudioGroup.LimitMode.TimeBased:
-				var newMinTime = EditorGUILayout.Slider("Min Seconds Between", _group.minimumTimeBetween, 0.1f, 10f);
-				if (newMinTime != _group.minimumTimeBetween) {
-					UndoHelper.RecordObjectPropertyForUndo(_group, "change Min Seconds Between");
-					_group.minimumTimeBetween = newMinTime;
-				}
-				break;
-			}
-		}
 		
 		var newBulkMode = (MasterAudio.AudioLocation) EditorGUILayout.EnumPopup("Variation Create Mode", _group.bulkVariationMode);
 		if (newBulkMode != _group.bulkVariationMode) {
@@ -169,7 +188,7 @@ public class MasterAudioGroupInspector : Editor {
 			_group.bulkVariationMode = newBulkMode;
 		}
 		if (_group.bulkVariationMode == MasterAudio.AudioLocation.ResourceFile) {
-			GUIHelper.ShowColorWarning("*Resource mode: make sure to drag from Resource folders only.");
+			DTGUIHelper.ShowColorWarning("*Resource mode: make sure to drag from Resource folders only.");
 		}
 		
 		var newLog = EditorGUILayout.Toggle("Log Sounds", _group.logSound);
@@ -209,8 +228,8 @@ public class MasterAudioGroupInspector : Editor {
 			GUI.color = Color.yellow;
 			
 			if (isInProjectView) {
-				GUIHelper.ShowLargeBarAlert("*You are in Project View and cannot create Variations.");
-				GUIHelper.ShowLargeBarAlert("*Pull this prefab into the Scene to create Variations.");
+				DTGUIHelper.ShowLargeBarAlert("*You are in Project View and cannot create Variations.");
+				DTGUIHelper.ShowLargeBarAlert("*Pull this prefab into the Scene to create Variations.");
 			} else {
 				var dragArea = GUILayoutUtility.GetRect(0f,35f,GUILayout.ExpandWidth(true));
 				GUI.Box (dragArea, "Drag Audio clips here to create Variations!");
@@ -247,7 +266,7 @@ public class MasterAudioGroupInspector : Editor {
 		}
 		
 		if (_group.groupVariations.Count == 0) {
-			GUIHelper.ShowRedError("You currently have no Variations.");
+			DTGUIHelper.ShowRedError("You currently have no Variations.");
 		} else {
 			_group.groupVariations.Sort(delegate(SoundGroupVariation x, SoundGroupVariation y) {
 				return x.name.CompareTo(y.name);	
@@ -260,20 +279,20 @@ public class MasterAudioGroupInspector : Editor {
 				
 				GUILayout.FlexibleSpace();
 
-				if (GUILayout.Button(new GUIContent(_group.settingsTexture, "Click to goto Variation"), EditorStyles.toolbarButton, GUILayout.Width(40))) {
+				if (GUILayout.Button(new GUIContent(MasterAudioInspectorResources.gearTexture, "Click to goto Variation"), EditorStyles.toolbarButton, GUILayout.Width(40))) {
 					Selection.activeObject = variation; 
 				}
 				
 				if (!Application.isPlaying) {
-					if (GUILayout.Button(new GUIContent(_group.deleteTexture, "Click to delete this Variation"), EditorStyles.toolbarButton, GUILayout.Width(40))) {
+					if (GUILayout.Button(new GUIContent(MasterAudioInspectorResources.deleteTexture, "Click to delete this Variation"), EditorStyles.toolbarButton, GUILayout.Width(40))) {
 						deadChildIndex = i;
 						isDirty = true;
 					}
 				}
 				
-				var buttonPressed = GUIHelper.AddVariationButtons(ma);
+				var buttonPressed = DTGUIHelper.AddVariationButtons();
 				switch (buttonPressed) {
-				case GUIHelper.DTFunctionButtons.Play:
+				case DTGUIHelper.DTFunctionButtons.Play:
 					if (Application.isPlaying) {
 						MasterAudio.PlaySound(_group.name, 1f, null, 0f, variation.name);
 					} else {
@@ -286,7 +305,7 @@ public class MasterAudioGroupInspector : Editor {
 						}
 					}
 					break;
-				case GUIHelper.DTFunctionButtons.Stop:
+				case DTGUIHelper.DTFunctionButtons.Stop:
 					if (Application.isPlaying) {
 						MasterAudio.StopAllOfSound(_group.name);
 					} else {
@@ -302,10 +321,10 @@ public class MasterAudioGroupInspector : Editor {
 				EditorGUILayout.EndHorizontal();
 				
 				if (!Application.isPlaying) {
-					GUIHelper.ShowColorWarning("*Fading & random settings are ignored by preview in edit mode.");
+					DTGUIHelper.ShowColorWarning("*Fading & random settings are ignored by preview in edit mode.");
 				}
 				if (variation.audio == null) {
-					GUIHelper.ShowRedError(string.Format("The Variation: '{0}' has no Audio Source.", variation.name));
+					DTGUIHelper.ShowRedError(string.Format("The Variation: '{0}' has no Audio Source.", variation.name));
 					break;
 				}
 				
@@ -359,7 +378,12 @@ public class MasterAudioGroupInspector : Editor {
 								}
 								
 								UndoHelper.RecordObjectPropertyForUndo(variation, "change Resource Filename");
-								variation.resourceFileName = aClip.name;
+								var resourceFileName = DTGUIHelper.GetResourcePath(aClip);
+								if (string.IsNullOrEmpty(resourceFileName)) {
+									resourceFileName = aClip.name;
+								}
+
+								variation.resourceFileName = resourceFileName;
 							}
 						}
 						Event.current.Use();
@@ -507,8 +531,8 @@ public class MasterAudioGroupInspector : Editor {
 			
 			if (!Application.isPlaying) {
 				if (childNames.Contains(child.name)) {
-					GUIHelper.ShowColorWarning("You have more than one Variation named: " + child.name + ".");
-					GUIHelper.ShowColorWarning("Please ensure each Variation of this Group has a unique name.");
+					DTGUIHelper.ShowColorWarning("You have more than one Variation named: " + child.name + ".");
+					DTGUIHelper.ShowColorWarning("Please ensure each Variation of this Group has a unique name.");
 					isValid = false;
 					return null;
 				}
@@ -544,7 +568,7 @@ public class MasterAudioGroupInspector : Editor {
 	public void CreateVariation(MasterAudioGroup group, MasterAudio ma, AudioClip clip) {
 		var resourceFileName = string.Empty;
 		if (group.bulkVariationMode == MasterAudio.AudioLocation.ResourceFile) {
-			resourceFileName = GUIHelper.GetResourcePath(clip);
+			resourceFileName = DTGUIHelper.GetResourcePath(clip);
 			if (string.IsNullOrEmpty(resourceFileName)) {
 				resourceFileName = clip.name;
 			}
@@ -553,7 +577,7 @@ public class MasterAudioGroupInspector : Editor {
 		var clipName = clip.name;
 		
 		if (group.transform.FindChild(clipName) != null) {
-			GUIHelper.ShowAlert("You already have a Variation for this Group named '" + clipName + "'. \n\nPlease rename these Variations when finished to be unique, or you may not be able to play them by name if you have a need to.");
+			DTGUIHelper.ShowAlert("You already have a Variation for this Group named '" + clipName + "'. \n\nPlease rename these Variations when finished to be unique, or you may not be able to play them by name if you have a need to.");
 		}
 		
 		var newVar = (GameObject) GameObject.Instantiate(ma.soundGroupVariationTemplate.gameObject, group.transform.position, Quaternion.identity);
@@ -575,7 +599,7 @@ public class MasterAudioGroupInspector : Editor {
 		var clips = new Dictionary<SoundGroupVariation, float>();
 		
 		if (variations.Count < 2) {
-			GUIHelper.ShowAlert("You must have at least 2 Variations to use this function.");
+			DTGUIHelper.ShowAlert("You must have at least 2 Variations to use this function.");
 			return;
 		}
 		
@@ -636,7 +660,7 @@ public class MasterAudioGroupInspector : Editor {
 		}
 		
 		if (clips.Count < 2) {
-			GUIHelper.ShowAlert("You must have at least 2 Variations with non-compressed, non-streaming clips to use this function.");
+			DTGUIHelper.ShowAlert("You must have at least 2 Variations with non-compressed, non-streaming clips to use this function.");
 			return;
 		}
 		

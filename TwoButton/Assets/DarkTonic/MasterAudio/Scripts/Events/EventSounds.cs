@@ -8,7 +8,7 @@ public class EventSounds : MonoBehaviour, ICustomEventReceiver {
 	public bool showGizmo = true;
 	public MasterAudio.SoundSpawnLocationMode soundSpawnMode = MasterAudio.SoundSpawnLocationMode.CallerLocation;
 	public bool disableSounds = false;
-	public bool hideUnused = false;
+	public bool hideUnused = true;
 	public bool showPoolManager = false;
 	public bool logMissingEvents = true;
 	
@@ -303,8 +303,10 @@ public class EventSounds : MonoBehaviour, ICustomEventReceiver {
 	}
 
 	private IEnumerator TryPlayStartSound(AudioEvent aEvent) {
-		for (var i = 0; i < 3; i++) {
-			yield return new WaitForSeconds(MasterAudio.INNER_LOOP_CHECK_INTERVAL);
+        YieldInstruction delay = new WaitForSeconds(MasterAudio.INNER_LOOP_CHECK_INTERVAL);
+
+        for (var i = 0; i < 3; i++) {
+			yield return delay;
 	
 			var result = PlaySound(aEvent, EventType.OnStart, false);
 			if (result != null && result.SoundPlayed) {
@@ -371,6 +373,10 @@ public class EventSounds : MonoBehaviour, ICustomEventReceiver {
 					SoundPlayed = true,
 					SoundScheduled = false
 				};
+		
+				if (string.IsNullOrEmpty(aEvent.playlistControllerName)) {
+					aEvent.playlistControllerName = MasterAudio.ONLY_PLAYLIST_CONTROLLER_NAME;
+				}
 			
 				switch (aEvent.currentPlaylistCommand) {
 					case MasterAudio.PlaylistCommand.None:

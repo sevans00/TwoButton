@@ -4,10 +4,7 @@ using System.Collections.Generic;
 
 public class MasterAudioGroup : MonoBehaviour {
 	public const string NO_BUS = "[NO BUS]";
-	
-	public Texture logoTexture;
-	public Texture settingsTexture;
-	public Texture deleteTexture;
+
 	public int busIndex = -1;
 	
 	public bool isExpanded = true;
@@ -19,6 +16,8 @@ public class MasterAudioGroup : MonoBehaviour {
 	public float chainLoopDelayMax;
 	public ChainedLoopLoopMode chainLoopMode = ChainedLoopLoopMode.Endless;
 	public int chainLoopNumLoops = 0;
+	public bool useDialogFadeOut = false;
+	public float dialogFadeOutTime = .5f;
 	
 	public VariationSequence curVariationSequence = VariationSequence.Randomized;
 	public bool useInactivePeriodPoolRefill = false;
@@ -48,7 +47,8 @@ public class MasterAudioGroup : MonoBehaviour {
 
 	public enum VariationMode {
 		Normal,
-		LoopedChain				
+		LoopedChain,
+		Dialog
 	}
 	
 	public enum ChainedLoopLoopMode {
@@ -95,7 +95,7 @@ public class MasterAudioGroup : MonoBehaviour {
 	
 	public GroupBus BusForGroup {
 		get {
-			if (busIndex < MasterAudio.HARD_CODED_BUS_OPTIONS || !Application.isPlaying) {
+			if (busIndex <= MasterAudio.HARD_CODED_BUS_OPTIONS || !Application.isPlaying) {
 				return null; // no bus, so no voice limit
 			}
 			

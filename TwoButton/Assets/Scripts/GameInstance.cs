@@ -7,5 +7,8 @@ public class GameInstance : MonoBehaviour {
 		if ( Game.instance == null && GameObject.FindObjectOfType<Game>() == null ) {
 			GameObject.Instantiate(GamePrefab, Vector3.zero, Quaternion.identity);
 		}
+		if ( GameObject.FindObjectsOfType<Game>().Length == 2 ) {
+			Destroy ( GameObject.FindObjectOfType<Game>().gameObject );
+		}
 	}
 }

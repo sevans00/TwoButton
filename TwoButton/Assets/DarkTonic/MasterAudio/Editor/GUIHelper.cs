@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEditor;
 using System.Collections;
 
-public static class GUIHelper {
+public static class DTGUIHelper {
 	private const string ALERT_TITLE = "Master Audio Alert";
 	private const string ALERT_OK_TEXT = "Ok";
 	private const string FOLD_OUT_TOOLTIP = "Click to expand or collapse";
@@ -70,41 +70,36 @@ public static class GUIHelper {
 		return DTFunctionButtons.None;
 	}
 	
-	public static bool AddDeleteIcon(MasterAudio sounds, string itemName) {
-		var deleteIcon = sounds.deleteTexture;
+	public static bool AddDeleteIcon(string itemName) {
+		var deleteIcon = MasterAudioInspectorResources.deleteTexture;
 		return GUILayout.Button(new GUIContent(deleteIcon, "Click to delete " + itemName), EditorStyles.toolbarButton, GUILayout.MaxWidth(30));
 	}
 
-	public static bool AddDynamicDeleteIcon(DynamicSoundGroupCreator creator, string itemName) {
-		var deleteIcon = creator.deleteTexture;
-		return GUILayout.Button(new GUIContent(deleteIcon, "Click to delete " + itemName), EditorStyles.toolbarButton, GUILayout.MaxWidth(30));
-	}
-	
-	public static JukeboxButtons AddJukeboxIcons(MasterAudio sounds) {
+	public static JukeboxButtons AddJukeboxIcons() {
 		JukeboxButtons buttonPressed = JukeboxButtons.None;
 		
-		var stopIcon = sounds.stopTrackTexture;
+		var stopIcon = MasterAudioInspectorResources.stopTexture;
 		var stopContent = stopIcon == null ? new GUIContent("Stop", "Stop Playlist") : new GUIContent(stopIcon, "Stop Playlist");
 		var buttonWidth = stopIcon == null ? 50 : 30;
 		if (GUILayout.Button(stopContent, EditorStyles.toolbarButton, GUILayout.MaxWidth(buttonWidth))) {
 			buttonPressed = JukeboxButtons.Stop;
 		}
 		
-		var pauseIcon = sounds.pauseTrackTexure;
+		var pauseIcon = MasterAudioInspectorResources.pauseTexture;
 		var pauseContent = pauseIcon == null ? new GUIContent("Pause", "Pause Playlist") : new GUIContent(pauseIcon, "Pause Playlist");
 		buttonWidth = pauseIcon == null ? 50 : 30;
 		if (GUILayout.Button(pauseContent, EditorStyles.toolbarButton, GUILayout.MaxWidth(buttonWidth))) {
 			buttonPressed = JukeboxButtons.Pause;
 		}
 
-		var playIcon = sounds.playTrackTexture;
+		var playIcon = MasterAudioInspectorResources.playSongTexture;
 		var playContent = playIcon == null ? new GUIContent("Play", "Play Playlist") : new GUIContent(playIcon, "Play Playlist");
 		buttonWidth = playIcon == null ? 50 : 30;
 		if (GUILayout.Button(playContent, EditorStyles.toolbarButton, GUILayout.MaxWidth(buttonWidth))) {
 			buttonPressed = JukeboxButtons.Play;
 		}
 		
-		var nextTrackIcon = sounds.nextTrackTexture;
+		var nextTrackIcon = MasterAudioInspectorResources.nextTrackTexture;
 		var nextContent = nextTrackIcon == null ? new GUIContent("Next", "Next Track in Playlist") : new GUIContent(nextTrackIcon, "Next Track in Playlist");
 		buttonWidth = nextTrackIcon == null ? 50 : 30;
 		if (GUILayout.Button(nextContent, EditorStyles.toolbarButton, GUILayout.MaxWidth(buttonWidth))) {
@@ -113,7 +108,7 @@ public static class GUIHelper {
 
 		GUILayout.Space(10);
 		
-		var randomIcon = sounds.randomTrackTexure;
+		var randomIcon = MasterAudioInspectorResources.randomTrackTexture;
 		var randomContent = randomIcon == null ? new GUIContent("Random", "Random Track in Playlist") : new GUIContent(randomIcon, "Random Track in Playlist");
 		buttonWidth = randomIcon == null ? 50 : 30;
 		if (GUILayout.Button(randomContent, EditorStyles.toolbarButton, GUILayout.MaxWidth(buttonWidth))) {
@@ -127,32 +122,32 @@ public static class GUIHelper {
 		return buttonPressed;
 	}
 	
-	public static DTFunctionButtons AddDynamicGroupButtons(DynamicSoundGroupCreator creator) {
+	public static DTFunctionButtons AddDynamicGroupButtons() {
 		GUIContent deleteIcon;
 		GUIContent settingsIcon;
 		GUIContent previewIcon;
 		GUIContent stopPreviewIcon;
 		
-		if (creator.deleteTexture != null) {
-			deleteIcon = new GUIContent(creator.deleteTexture, "Click to delete Group");
+		if (MasterAudioInspectorResources.deleteTexture != null) {
+			deleteIcon = new GUIContent(MasterAudioInspectorResources.deleteTexture, "Click to delete Group");
 		} else {
 			deleteIcon = new GUIContent("Delete", "Click to delete Group");
 		}
 		
-		if (creator.settingsTexture != null) {
-			settingsIcon = new GUIContent(creator.settingsTexture, "Click to edit Group");
+		if (MasterAudioInspectorResources.gearTexture != null) {
+			settingsIcon = new GUIContent(MasterAudioInspectorResources.gearTexture, "Click to edit Group");
 		} else {
 			settingsIcon = new GUIContent("Edit", "Click to edit Group");
 		}
 		
-		if (creator.playTexture != null) {
-			previewIcon = new GUIContent(creator.playTexture, "Click to preview Group");
+		if (MasterAudioInspectorResources.previewTexture != null) {
+			previewIcon = new GUIContent(MasterAudioInspectorResources.previewTexture, "Click to preview Group");
 		} else {
 			previewIcon = new GUIContent("Preview", "Click to preview Group");
 		}
 
-		if (creator.stopTrackTexture != null) {
-			stopPreviewIcon = new GUIContent(creator.stopTrackTexture, "Click to stop previewing Group");
+		if (MasterAudioInspectorResources.stopTexture != null) {
+			stopPreviewIcon = new GUIContent(MasterAudioInspectorResources.stopTexture, "Click to stop previewing Group");
 		} else {
 			stopPreviewIcon = new GUIContent("End Preview", "Click to stop previewing Group");
 		}
@@ -178,19 +173,19 @@ public static class GUIHelper {
 		return DTFunctionButtons.None;
 	}
 	
-	public static DTFunctionButtons AddMixerBusButtons(GroupBus gb, MasterAudio sounds) {
-		var deleteIcon = sounds.deleteTexture;
+	public static DTFunctionButtons AddMixerBusButtons(GroupBus gb) {
+		var deleteIcon = MasterAudioInspectorResources.deleteTexture;
 		
-		var muteContent = new GUIContent(sounds.muteOffTexture, "Click to mute bus");
+		var muteContent = new GUIContent(MasterAudioInspectorResources.muteOffTexture, "Click to mute bus");
 		
 		if (gb.isMuted) {
-			muteContent.image = sounds.muteOnTexture;
+			muteContent.image = MasterAudioInspectorResources.muteOnTexture;
 		}
 		
-		var soloContent = new GUIContent(sounds.soloOffTexture, "Click to solo bus");
+		var soloContent = new GUIContent(MasterAudioInspectorResources.soloOffTexture, "Click to solo bus");
 
 		if (gb.isSoloed) {
-			soloContent.image = sounds.soloOnTexture;
+			soloContent.image = MasterAudioInspectorResources.soloOnTexture;
 		}
 		
 		bool soloPressed = GUILayout.Button(soloContent, EditorStyles.toolbarButton);
@@ -218,12 +213,12 @@ public static class GUIHelper {
 		return DTFunctionButtons.None;
 	}
 
-	public static DTFunctionButtons AddDynamicVariationButtons(DynamicGroupVariation _variation) {
-		if (GUILayout.Button(new GUIContent(_variation.playTexture, "Click to preview Variation"), EditorStyles.toolbarButton, GUILayout.Width(40))) {
+	public static DTFunctionButtons AddDynamicVariationButtons() {
+		if (GUILayout.Button(new GUIContent(MasterAudioInspectorResources.previewTexture, "Click to preview Variation"), EditorStyles.toolbarButton, GUILayout.Width(40))) {
 			return DTFunctionButtons.Play;
 		}
 
-		if (GUILayout.Button(new GUIContent(_variation.stopTrackTexture, "Click to stop audio preview"), EditorStyles.toolbarButton, GUILayout.Width(40))) {
+		if (GUILayout.Button(new GUIContent(MasterAudioInspectorResources.stopTexture, "Click to stop audio preview"), EditorStyles.toolbarButton, GUILayout.Width(40))) {
 			return DTFunctionButtons.Stop;
 		}
 		
@@ -231,23 +226,23 @@ public static class GUIHelper {
 	}
 	
 	public static DTFunctionButtons AddDynamicGroupButtons(DynamicSoundGroup _group) {
-		if (GUILayout.Button(new GUIContent(_group.playTexture, "Click to preview Variation"), EditorStyles.toolbarButton, GUILayout.Width(40))) {
+		if (GUILayout.Button(new GUIContent(MasterAudioInspectorResources.previewTexture, "Click to preview Variation"), EditorStyles.toolbarButton, GUILayout.Width(40))) {
 			return DTFunctionButtons.Play;
 		}
 
-		if (GUILayout.Button(new GUIContent(_group.stopTrackTexture, "Click to stop audio preview"), EditorStyles.toolbarButton, GUILayout.Width(40))) {
+		if (GUILayout.Button(new GUIContent(MasterAudioInspectorResources.stopTexture, "Click to stop audio preview"), EditorStyles.toolbarButton, GUILayout.Width(40))) {
 			return DTFunctionButtons.Stop;
 		}
 		
 		return DTFunctionButtons.None;
 	}
 	
-	public static DTFunctionButtons AddVariationButtons(MasterAudio sounds) {
-		if (GUILayout.Button(new GUIContent(sounds.playTexture, "Click to preview Variation"), EditorStyles.toolbarButton, GUILayout.Width(40))) {
+	public static DTFunctionButtons AddVariationButtons() {
+		if (GUILayout.Button(new GUIContent(MasterAudioInspectorResources.previewTexture, "Click to preview Variation"), EditorStyles.toolbarButton, GUILayout.Width(40))) {
 			return DTFunctionButtons.Play;
 		}
 
-		if (GUILayout.Button(new GUIContent(sounds.stopTrackTexture, "Click to stop audio preview"), EditorStyles.toolbarButton, GUILayout.Width(40))) {
+		if (GUILayout.Button(new GUIContent(MasterAudioInspectorResources.stopTexture, "Click to stop audio preview"), EditorStyles.toolbarButton, GUILayout.Width(40))) {
 			return DTFunctionButtons.Stop;
 		}
 		
@@ -255,10 +250,10 @@ public static class GUIHelper {
 	}
 
     public static DTFunctionButtons AddMixerMuteButton(string itemName, MasterAudio sounds) {
-		var muteContent = new GUIContent(sounds.muteOffTexture, "Click to mute " + itemName);
+		var muteContent = new GUIContent(MasterAudioInspectorResources.muteOffTexture, "Click to mute " + itemName);
 		
 		if (sounds.mixerMuted) {
-			muteContent.image = sounds.muteOnTexture;
+			muteContent.image = MasterAudioInspectorResources.muteOnTexture;
 		}
 		
 		bool mutePressed = GUILayout.Button(muteContent, EditorStyles.toolbarButton);
@@ -271,10 +266,10 @@ public static class GUIHelper {
 	}	
 
     public static DTFunctionButtons AddPlaylistMuteButton(string itemName, MasterAudio sounds) {
-		var muteContent = new GUIContent(sounds.muteOffTexture, "Click to mute " + itemName);
+		var muteContent = new GUIContent(MasterAudioInspectorResources.muteOffTexture, "Click to mute " + itemName);
 		
 		if (sounds.playlistsMuted) {
-			muteContent.image = sounds.muteOnTexture;
+			muteContent.image = MasterAudioInspectorResources.muteOnTexture;
 		}
 		
 		bool mutePressed = GUILayout.Button(muteContent, EditorStyles.toolbarButton);
@@ -287,11 +282,7 @@ public static class GUIHelper {
 	}	
 	
 	public static void AddLedSignalLight(MasterAudio sounds, string groupName) {
-		if (sounds.ledTextures.Length == 0) {
-			return;
-		}
-		
-		GUIContent content = new GUIContent(sounds.ledTextures[sounds.ledTextures.Length - 1]); 
+		GUIContent content = new GUIContent(MasterAudioInspectorResources.ledTextures[MasterAudioInspectorResources.ledTextures.Length - 1]); 
 		
 		if (Application.isPlaying) {
 			var groupInfo = MasterAudio.GetGroupInfo(groupName);
@@ -301,15 +292,15 @@ public static class GUIHelper {
 				var timeSlot = (int)(timeDiff / LED_FRAME_TIME);
 				
 				if (timeSlot >= 4 && timeSlot < 5) {
-					content = new GUIContent(sounds.ledTextures[4]); 
+					content = new GUIContent(MasterAudioInspectorResources.ledTextures[4]); 
 				} else if (timeSlot >= 3 && timeSlot < 4) {
-					content = new GUIContent(sounds.ledTextures[3]); 
+					content = new GUIContent(MasterAudioInspectorResources.ledTextures[3]); 
 				} else if (timeSlot >= 2 && timeSlot < 3) {
-					content = new GUIContent(sounds.ledTextures[2]); 
+					content = new GUIContent(MasterAudioInspectorResources.ledTextures[2]); 
 				} else if (timeSlot >= 1 && timeSlot < 2) {
-					content = new GUIContent(sounds.ledTextures[1]); 
+					content = new GUIContent(MasterAudioInspectorResources.ledTextures[1]); 
 				} else if (timeSlot >= 0 && timeSlot < 1f) {
-					content = new GUIContent(sounds.ledTextures[0]); 
+					content = new GUIContent(MasterAudioInspectorResources.ledTextures[0]); 
 				}
 			}
 		} 
@@ -317,21 +308,21 @@ public static class GUIHelper {
 		GUILayout.Label(content, EditorStyles.toolbarButton, GUILayout.Width(26));
 	}
 	
-    public static DTFunctionButtons AddMixerButtons(MasterAudioGroup aGroup, string itemName, MasterAudio sounds)
+    public static DTFunctionButtons AddMixerButtons(MasterAudioGroup aGroup, string itemName)
     {
-		var deleteIcon = sounds.deleteTexture;
-		var settingsIcon = sounds.settingsTexture;
+		var deleteIcon = MasterAudioInspectorResources.deleteTexture;
+		var settingsIcon = MasterAudioInspectorResources.gearTexture;
 		
-		var muteContent = new GUIContent(sounds.muteOffTexture, "Click to mute " + itemName);
+		var muteContent = new GUIContent(MasterAudioInspectorResources.muteOffTexture, "Click to mute " + itemName);
 		
 		if (aGroup.isMuted) {
-			muteContent.image = sounds.muteOnTexture;
+			muteContent.image = MasterAudioInspectorResources.muteOnTexture;
 		}
 		
-		var soloContent = new GUIContent(sounds.soloOffTexture, "Click to solo " + itemName);
+		var soloContent = new GUIContent(MasterAudioInspectorResources.soloOffTexture, "Click to solo " + itemName);
 
 		if (aGroup.isSoloed) {
-			soloContent.image = sounds.soloOnTexture;
+			soloContent.image = MasterAudioInspectorResources.soloOnTexture;
 		}
 		
 		if (GUILayout.Button(soloContent, EditorStyles.toolbarButton)) {
@@ -345,10 +336,10 @@ public static class GUIHelper {
 			return DTFunctionButtons.Go;
 		}
 		
-		if (GUILayout.Button(new GUIContent(sounds.playTexture, "Click to preview " + itemName), EditorStyles.toolbarButton)) {
+		if (GUILayout.Button(new GUIContent(MasterAudioInspectorResources.previewTexture, "Click to preview " + itemName), EditorStyles.toolbarButton)) {
 			return DTFunctionButtons.Play;
 		}
-		if (GUILayout.Button(new GUIContent(sounds.stopTrackTexture, "Click to stop all of Sound"), EditorStyles.toolbarButton)) {
+		if (GUILayout.Button(new GUIContent(MasterAudioInspectorResources.stopTexture, "Click to stop all of Sound"), EditorStyles.toolbarButton)) {
 			return DTFunctionButtons.Stop;			
 		}
 
@@ -361,14 +352,14 @@ public static class GUIHelper {
         return DTFunctionButtons.None;
     }
 
-    public static DTFunctionButtons AddPlaylistControllerSetupButtons(PlaylistController controller, string itemName, MasterAudio sounds, bool jukeboxMode)
+    public static DTFunctionButtons AddPlaylistControllerSetupButtons(PlaylistController controller, string itemName, bool jukeboxMode)
     {
-		var deleteIcon = sounds.deleteTexture;
-		var settingsIcon = sounds.settingsTexture;
+		var deleteIcon = MasterAudioInspectorResources.deleteTexture;
+		var settingsIcon = MasterAudioInspectorResources.gearTexture;
 		
-		var muteContent = new GUIContent(sounds.muteOffTexture, "Click to mute " + itemName);
+		var muteContent = new GUIContent(MasterAudioInspectorResources.muteOffTexture, "Click to mute " + itemName);
 		if (controller.isMuted) {
-			muteContent.image = sounds.muteOnTexture;
+			muteContent.image = MasterAudioInspectorResources.muteOnTexture;
 		}
 		
 		var mutePressed = GUILayout.Button(muteContent, EditorStyles.toolbarButton);
@@ -411,16 +402,13 @@ public static class GUIHelper {
 		bool downPressed = false;
 		
 		if (showAudioPreview) {
-	   		var ma = MasterAudio.Instance;
-			if (ma != null) {
-				if (GUILayout.Button(new GUIContent(ma.playTexture, "Click to preview clip"), 
-						EditorStyles.toolbarButton)) {
-					return DTFunctionButtons.Play;
-				}
-				if (GUILayout.Button(new GUIContent(ma.stopTrackTexture, "Click to stop previewing clip"), 
-						EditorStyles.toolbarButton)) {
-					return DTFunctionButtons.Stop;
-				}
+			if (GUILayout.Button(new GUIContent(MasterAudioInspectorResources.previewTexture, "Click to preview clip"), 
+					EditorStyles.toolbarButton)) {
+				return DTFunctionButtons.Play;
+			}
+			if (GUILayout.Button(new GUIContent(MasterAudioInspectorResources.stopTexture, "Click to stop previewing clip"), 
+					EditorStyles.toolbarButton)) {
+				return DTFunctionButtons.Stop;
 			}
 		}
 		
@@ -503,8 +491,8 @@ public static class GUIHelper {
 		if (Application.isPlaying) {
 			Debug.LogWarning(text);
 		} else {
-			EditorUtility.DisplayDialog(GUIHelper.ALERT_TITLE, text,
-					GUIHelper.ALERT_OK_TEXT);
+			EditorUtility.DisplayDialog(DTGUIHelper.ALERT_TITLE, text,
+					DTGUIHelper.ALERT_OK_TEXT);
 		}
 	}
 

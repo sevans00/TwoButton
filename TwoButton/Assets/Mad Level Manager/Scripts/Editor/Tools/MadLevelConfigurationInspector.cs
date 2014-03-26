@@ -53,6 +53,7 @@ public class MadLevelConfigurationInspector : Editor {
         items = new List<LevelItem>();
     
         list = new MadGUI.ScrollableList<LevelItem>(items);
+        list.height = 0; // expand
         list.label = "Level List";
         list.selectionEnabled = true;
         
@@ -86,7 +87,7 @@ public class MadLevelConfigurationInspector : Editor {
         CheckAssetLocation();
         ActiveInfo();
 
-        LoadItems();    
+        LoadItems();
         list.Draw();
         
         EditorGUILayout.BeginHorizontal();
@@ -132,10 +133,24 @@ public class MadLevelConfigurationInspector : Editor {
             MadUndo.RecordObject(configuration, "Edit '" + item.level.name + "'");
             EditorGUI.BeginChangeCheck();
             
+            EditorGUILayout.BeginHorizontal();
             MadGUI.Validate(() => item.level.sceneObject != null, () => {
                 item.level.sceneObject =
                     EditorGUILayout.ObjectField("Scene", item.level.sceneObject, typeof(UnityEngine.Object), false);
             });
+            GUI.backgroundColor = Color.yellow;
+            if (GUILayout.Button("Set Current", GUILayout.Width(85))) {
+                MadUndo.RecordObject2(target, "Change Scene");
+                var obj = AssetDatabase.LoadAssetAtPath(EditorApplication.currentScene, typeof(UnityEngine.Object));
+                if (obj != null) {
+                    item.level.sceneObject = obj;
+                } else {
+                    EditorUtility.DisplayDialog("Scene not saved", "Current scene is not saved. Please save it first (CTRL+S).", "OK");
+                }
+            }
+            GUI.backgroundColor = Color.white;
+            
+            EditorGUILayout.EndHorizontal();
             if (!CheckAssetIsScene(item.level.sceneObject)) {
                 item.level.sceneObject = null;
             }
@@ -178,6 +193,7 @@ public class MadLevelConfigurationInspector : Editor {
                 configuration.SynchronizeBuild();
             }
         }
+
     }
     
     bool CheckAssetIsScene(UnityEngine.Object obj) {
@@ -271,7 +287,7 @@ public class MadLevelConfigurationInspector : Editor {
             }
         
             int choice = MadGUI.MessageWithButtonMulti("This configuration is not active. "
-                                                  + "It's not currently used to manage your scenes." + additional, MessageType.Warning, "Select Active", "Activate This One");
+                                                  + "It's not currently used to manage your scenes." + additional, MessageType.Warning, "Where is active?", "Activate");
             
             if (choice == 0) {
                 var currentlyActive = MadLevelConfiguration.FindActive();
@@ -421,7 +437,6 @@ public class MadLevelConfigurationInspector : Editor {
     }
 
 }
-
 #if !UNITY_3_5
 } // namespace
 #endif

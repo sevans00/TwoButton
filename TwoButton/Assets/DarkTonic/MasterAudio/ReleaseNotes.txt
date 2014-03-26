@@ -2,6 +2,86 @@ MASTER AUDIO PLUGIN - By DarkTonic, Inc. (c) 2012-2013
 
 - Code by Brian Hunsaker
 
+-V 3.4.4 - Added RemoveItems method to Dynamic Sound Group Creator script. You can manually call this if you don't want to wait before the end of the Scene (or when the Dynamic SGC is disabled) to remove all the temporary items.
+	 - Fixed bug: Dragging songs into playlist clip section in Resource File mode didn't populate their folder name.
+	 - Fixed bug: Dragging clips into Variation Inspector in Resource File mode didn't populate their folder name.
+	 - Fixed bug: Dragging clips into Sound Group Inspector in Resource File mode didn't populate their folder name.
+	 - Fixed bug: An all resource file Playlist gives errors when playing tracks from it.
+	 - Fixed bug: Playlist fading had divide by zero error if already at zero volume.
+	 - Redid Hierarchy "M" renderer for much better performance. Thanks to user Bryan Wilkins for sending me the fix!
+	 - Updated 2D Toolkit integration package to work with latest 2DTK. It was broken.
+	 - Made resource file playlist clip "names" able to play them without specifying the resource folder name. Just the clip name. 
+	 
+-V 3.4.3 - Add optional fade out time for dialog variation mode. Now you can have the previous dialog clip fade out while the new one starts.
+	 - Fixed bug where a Variation's FadeOutNow command wouldn't work if it was already fading (called twice quickly).
+	 - Made a friendlier error when you have a custom property drawer with no MA in the scene. No Null Exception.
+	 - Added MasterAudio.CreateGroupVariationFromClip method to create additional variations at runtime.
+
+-V 3.4.2 - Changed Master Audio logging info to warnings instead of errors.
+		- Added MasterAudio.ChangeBusPitch method, which changes the pitch of all Variations in all Sound Groups in a bus.
+		- Added MasterAudio.ChangePlaylistPitch method, which changes the pitch of all songs in a Playlist. This does not affect any already playing clips however.
+		- Bug fix: Retrigger Percentage should be ignored for Chained Loop Sound Groups. Made this work properly and hid the Retrigger Percentage for Chained Loop types.
+		- Bug fix: made Replay Limit Mode ignored when not in normal Variation Mode, where it's not visible.
+		- Bug fix: made Limit Polyphony ignored when not in in normal Variation Mode, where it's not visible.
+		- Added 3rd Variation Mode to Sound Groups: "Dialog". This stops all other Variations in the Sound Group whenever you play one. This is very useful for a single character's dialog and makes sure they're only saying one thing at a time. Normal mode doesn't work properly for this without calling StopAllOfSound every time you play the Sound Group to be sure.
+
+-V 3.4.1.9 - Added option to Master Audio Inspector "fast GUI refresh" which defaults to on. You can uncheck it for less intensive CPU usage.
+		   - Fixed icons. Play icon was in place of speaker icon for previews.
+
+-V 3.4.1.8 - Attention: Please delete the following folder: MasterAudio/Sources/Textures. They have been moved to Editor Default Resources so they won't take up room in builds.
+		   - Added method: FadeOutSoundGroupOfTransform to MasterAudio. This operates on all sounds following or triggered at the location of a given Transform.
+		   - Revised WasTriggeredFromTransform method to include embedded Audio Listener objects as well for that scenario.
+		   - Fixed a bug to allow playing of samples backward, using negative pitch. Note that this only works when loop is turned on for the clip, otherwise nothing is heard. Unity only allows it when that's on. I have no idea why.
+		   - Fixed bug where dragging Resource files into a Playlist wouldn't use the folder name, so the song wouldn't load at runtime.
+
+-V 3.4.1.7 - Optimized CoRoutine speed by creating the yield instruction up front.
+		   - Fixed bug where ducking did not work when playing Resource file clips.
+		   - Added MasterAudio methods StopAllSoundsOfTransform and StopSoundGroupOfTransform. These stop all sounds following or triggered at the location of a given Transform.
+		   - Added MasterAudio methods PauseAllSoundsOfTransform and PauseSoundGroupOfTransform. These pause all sounds following or triggered at the location of a given Transform.
+
+-V 3.4.1.6 - Breaking Change: Make sure you delete your "MasterAudio Icon" in the top-level Gizmos folder before updating. It has been moved to an inner folder.
+		   - Breaking Change: Makre sure to delete GUIHelper.cs from the MasterAudio/Editor folder. It has been renamed to DTGUIHelper.cs for a naming conflict with another plugin.
+   		   - Fixed bug where AudioResourceOptimizer would lose track of where resource files were located when populating.
+		   - Added SongEnded event you can subscribe to in PlaylistController. 
+		   - Added a DelayBetweenSongs script you can use to have a random delay between songs in a PlaylistController. You must turn auto-advance off for the controller for this to work properly.
+		   - Changed MasterAudioManager window to use PrefabUtility.Instantiate so that prefabs created will be linked to the Master Audio source prefabs.
+		   - Performance increase for Resource files! Asyncronous loading of resource clip so it doesn't cause frame rate drop while loading (thread was blocked previously).
+
+-V 3.4.1.5 - Fixed bug where songs in a playlist not set to auto-advance would not fade out when "fade out last song" was checked.
+	   - Fixed bug where the pitch of already playing Variations was not affects by ChangeVariationPitch Playmaker Custom Action (or calling it from code).
+		   - Auto "Fade out last song" in Playlist Controller now puts the volume of the Controller back to pre-fade volume after the fade.
+		
+-V 3.4.1.4 - Fixed bug where a single bus on a Dynamic SGC sound would cause an error when the scene changed.
+		- Breaking Change (only if you're calling it from your code) 
+		- changed MasterAudio.CrossfadeTime property to MasterAudio.MasterCrossfadeTime
+		- Relabeled Crossfade time on Master Audio Inspector to Master Crossfade Time.
+		- Added "every frame" to all Playmaker custom actions where it makes sense (only about 5).
+		- Added controls to override the Master Crossfade Time on each playlist (or not).
+		- Added checkbox to each playlist for "fade in first song" and "fade out last song".
+		- Functionality change: you now must have the "fade out last song" checkbox checked for the last song to fade out. Before it always did.
+		
+-V 3.4.1.3 - Changed the default 3D settings of SoundGroupVariations to match the other Audio Sources used by Master Audio for consistency.
+	   - Fixed bug with CoRoutine never ending with custom fade times and FadeOutAllOfSoundGroup called.
+	   - Fixed C# comments and intellisense for deprecated PlaySound3D methods.
+	   - Fixed bug where Auto-advance with 1 clip in a playlist tries to crossfade same song.
+	   - Fixed bug where resource clips in a playlist were not released auto-advance is turned off.
+	   - Fixed caching problem with Playlist Controller Inspector. It wouldn't always show the latest Playlists in the dropdown.
+	   - Fixed bug where extra Audio Manager RAM was used when MasterAudio Inspector is selected in Hierarchy (jukebox section).
+	   - Fixed bug where deleting a Sound Group from the Master Audio Inspector wouldn't remove the duck group.
+	   - Major performance increase in the code that makes the AudioUpdater follow (embedded AudioListener on caller triggers this).
+       - Changed list of sound sources back to Dictionary (performance increase).
+	   - As a side effect of the item above, all PlaySoundByIndex methods are removed.
+	   - Made EventSounds playlist controller functions with no Playlist Controller name specified "just work" if there's only one Controller, in a Boostrapper Scene configuration.
+	   - For Unity 4 users, we have added a CustomPropertyDrawer attribute of "SoundGroupAttribute", so you can decorate public strings that are Sound Groups in your Inspectors like this: [SoundGroupAttribute] public string laserSound;
+	   - Added "Controller Sync Group" field to Playlist Controllers. It's optional and is a number 1-4. If you assign a number, then whenever a new song is played, it's time will be set to the first matching Playlist Controller's (with the same Sync Group and a clip playing) time marker. This will also help align layered Resource clips more precisely.
+
+-V 3.4.1.2 - Added a "loop playlists" checkbox to Playlist Controllers, defaults to on. If you turn it off, the Playlist will crossfade out the last song and stop.
+		   - Fixed bug: FadePlaylistToVolume doesn't use the right time when Master Playlist Volume is < 1.
+		   - Added new Playmaker Custom Action "MasterAudioPlaylistGetCurrentClipName", which stores the result in a string variable for your use.
+
+-V 3.4.1.1 - Added a method to get the length in seconds of a Variation, taking pitch into account. MasterAudio.GetVariationLength(string soundGroupName, string variationName);
+	   - Fixed compile error from missing AudioUpdate file.
+
 -V 3.4.1 - Added controls to specify number of loops for chained loop Groups instead of only endlessly looping.
 
 -V 3.4 - Added a random delay min and max fields to each Variation. If you use these, an additional random delay will be used before the sound is heard. I say additional becuase this is on top of any random chained loop delays or delay times you pass into PlaySound methods or specify with EventSounds.

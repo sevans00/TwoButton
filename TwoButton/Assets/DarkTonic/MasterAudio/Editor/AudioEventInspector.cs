@@ -24,7 +24,7 @@ public class AudioEventInspector : Editor
 		
 		ma = MasterAudio.Instance;
 		if (ma != null) {
-			GUIHelper.ShowHeaderTexture(ma.logoTexture);
+			DTGUIHelper.ShowHeaderTexture(MasterAudioInspectorResources.logoTexture);
 		}
 		
 		sounds = (EventSounds)target;
@@ -513,9 +513,9 @@ public class AudioEventInspector : Editor
 					customEvent.customSoundActive = newUse;
 				}
 				
-				var buttonPressed = GUIHelper.AddCustomEventDeleteIcon(false);
+				var buttonPressed = DTGUIHelper.AddCustomEventDeleteIcon(false);
 				switch (buttonPressed) {
-					case GUIHelper.DTFunctionButtons.Remove:
+					case DTGUIHelper.DTFunctionButtons.Remove:
 						eventToDelete = i;
 						break;
 				}
@@ -553,7 +553,7 @@ public class AudioEventInspector : Editor
 		EditorGUI.indentLevel = 0;
 	
 		if (eType == EventSounds.EventType.OnEnable) {
-			GUIHelper.ShowColorWarning("*If this prefab is in the scene at startup, use Start event instead.");
+			DTGUIHelper.ShowColorWarning("*If this prefab is in the scene at startup, use Start event instead.");
 		}
 		
 		if (eType == EventSounds.EventType.UserDefinedEvent) {
@@ -589,9 +589,9 @@ public class AudioEventInspector : Editor
 				}
 				
 				if (noEvent) {	
-					GUIHelper.ShowRedError("No Custom Event specified. This section will do nothing.");					
+					DTGUIHelper.ShowRedError("No Custom Event specified. This section will do nothing.");					
 				} else if (noMatch) {
-					GUIHelper.ShowRedError("Custom Event found no match. Type in or choose one.");
+					DTGUIHelper.ShowRedError("Custom Event found no match. Type in or choose one.");
 				}
 				
 				if (customEventIndex.HasValue) {
@@ -654,9 +654,9 @@ public class AudioEventInspector : Editor
 					}
 					
 					if (noGroup) {	
-						GUIHelper.ShowRedError("No Sound Group specified. Event will do nothing.");					
+						DTGUIHelper.ShowRedError("No Sound Group specified. Event will do nothing.");					
 					} else if (noMatch) {
-						GUIHelper.ShowRedError("Sound Group found no match. Type in or choose one.");
+						DTGUIHelper.ShowRedError("Sound Group found no match. Type in or choose one.");
 					}
 					
 					if (groupIndex.HasValue) {
@@ -691,7 +691,7 @@ public class AudioEventInspector : Editor
 					}
 				
 					if (string.IsNullOrEmpty(aEvent.variationName)) {
-						GUIHelper.ShowRedError("Variation Name is empty. No sound will play.");
+						DTGUIHelper.ShowRedError("Variation Name is empty. No sound will play.");
 					}
 				}
 			
@@ -767,9 +767,9 @@ public class AudioEventInspector : Editor
 							}
 						
 							if (noPC) {
-								GUIHelper.ShowRedError("No Playlist Controller specified. Event will do nothing.");
+								DTGUIHelper.ShowRedError("No Playlist Controller specified. Event will do nothing.");
 							} else if (noMatch) {
-								GUIHelper.ShowRedError("Playlist Controller found no match. Type in or choose one.");							
+								DTGUIHelper.ShowRedError("Playlist Controller found no match. Type in or choose one.");							
 							}
 						
 							if (playlistControllerIndex.HasValue) {
@@ -825,9 +825,9 @@ public class AudioEventInspector : Editor
 							}
 							
 							if (noPl) {
-								GUIHelper.ShowRedError("No Playlist Name specified. Event will do nothing.");
+								DTGUIHelper.ShowRedError("No Playlist Name specified. Event will do nothing.");
 							} else if (noMatch) {
-								GUIHelper.ShowRedError("Playlist Name found no match. Type in or choose one.");					
+								DTGUIHelper.ShowRedError("Playlist Name found no match. Type in or choose one.");					
 							}
 					
 							if (playlistIndex.HasValue) {
@@ -874,7 +874,7 @@ public class AudioEventInspector : Editor
 							aEvent.clipName = newClip;
 						}
 						if (string.IsNullOrEmpty(aEvent.clipName)) {
-							GUIHelper.ShowRedError("Clip name is empty. Event will do nothing.");
+							DTGUIHelper.ShowRedError("Clip name is empty. Event will do nothing.");
 						}
 						break;
 				}
@@ -927,9 +927,9 @@ public class AudioEventInspector : Editor
 							}
 						
 							if (noMatch) {
-								GUIHelper.ShowRedError("Sound Group found no match. Type in or choose one.");					
+								DTGUIHelper.ShowRedError("Sound Group found no match. Type in or choose one.");					
 							} else if (noGroup) {
-								GUIHelper.ShowRedError("No Sound Group specified. Event will do nothing.");					
+								DTGUIHelper.ShowRedError("No Sound Group specified. Event will do nothing.");					
 							}
 						
 							if (groupIndex.HasValue) {
@@ -1037,9 +1037,9 @@ public class AudioEventInspector : Editor
 							}
 						
 							if (noBus) {
-								GUIHelper.ShowRedError("No Bus Name specified. Event will do nothing.");	
+								DTGUIHelper.ShowRedError("No Bus Name specified. Event will do nothing.");	
 							} else if (noMatch) {
-								GUIHelper.ShowRedError("Bus Name found no match. Type in or choose one.");							
+								DTGUIHelper.ShowRedError("Bus Name found no match. Type in or choose one.");							
 							}
 						
 							if (busIndex.HasValue) {
@@ -1073,7 +1073,7 @@ public class AudioEventInspector : Editor
 						aEvent.useFixedPitch = newFixPitch;
 					}
 					if (aEvent.useFixedPitch) {
-						GUIHelper.ShowColorWarning("*Random pitches for the variation will not be used.");
+						DTGUIHelper.ShowColorWarning("*Random pitches for the variation will not be used.");
 						var newPitch = EditorGUILayout.Slider("Pitch", aEvent.pitch, -3f, 3f);
 						if (newPitch != aEvent.pitch) {
 							UndoHelper.RecordObjectPropertyForUndo(sounds, "change Pitch");
@@ -1105,7 +1105,7 @@ public class AudioEventInspector : Editor
 				break;
 			case MasterAudio.EventSoundFunctionType.CustomEventControl:
 				if (eType == EventSounds.EventType.UserDefinedEvent) {
-					GUIHelper.ShowRedError("Custom Event Receivers cannot fire events. Select another Action Type.");
+					DTGUIHelper.ShowRedError("Custom Event Receivers cannot fire events. Select another Action Type.");
 					break;
 				}	
 				
@@ -1150,9 +1150,9 @@ public class AudioEventInspector : Editor
 							}
 							
 							if (noEvent) {	
-								GUIHelper.ShowRedError("No Custom Event specified. This section will do nothing.");					
+								DTGUIHelper.ShowRedError("No Custom Event specified. This section will do nothing.");					
 							} else if (noMatch) {
-								GUIHelper.ShowRedError("Custom Event found no match. Type in or choose one.");
+								DTGUIHelper.ShowRedError("Custom Event found no match. Type in or choose one.");
 							}
 							
 							if (customEventIndex.HasValue) {

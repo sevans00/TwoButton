@@ -66,6 +66,29 @@ public class MadMath  {
             return new Vector2(x, y);
         }
     }
+
+    public static Vector2 ClosestPoint(Bounds bounds, Vector2 point) {
+        if (bounds.Contains(point)) {
+            return point;
+        } else {
+            float x = point.x;
+            float y = point.y;
+
+            if (x < bounds.min.x) {
+                x = bounds.min.x;
+            } else if (x > bounds.max.x) {
+                x = bounds.max.x;
+            }
+
+            if (y < bounds.min.y) {
+                y = bounds.min.y;
+            } else if (y > bounds.max.y) {
+                y = bounds.max.y;
+            }
+
+            return new Vector2(x, y);
+        }
+    }
     
     public static Vector3 Round(Vector3 v) {
         return new Vector3(
@@ -86,6 +109,10 @@ public class MadMath  {
     
     public static Rect Translate(Rect r, Vector2 delta) {
         return new Rect(r.x + delta.x, r.y + delta.y, r.width, r.height);
+    }
+
+    public static Rect Scale(Rect r, Vector2 scale) {
+        return new Rect(r.x * scale.x, r.y * scale.y, r.width * scale.x, r.height * scale.y);
     }
     
     // ===========================================================

@@ -27,14 +27,14 @@ public class MasterAudioManager : EditorWindow {
 
 		Texture header = (Texture) Resources.LoadAssetAtPath(MasterAudioFolderPath + "/Sources/Textures/inspector_header_master_audio.png", typeof(Texture));
 		if (header != null) {
-			GUIHelper.ShowHeaderTexture(header);
+			DTGUIHelper.ShowHeaderTexture(header);
 		}
         Texture settings = (Texture)Resources.LoadAssetAtPath(MasterAudioFolderPath + "/Sources/Textures/gearIcon.png", typeof(Texture));
 		
 		MasterAudio.Instance = null;
 		var ma = MasterAudio.Instance;
 		
-		GUIHelper.ShowColorWarning("The Master Audio prefab holds sound FX group and mixer controls. Add this first (only one per scene).");
+		DTGUIHelper.ShowColorWarning("The Master Audio prefab holds sound FX group and mixer controls. Add this first (only one per scene).");
 		EditorGUILayout.BeginHorizontal(EditorStyles.objectFieldThumb);
 		
 		EditorGUILayout.LabelField("Master Audio prefab", GUILayout.Width(300));
@@ -59,7 +59,7 @@ public class MasterAudioManager : EditorWindow {
 		EditorGUILayout.Separator();
 		
 		// Playlist Controller
-		GUIHelper.ShowColorWarning("The Playlist Controller prefab controls sets of songs (or other audio) and ducking. No limit per scene.");
+		DTGUIHelper.ShowColorWarning("The Playlist Controller prefab controls sets of songs (or other audio) and ducking. No limit per scene.");
 		EditorGUILayout.BeginHorizontal(EditorStyles.objectFieldThumb);
 		EditorGUILayout.LabelField("Playlist Controller prefab", GUILayout.Width(300));
 
@@ -72,12 +72,12 @@ public class MasterAudioManager : EditorWindow {
 		GUILayout.FlexibleSpace();
 		EditorGUILayout.EndHorizontal();
 		if (!plControllerInScene) {
-			GUIHelper.ShowColorWarning("*There is no Playlist Controller in the scene. Music will not play.");
+			DTGUIHelper.ShowRedError("*There is no Playlist Controller in the scene. Music will not play.");
 		}
 		
 		EditorGUILayout.Separator();
 		// Dynamic Sound Group Creators
-		GUIHelper.ShowColorWarning("The Dynamic Sound Group Creator prefab can create Sound Groups on the fly. No limit per scene.");
+		DTGUIHelper.ShowColorWarning("The Dynamic Sound Group Creator prefab can create Sound Groups on the fly. No limit per scene.");
 		EditorGUILayout.BeginHorizontal(EditorStyles.objectFieldThumb);
 		EditorGUILayout.LabelField("Dynamic Sound Group Creator prefab", GUILayout.Width(300));
 
@@ -116,7 +116,7 @@ public class MasterAudioManager : EditorWindow {
 		var ma = MasterAudio.Instance;
 		
 		if (ma == null) {
-			GUIHelper.ShowAlert("There is no MasterAudio prefab in this scene. Try pressing this button on a different Scene.");
+			DTGUIHelper.ShowAlert("There is no MasterAudio prefab in this scene. Try pressing this button on a different Scene.");
 			return;
 		}
 		
@@ -200,7 +200,7 @@ public class MasterAudioManager : EditorWindow {
 			DestroyImmediate(filtersToDelete[i]);
 		}
 		
-		GUIHelper.ShowAlert(string.Format("{0} Filter FX Components deleted.", filtersToDelete.Count));
+		DTGUIHelper.ShowAlert(string.Format("{0} Filter FX Components deleted.", filtersToDelete.Count));
 	}
 	
 	private void CreateMasterAudio() {
@@ -209,8 +209,9 @@ public class MasterAudioManager : EditorWindow {
 			Debug.LogError("Could not find MasterAudio prefab. Please drag it into the scene yourself. It is located under MasterAudio/Prefabs.");
 			return;
 		}
-
-        var go = GameObject.Instantiate(ma) as GameObject;
+		
+		
+        var go = PrefabUtility.InstantiatePrefab(ma) as GameObject;
 
         UndoHelper.CreateObjectForUndo(go, "Create Master Audio prefab");
 
@@ -224,7 +225,7 @@ public class MasterAudioManager : EditorWindow {
 			return;
 		}
 
-        var go = GameObject.Instantiate(pc) as GameObject;
+        var go = PrefabUtility.InstantiatePrefab(pc) as GameObject;
 		go.name = "PlaylistController";
 
         UndoHelper.CreateObjectForUndo(go, "Create Playlist Controller prefab");
@@ -236,7 +237,7 @@ public class MasterAudioManager : EditorWindow {
 			Debug.LogError("Could not find DynamicSoundGroupCreator prefab. Please drag it into the scene yourself. It is located under MasterAudio/Prefabs.");
 			return;
 		}
-		var go = GameObject.Instantiate(pc) as GameObject;
+		var go = PrefabUtility.InstantiatePrefab(pc) as GameObject;
 		go.name = "DynamicSoundGroupCreator";
 
         UndoHelper.CreateObjectForUndo(go, "Create Dynamic Sound Group Creator prefab");

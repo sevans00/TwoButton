@@ -16,12 +16,12 @@ public class SoundGroupVariationInspector : Editor {
 		
 		_variation = (SoundGroupVariation)target;
 		
-		if (_variation.logoTexture != null) {
-			GUIHelper.ShowHeaderTexture(_variation.logoTexture);
+		if (MasterAudioInspectorResources.logoTexture != null) {
+			DTGUIHelper.ShowHeaderTexture(MasterAudioInspectorResources.logoTexture);
 		}
 		
 //		if (Application.isPlaying) {
-//			GUIHelper.ShowColorWarning(_variation.IsAvailableToPlay.ToString());
+//			DTGUIHelper.ShowColorWarning(_variation.IsAvailableToPlay.ToString());
 //		}
 		
 		EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
@@ -34,10 +34,10 @@ public class SoundGroupVariationInspector : Editor {
 		
 		var ma = MasterAudio.Instance;
 		if (ma != null) {
-			var buttonPressed = GUIHelper.AddVariationButtons(ma);
+			var buttonPressed = DTGUIHelper.AddVariationButtons();
 			
 			switch (buttonPressed) {
-				case GUIHelper.DTFunctionButtons.Play:
+				case DTGUIHelper.DTFunctionButtons.Play:
 					if (Application.isPlaying) {
 						MasterAudio.PlaySound(_variation.transform.parent.name, 1f, null, 0f, _variation.name);
 					} else {
@@ -50,7 +50,7 @@ public class SoundGroupVariationInspector : Editor {
 						}
 					}
 					break;
-				case GUIHelper.DTFunctionButtons.Stop:
+				case DTGUIHelper.DTFunctionButtons.Stop:
 					if (Application.isPlaying) {
 						MasterAudio.StopAllOfSound(_variation.transform.parent.name);
 					} else {
@@ -67,7 +67,7 @@ public class SoundGroupVariationInspector : Editor {
 		EditorGUILayout.EndHorizontal();
 		
 		if (ma != null && !Application.isPlaying) {
-			GUIHelper.ShowColorWarning("*Fading & random settings are ignored by preview in edit mode.");
+			DTGUIHelper.ShowColorWarning("*Fading & random settings are ignored by preview in edit mode.");
 		}
 		
 		var oldLocation = _variation.audLocation;
@@ -123,14 +123,14 @@ public class SoundGroupVariationInspector : Editor {
 									continue;
 								}
 								
-								newFilename = GUIHelper.GetResourcePath(aClip);
+								newFilename = DTGUIHelper.GetResourcePath(aClip);
 								if (string.IsNullOrEmpty(newFilename)) {
 									newFilename = aClip.name;
 								}
 						
 								if (newFilename != 	_variation.resourceFileName) {
 									UndoHelper.RecordObjectPropertyForUndo(_variation, "change Resource filename");
-								    _variation.resourceFileName = aClip.name;
+									_variation.resourceFileName = newFilename;
 								}
 								break;
 							}
@@ -234,7 +234,7 @@ public class SoundGroupVariationInspector : Editor {
 			}
 			
 			if (_variation.audio.loop) {
-				GUIHelper.ShowColorWarning("*Looped clips cannot have a custom fade out.");
+				DTGUIHelper.ShowColorWarning("*Looped clips cannot have a custom fade out.");
 			} else {
 				var newFadeOut = EditorGUILayout.Slider("Fade Out time (sec)", _variation.fadeOutTime, 0f, 10f);
 				if (newFadeOut != _variation.fadeOutTime) {

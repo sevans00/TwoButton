@@ -49,6 +49,12 @@ public class MadLevelIcon : MadSprite {
     // ===========================================================
     // Properties
     // ===========================================================
+
+    public bool generated {
+        get {
+            return hasLevelConfiguration;
+        }
+    }
     
     public bool completed {
         set {
@@ -84,14 +90,24 @@ public class MadLevelIcon : MadSprite {
             }
         }
     }
+
+    public List<MadLevelProperty> properties {
+        get {
+            return MadTransform.FindChildren<MadLevelProperty>(transform);
+        }
+    }
     
     /// <summary>
     /// Level refrerence. You can get here all information about the referenced level.
     /// </summary>
-    /// <value>The level.</value>
+    /// <value>The level or null if level or configuration is not set yet.</value>
     public MadLevelConfiguration.Level level {
         get {
-            return configuration.GetLevel(MadLevel.Type.Level, levelIndex);
+        	if (configuration != null) {
+	            return configuration.GetLevel(MadLevel.Type.Level, levelIndex);
+            } else {
+            	return null;
+            }
         }
     }    
                     
@@ -124,7 +140,9 @@ public class MadLevelIcon : MadSprite {
             // completed property object is optional
             // if it's not present, check the completed property manually
             if (completedProperty == null) {
-                completed = MadLevelProfile.IsCompleted(level.name);
+                if (level != null) {
+                    completed = MadLevelProfile.IsCompleted(level.name);
+                }
             }
 
             onMouseUp += (sprite) => Activate();
@@ -143,6 +161,12 @@ public class MadLevelIcon : MadSprite {
     // ===========================================================
     // Methods
     // ===========================================================
+
+    public void ApplyConnections() {
+        foreach (var property in properties) {
+            property.ApplyConnections();
+        }
+    }
     
     public MadLevelProperty.SpecialType TypeFor(MadLevelProperty property) {
         if (property == completedProperty) {

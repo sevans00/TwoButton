@@ -40,6 +40,8 @@ public class MadTextInspector : MadSpriteInspector {
         text = serializedObject.FindProperty("text");
         scale = serializedObject.FindProperty("scale");
         letterSpacing = serializedObject.FindProperty("letterSpacing");
+
+        showLiveBounds = false;
     }
 
     public override void OnInspectorGUI() {

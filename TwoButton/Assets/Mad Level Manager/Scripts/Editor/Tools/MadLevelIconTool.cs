@@ -58,11 +58,23 @@ public class MadLevelIconTool : ScriptableWizard {
         icon.transform.localPosition = Vector3.zero;
         icon.transform.localScale = Vector3.one;
         icon.texture = texture;
+
+        Selection.activeGameObject = icon.gameObject;
     }
 
     // ===========================================================
     // Static Methods
     // ===========================================================
+
+    public static void Display() {
+        var wizard = ScriptableWizard.DisplayWizard<MadLevelIconTool>("Create Icon", "Create");
+        wizard.panel = MadPanel.UniqueOrNull();
+
+        if (Selection.activeObject is Texture2D) {
+            wizard.texture = Selection.activeObject as Texture2D;
+            wizard.OnWizardUpdate();
+        }
+    }
 
     // ===========================================================
     // Inner and Anonymous Classes

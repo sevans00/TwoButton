@@ -318,6 +318,10 @@ public class MadLevelGridLayout : MadLevelAbstractLayout {
                 }
             }
         }
+
+        // remove slides
+        ClearSlide("SlideLeftAnchor");
+        ClearSlide("SlideRightAnchor");
     }
     
     // builds level icons that are absent now
@@ -440,6 +444,8 @@ public class MadLevelGridLayout : MadLevelAbstractLayout {
     void BuildDragging(MadDragStopDraggable dragHandler, int dragStops) {
         var pages = MadTransform.FindChildren<Transform>(dragHandler.transform, (t) => t.name.StartsWith("Page"), 0);
         pages.Sort((a, b) => { return a.localPosition.x.CompareTo(b.localPosition.x); });
+
+        dragHandler.ClearDragStops();
     
         for (int i = 0; i < pages.Count; ++i) {
             int dragStopIndex = dragHandler.AddDragStop(pages[i].localPosition.x, 0);
@@ -478,15 +484,16 @@ public class MadLevelGridLayout : MadLevelAbstractLayout {
         slideRight.onTap += goToNextPage;
         slideRight.onMouseUp += goToNextPage;
     }
-    
-    MadSprite BuildSlide(MadSprite template, string anchorName, bool left) {
-    
+
+    private void ClearSlide(string anchorName) {
         MadAnchor slideAnchor = MadTransform.FindChildWithName<MadAnchor>(transform, anchorName);
         if (slideAnchor != null) {
             DestroyImmediate(slideAnchor.gameObject);
         }
+    }
     
-        slideAnchor = CreateChild<MadAnchor>(anchorName);
+    MadSprite BuildSlide(MadSprite template, string anchorName, bool left) {
+        var slideAnchor = CreateChild<MadAnchor>(anchorName);
         if (hideManagedObjects) {
             slideAnchor.gameObject.hideFlags = HideFlags.HideInHierarchy;
         }

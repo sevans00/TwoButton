@@ -54,7 +54,6 @@ public class MadDraggable : MadNode {
     // deprecated
     [SerializeField] DragMode dragMode = DragMode.DragStop;
     [SerializeField] Rect freeDragArea = new Rect(-200, -200, 400, 400);
-    [SerializeField] Vector2 freeDragStartPosition = new Vector2(-200, 200);
     [SerializeField] bool allowScaling = false;
     [SerializeField] float scaleMax = 2;
     [SerializeField] float scaleMin = 0.25f;
@@ -103,9 +102,10 @@ public class MadDraggable : MadNode {
             switch (dragMode) {
                 case DragMode.Free:
                     var free = gameObject.AddComponent<MadFreeDraggable>() as MadFreeDraggable;
+                    #pragma warning disable 618
                     free.dragArea = freeDragArea;
-                    free.dragStartPosition = freeDragStartPosition;
                     free.scaling = allowScaling;
+                    #pragma warning restore 618
                     free.scalingMax = scaleMax;
                     free.scalingMin = scaleMin;
                     break;
@@ -121,6 +121,7 @@ public class MadDraggable : MadNode {
   
     protected virtual void Start() {
         cachedCamPos = cameraPos;
+        lastTouchTime = -1000; // prevent touch time on start
     }
     
     bool addInteriaForce;

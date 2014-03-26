@@ -1,4 +1,4 @@
-/*
+﻿/*
 * Mad Level Manager by Mad Pixel Machine
 * http://www.madpixelmachine.com
 */
@@ -25,12 +25,19 @@ public class MadDragStopDraggable : MadDraggable {
     public DragStopCallback dragStopCallback;
     List<Vector2> dragStops = new List<Vector2>();
     
-    int dragStopCurrentIndex = 0;
     int forcedDragStopIndex = -1;
 
     // ===========================================================
-    // Methods for/from SuperClass/Interfaces
+    // Properties
     // ===========================================================
+
+    public int dragStopCount {
+        get {
+            return dragStops.Count;
+        }
+    }
+
+    public int dragStopCurrentIndex { get; private set; }
 
     // ===========================================================
     // Methods
@@ -83,6 +90,11 @@ public class MadDragStopDraggable : MadDraggable {
                 cameraPos = cachedCamPos;
             }
         }
+    }
+
+    public void ClearDragStops() {
+        dragStops.Clear();
+        dragStopCurrentIndex = 0;
     }
 
     public int AddDragStop(float x, float y) {

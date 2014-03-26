@@ -144,7 +144,6 @@ public class MadLevelConfiguration : ScriptableObject {
             }
         }
         
-        Debug.LogError(string.Format("Out of bounds: {0} (size: {1})", index, skipped));
         return null;
     }
     
@@ -321,7 +320,9 @@ public class MadLevelConfiguration : ScriptableObject {
     
     public static MadLevelConfiguration GetActive() {
         var active = FindActive();
-        MadDebug.Assert(active != null, "There's no active configuration. Please make at least one!");
+        if (active == null) {
+            Debug.LogWarning("There's no active configuration. Please make at least one!");
+        }
         return active;
     }
     
@@ -398,26 +399,32 @@ public class MadLevelConfiguration : ScriptableObject {
             
 #if UNITY_EDITOR
                 _sceneObject = value;
-                if (value != null) {
-                    _scenePath = AssetDatabase.GetAssetPath(value);
-                    string basename = scenePath.Substring(_scenePath.LastIndexOf('/') + 1);
-                    _sceneName = basename.Substring(0, basename.IndexOf('.'));
-                } else {
-                    _sceneName = "";
-                    _scenePath = "";
-                }
 #endif
             }
         }
         
         public string scenePath {
             get {
+#if UNITY_EDITOR
+                if (sceneObject != null) {
+                    _scenePath = AssetDatabase.GetAssetPath(sceneObject);
+                }
+#endif
+
                 return _scenePath;
             }
         }
         
         public string sceneName {
             get {
+#if UNITY_EDITOR
+                string path = scenePath;
+                if (!string.IsNullOrEmpty(path)) {
+                    string basename = scenePath.Substring(_scenePath.LastIndexOf('/') + 1);
+                    _sceneName = basename.Substring(0, basename.IndexOf('.'));
+                }
+#endif
+
                 return _sceneName;
             }
         }

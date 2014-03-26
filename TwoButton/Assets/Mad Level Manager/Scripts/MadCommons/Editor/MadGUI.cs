@@ -40,12 +40,34 @@ public class MadGUI {
     }
     
     public static bool Button(string label) {
+        return Button(label, GUI.color);
+    }
+
+    public static bool Button(string label, Color color, params GUILayoutOption[] options) {
+        var prevColor = GUI.backgroundColor;
+        GUI.backgroundColor = color;
+
         GUILayout.BeginHorizontal();
         GUILayout.Space(15 * EditorGUI.indentLevel);
-        bool state = GUILayout.Button(label);
+        bool state = GUILayout.Button(label, options);
         GUILayout.EndHorizontal();
-        
+
+        GUI.backgroundColor = prevColor;
+
         return state;
+    }
+
+    public static void Space(float width, float height) {
+
+        if (height > 0) {
+            EditorGUILayout.BeginVertical();
+            GUILayout.Space(height);
+            EditorGUILayout.EndVertical();
+        }
+
+        if (width > 0) {
+            GUILayout.Space(width);
+        }
     }
 
     // ===========================================================
@@ -144,6 +166,8 @@ public class MadGUI {
             if (items.Count == 0) {
                 GUILayout.Label(emptyListMessage);
             }
+
+            GUILayout.FlexibleSpace();
                 
             EditorGUILayout.EndScrollView();
             
@@ -178,6 +202,9 @@ public class MadGUI {
         
         RunnableVoid1<T> genericRenderer;
         RunnableVoid1<SerializedProperty> propertyRenderer;
+        
+		public string emptyLabel = "Use the 'Add' button to add items";
+		public string addLabel = "Add";
         
         public RunnableGeneric0<T> createFunctionGeneric = () => { return new T(); };
         public RunnableVoid1<SerializedProperty> createFunctionProperty = (element) => {
@@ -257,7 +284,7 @@ public class MadGUI {
         public bool Draw() {
             EditorGUI.BeginChangeCheck();
             if (ItemCount() == 0) {
-                GUILayout.Label("   Use 'Add' button to add items");
+                GUILayout.Label("   " + emptyLabel);
             } else {
                 Separator();
                 int removeIndex = -1;
@@ -269,11 +296,11 @@ public class MadGUI {
                     RenderItem(i);
                     EditorGUILayout.EndVertical();
                     
-                    GUI.color = Color.red;
+                    GUI.backgroundColor = Color.red;
                     if (GUILayout.Button("X", GUILayout.ExpandWidth(false))) {
                         removeIndex = i;
                     }
-                    GUI.color = Color.white;
+                    GUI.backgroundColor = Color.white;
                     
                     EditorGUILayout.EndHorizontal();
                     
@@ -290,14 +317,14 @@ public class MadGUI {
                     onRemove(item);
                 }
             }
-                
-            GUI.color = Color.green;
+
+            GUI.backgroundColor = Color.green;
             EditorGUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
-            if (GUILayout.Button("Add", GUILayout.ExpandWidth(false))) {
+            if (GUILayout.Button(addLabel, GUILayout.ExpandWidth(false))) {
                 AddItem();
             }
-            GUI.color = Color.white;
+            GUI.backgroundColor = Color.white;
             EditorGUILayout.EndHorizontal();
             
             return EditorGUI.EndChangeCheck();
@@ -393,6 +420,10 @@ public class MadGUI {
     public static bool WarningFix(string message) {
         return MessageFix(message, MessageType.Warning);
     }
+
+    public static bool WarningFix(string message, string fixMessage) {
+        return MessageFix(message, fixMessage, MessageType.Warning);
+    }
     
     public static bool ErrorFix(string message) {
         return MessageFix(message, MessageType.Error);
@@ -415,7 +446,9 @@ public class MadGUI {
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.Space();
         EditorGUILayout.Space();
+        GUI.backgroundColor = Color.cyan;
         bool result = GUILayout.Button(buttonLabel);
+        GUI.backgroundColor = Color.white;
         EditorGUILayout.EndHorizontal();
         EditorGUILayout.Space();
         
@@ -440,7 +473,7 @@ public class MadGUI {
         
         return result;
     }
-    
+
     public static void Warning(string message) {
         Message(message, MessageType.Warning);
     }

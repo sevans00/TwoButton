@@ -10,11 +10,6 @@ public class DynamicSoundGroupCreator : MonoBehaviour
     public const int EXTRA_HARD_CODED_BUS_OPTIONS = 1;
 
     public MasterAudio.DragGroupMode curDragGroupMode = MasterAudio.DragGroupMode.OneGroupPerClip;
-    public Texture logoTexture;
-    public Texture deleteTexture;
-    public Texture settingsTexture;
-    public Texture playTexture;
-    public Texture stopTrackTexture;
     public GameObject groupTemplate;
     public GameObject variationTemplate;
     public bool createOnAwake = true;
@@ -81,6 +76,13 @@ public class DynamicSoundGroupCreator : MonoBehaviour
             return;
         }
 
+		RemoveItems();
+	}
+	
+    /// <summary>
+    /// This method will remove the Sound Groups, Variations, buses, ducking triggers and Playlist objects specified in the Dynamic Sound Group Creator's Inspector. It is called automatically if you check the "Auto-remove Items" checkbox, otherwise you will need to call this method manually.
+    /// </summary>
+	public void RemoveItems() {
         // delete any buses we created too
         for (var i = 0; i < groupBuses.Count; i++)
         {
@@ -104,10 +106,10 @@ public class DynamicSoundGroupCreator : MonoBehaviour
             var anEvent = customEventsToCreate[i];
             MasterAudio.DeleteCustomEvent(anEvent.EventName);
         }
-    }
-
+	}
+	
     /// <summary>
-    /// This method will create the Sound Groups, Variations, buses and ducking triggers specified in the Dynamic Sound Group Creator's Inspector. It is called automatically if you check the "auto-create" checkbox, otherwise you will need to call this method manually.
+    /// This method will create the Sound Groups, Variations, buses, ducking triggers and Playlist objects specified in the Dynamic Sound Group Creator's Inspector. It is called automatically if you check the "Auto-create Items" checkbox, otherwise you will need to call this method manually.
     /// </summary>
     public void CreateItems()
     {

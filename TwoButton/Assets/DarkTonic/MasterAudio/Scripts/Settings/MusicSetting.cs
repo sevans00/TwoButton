@@ -6,6 +6,7 @@ using System.Collections;
 public class MusicSetting {
     public MasterAudio.AudioLocation audLocation = MasterAudio.AudioLocation.Clip;
 	public AudioClip clip;
+	public string songName = string.Empty;
 	public string resourceFileName = string.Empty;
 	public float volume = 1f;
 	public float pitch = 1f;

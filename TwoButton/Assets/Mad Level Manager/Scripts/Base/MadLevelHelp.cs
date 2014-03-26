@@ -17,11 +17,14 @@ public class MadLevelHelp {
     
     public const string Mail = "support@madpixelmachine.com";
 
-    public const string Documentation =
-        "http://madlevelmanager.madpixelmachine.com/documentation.html";
+    public const string Latest = "http://madlevelmanager.madpixelmachine.com/doc/latest/";
+    public const string Safe = "http://madlevelmanager.madpixelmachine.com/doc/1.5.2/";
     
-    public const string ConfigurationWiki =
-            "http://docs.madpixelmachine.com/madlevelmanager/doc/latest/basics/working_with_level_configurations.html";
+    public const string ConfigurationWiki = Latest + "basics/working_with_level_configurations.html";
+
+    // Mad Level Icon
+    public const string IconGenerated = Safe + "context/icon_generated.html";
+    public const string SpecialProperty = Safe + "context/special_property.html";
 
     // ===========================================================
     // Fields

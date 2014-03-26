@@ -7,6 +7,7 @@ public class CrumbleBlock : InteractiveTile {
 	public void Start () {
 		animator = GetComponent<tk2dSpriteAnimator>();
 		animator.AnimationCompleted = animationCompleted;
+		animator.Stop();
 	}
 
 	public bool triggered = false;
@@ -26,7 +27,8 @@ public class CrumbleBlock : InteractiveTile {
 
 	public override void Reset ()
 	{
-		gameObject.SetActive(true);
+		gameObject.SetActive(true); 
+		animator.Stop();
 		animator.SetFrame(0);
 		triggered = false;
 		base.Reset ();

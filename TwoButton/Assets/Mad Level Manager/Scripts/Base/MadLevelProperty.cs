@@ -27,8 +27,8 @@ public class MadLevelProperty : MadNode {
     [HideInInspector]
     public bool _propertyEnabled = true;
     
-    public MadSprite[] showWhenEnabled;
-    public MadSprite[] showWhenDisabled;
+    public MadSprite[] showWhenEnabled = new MadSprite[0];
+    public MadSprite[] showWhenDisabled = new MadSprite[0];
     
     public bool textFromProperty;
     public string textPropertyName;
@@ -51,7 +51,7 @@ public class MadLevelProperty : MadNode {
     }
     
     private MadLevelIcon _icon;
-    private MadLevelIcon icon {
+    public MadLevelIcon icon {
         get {
             if (_icon == null) {
                 _icon = MadTransform.FindParent<MadLevelIcon>(transform);
@@ -74,7 +74,34 @@ public class MadLevelProperty : MadNode {
             UpdateEnabled(value);
         }
     }
-    
+
+    // tells if this property is linked
+    public bool linked {
+        get {
+            return linkage != null;
+        }
+    }
+
+    // gets the property that is owner of this property state (by showBy linkage)
+    public MadLevelProperty linkage {
+        get {
+            var properties = icon.properties;
+            foreach (var property in properties) {
+                int index = System.Array.FindIndex<MadSprite>(property.showWhenEnabled, (sprite) => sprite != null ? sprite.gameObject == gameObject : false);
+                if (index != -1) {
+                    return property;
+                }
+
+                index = System.Array.FindIndex<MadSprite>(property.showWhenDisabled, (sprite) => sprite != null ? sprite.gameObject == gameObject : false);
+                if (index != -1) {
+                    return property;
+                }
+            }
+
+            return null;
+        }
+    }
+
     bool propertySet {
         get {
             if (Application.isPlaying) {
@@ -100,11 +127,11 @@ public class MadLevelProperty : MadNode {
     // ===========================================================
     
     void OnEnable() {
-        
+
     }
     
     void Start() {
-        if (Application.isPlaying && persistent) {
+        if (Application.isPlaying && icon.level != null && persistent) {
             if (propertySet) {
                 propertyEnabled = GetLevelBoolean();
             } else {
@@ -127,47 +154,16 @@ public class MadLevelProperty : MadNode {
 //            propertyEnabled = GetLevelBoolean();
 //        }
     }
-    
+
     void UpdateEnabled(bool enabled) {
         // do nothing is there's no change
         if (_propertyEnabled == enabled) {
             return;
         }
+
+        ApplyConnections(enabled);
     
-        MadSprite[] hideSprites, showSprites;
-        if (enabled) {
-            showSprites = showWhenEnabled;
-            hideSprites = showWhenDisabled;
-        } else {
-            showSprites = showWhenDisabled;
-            hideSprites = showWhenEnabled;
-        }
-        
-        if (hideSprites != null) {
-            foreach (var sprite in hideSprites) {
-                // if this is property then change property value
-                var property = sprite.GetComponent<MadLevelProperty>();
-                if (property != null) {
-                    property.propertyEnabled = false;
-                } else {
-                    sprite.visible = false;
-                }
-            }
-        }
-        
-        if (showSprites != null) {
-            foreach (var sprite in showSprites) {
-                // if this is property then change property value
-                var property = sprite.GetComponent<MadLevelProperty>();
-                if (property != null) {
-                    property.propertyEnabled = true;
-                } else {
-                    sprite.visible = true;
-                }
-            }
-        }
-        
-        if (this.sprite != null) { // why the hell must be here 'this.'?
+        if (sprite != null) {
     
             if (!Application.isPlaying) {
                 // in editor just change the visibility
@@ -182,6 +178,54 @@ public class MadLevelProperty : MadNode {
         if (Application.isPlaying && persistent) {
             SetLevelBoolean(enabled);
             SendMessageUpwards("OnPropertyChange", this);
+        }
+    }
+
+    public void ApplyConnections() {
+        ApplyConnections(propertyEnabled);
+    }
+
+    private void ApplyConnections(bool enabled) {
+        MadSprite[] hideSprites, showSprites;
+
+        if (enabled) {
+            showSprites = showWhenEnabled;
+            hideSprites = showWhenDisabled;
+        } else {
+            showSprites = showWhenDisabled;
+            hideSprites = showWhenEnabled;
+        }
+
+        if (hideSprites != null) {
+            foreach (var sprite in hideSprites) {
+                if (sprite == null) {
+                    continue;
+                }
+
+                // if this is property then change property value
+                var property = sprite.GetComponent<MadLevelProperty>();
+                if (property != null) {
+                    property.propertyEnabled = false;
+                } else {
+                    sprite.visible = false;
+                }
+            }
+        }
+
+        if (showSprites != null) {
+            foreach (var sprite in showSprites) {
+                if (sprite == null) {
+                    continue;
+                }
+
+                // if this is property then change property value
+                var property = sprite.GetComponent<MadLevelProperty>();
+                if (property != null) {
+                    property.propertyEnabled = true;
+                } else {
+                    sprite.visible = true;
+                }
+            }
         }
     }
     

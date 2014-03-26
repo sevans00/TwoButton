@@ -21,6 +21,8 @@ public class MadSpriteInspector : Editor {
     // Constants
     // ===========================================================
 
+    private static readonly Color BoundsColor = new Color(1f, 0f, 1f, 1f);
+
     // ===========================================================
     // Fields
     // ===========================================================
@@ -36,8 +38,19 @@ public class MadSpriteInspector : Editor {
     private SerializedProperty fillValue;
     private SerializedProperty radialFillOffset;
     private SerializedProperty radialFillLength;
+
+    private SerializedProperty hasLiveBounds;
+    private SerializedProperty liveLeft;
+    private SerializedProperty liveBottom;
+    private SerializedProperty liveRight;
+    private SerializedProperty liveTop;
     
-    private MadSprite sprite;
+    protected MadSprite sprite;
+
+    private Texture2D gridTexture;
+    private Texture2D whiteTexture;
+
+    protected bool showLiveBounds = true;
 
     // ===========================================================
     // Methods for/from SuperClass/Interfaces
@@ -57,10 +70,29 @@ public class MadSpriteInspector : Editor {
         fillValue = serializedObject.FindProperty("fillValue");
         radialFillOffset = serializedObject.FindProperty("radialFillOffset");
         radialFillLength = serializedObject.FindProperty("radialFillLength");
+
+        hasLiveBounds = serializedObject.FindProperty("hasLiveBounds");
+        liveLeft = serializedObject.FindProperty("liveLeft");
+        liveBottom = serializedObject.FindProperty("liveBottom");
+        liveRight = serializedObject.FindProperty("liveRight");
+        liveTop = serializedObject.FindProperty("liveTop");
+
+        gridTexture = Resources.Load("MadLevelManager/Textures/grid", typeof(Texture2D)) as Texture2D;
+        whiteTexture = Resources.Load("Textures/white", typeof(Texture2D)) as Texture2D;
+
+        
     }
     
     public override void OnInspectorGUI() {
         SectionSprite();
+    }
+
+    public override bool HasPreviewGUI() {
+        return sprite.texture != null && showLiveBounds;
+    }
+
+    public override void OnPreviewGUI(Rect r, GUIStyle background) {
+        DrawLiveBoundsPreview(r);
     }
 
     // ===========================================================
@@ -82,17 +114,22 @@ public class MadSpriteInspector : Editor {
                 MadGUI.PropertyFieldVector2(textureOffset, "Offset");
             });
         }
+
+        EditorGUILayout.Space();
         
         MadGUI.PropertyField(tint, "Tint");
         
         if ((flags & DisplayFlag.WithoutSize) == 0) {
+            EditorGUILayout.Space();
+            GUI.backgroundColor = Color.yellow;
             if (GUILayout.Button(new GUIContent("Resize To Texture",
                 "Resizes this sprite to match texture size"))) {
-                var sprite = target as MadSprite;
                 MadUndo.RecordObject2(sprite, "Resize To Texture");
                 sprite.ResizeToTexture();
                 EditorUtility.SetDirty(sprite);
             }
+            GUI.backgroundColor = Color.white;
+            EditorGUILayout.Space();
         }
         
         MadGUI.PropertyField(pivotPoint, "Pivot Point");
@@ -107,8 +144,145 @@ public class MadSpriteInspector : Editor {
                 MadGUI.PropertyFieldSlider(radialFillLength, 0, 1, "Length");
             }
         }
-        
+
+        if (showLiveBounds) {
+            GUILayout.Label("Sprite Border", "HeaderLabel");
+            EditorGUILayout.Space();
+            if (sprite.texture != null) {
+                FieldLiveBounds();
+            } else {
+                MadGUI.Info("More settings will be available when the sprite texture is set.");
+            }
+        }
+
         serializedObject.ApplyModifiedProperties();
+    }
+
+    private void FieldLiveBounds() {
+
+        int texWidth = sprite.texture.width;
+        int texHeight = sprite.texture.height;
+
+        MadGUI.PropertyField(hasLiveBounds, "Has Border");
+
+        GUI.backgroundColor = Color.yellow;
+        MadGUI.Indent(() => {
+            MadGUI.LookLikeControls(0, 40);
+            FieldLiveBounds(liveLeft, texWidth, "Left", 0, liveRight.floatValue);
+            FieldLiveBounds(liveTop, texHeight, "Top", liveBottom.floatValue, 1);
+            FieldLiveBounds(liveRight, texWidth, "Right", liveLeft.floatValue, 1);
+            FieldLiveBounds(liveBottom, texHeight, "Bottom", 0, liveTop.floatValue);
+            MadGUI.LookLikeControls(0);
+        });
+        GUI.backgroundColor = Color.white;
+
+        EditorGUILayout.Space();
+
+        EditorGUILayout.BeginHorizontal();
+        if (MadGUI.Button("Reset")) {
+            ResetLiveBounds();
+        }
+        if (MadGUI.Button("Compute")) {
+            MadUndo.RecordObject2(sprite, "Set Live Bounds");
+            ComputeLiveBounds();
+        }
+        EditorGUILayout.EndHorizontal();
+    }
+
+    private void ResetLiveBounds() {
+        liveLeft.floatValue = 0;
+        liveBottom.floatValue = 0;
+        liveTop.floatValue = 1;
+        liveRight.floatValue = 1;
+    }
+
+    private Rect DrawLiveBoundsPreview(Rect rect) {
+        DrawGrid(rect);
+
+        var textureRect = KeepRatio(sprite.texture, rect);
+        GUI.DrawTexture(textureRect, sprite.texture);
+
+        DrawLiveBounds(textureRect);
+        return rect;
+    }
+
+    private Rect KeepRatio(Texture2D texture, Rect rect) {
+        float targetRatio = texture.width / (float) texture.height;
+        float rectRatio = rect.width / rect.height;
+
+        if (rectRatio > targetRatio) { // rect is wider than the texture, correct width
+            float width = rect.height * targetRatio;
+            return new Rect(rect.x + (rect.width - width) / 2, rect.y, width, rect.height);
+        } else if (rectRatio < targetRatio) { // rect is higher than the texture, correct height
+            float height = rect.width / targetRatio;
+            return new Rect(rect.x, rect.y + (rect.height - height) / 2, rect.width, height);
+        } else {
+            return rect;
+        }
+    }
+
+    private void DrawGrid(Rect rect) {
+        float tx = rect.width / gridTexture.width;
+        float ty = rect.height / gridTexture.height;
+
+        GUI.DrawTextureWithTexCoords(rect, gridTexture, new Rect(0, 0, tx, ty));
+    }
+
+    private void DrawLiveBounds(Rect rect) {
+        DrawLiveBoundHoriz(rect, sprite.liveTop);
+        DrawLiveBoundHoriz(rect, sprite.liveBottom);
+        DrawLiveBoundVert(rect, sprite.liveLeft);
+        DrawLiveBoundVert(rect, sprite.liveRight);
+    }
+
+    private void DrawLiveBoundHoriz(Rect rect, float val) {
+        float top = rect.y + rect.height * (1 - val);
+        DrawRect(new Rect(rect.x, top, rect.width, 1), BoundsColor);
+    }
+
+    private void DrawLiveBoundVert(Rect rect, float val) {
+        float left = rect.x + rect.width * val;
+        DrawRect(new Rect(left, rect.y, 1, rect.height), BoundsColor);
+    }
+
+    private void DrawRect(Rect rect, Color color) {
+        Graphics.DrawTexture(rect, whiteTexture, new Rect(0, 0, 1, 1), 0, 0, 0, 0, color);
+    }
+
+    private void FieldLiveBounds(SerializedProperty property, int width, string label, float min, float max) {
+        int value = (int) (property.floatValue * width);
+        EditorGUI.BeginChangeCheck();
+        value = EditorGUILayout.IntField(label, value);
+        if (EditorGUI.EndChangeCheck()) {
+            property.floatValue = Mathf.Clamp(value / (float) width, min, max);
+        }
+    }
+
+    private void ComputeLiveBounds() {
+
+        bool changed = SetReadable(sprite.texture, true);
+        try {
+            sprite.RecalculateLiveBounds();
+            EditorUtility.SetDirty(sprite);
+        } finally {
+            if (changed) {
+                SetReadable(sprite.texture, false);
+            }
+        }
+
+    }
+
+    private bool SetReadable(Texture2D texture, bool readable) {
+        var assetPath = AssetDatabase.GetAssetPath(texture);
+
+        var importer = TextureImporter.GetAtPath(assetPath) as TextureImporter;
+        if (importer.isReadable != readable) {
+            importer.isReadable = readable;
+            AssetDatabase.ImportAsset(assetPath, ImportAssetOptions.ForceUpdate);
+            return true;
+        }
+
+        return false;
     }
 
     // ===========================================================

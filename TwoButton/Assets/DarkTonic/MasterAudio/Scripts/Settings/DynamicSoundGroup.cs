@@ -4,11 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class DynamicSoundGroup : MonoBehaviour {
-	public Texture logoTexture;
-	public Texture settingsTexture;
-	public Texture deleteTexture;
-	public Texture playTexture;
-	public Texture stopTrackTexture;
 	public GameObject variationTemplate;
 	
 	public float groupMasterVolume = 1f;
@@ -23,6 +18,8 @@ public class DynamicSoundGroup : MonoBehaviour {
 	public float chainLoopDelayMax;
 	public MasterAudioGroup.ChainedLoopLoopMode chainLoopMode = MasterAudioGroup.ChainedLoopLoopMode.Endless;
 	public int chainLoopNumLoops = 0;
+	public bool useDialogFadeOut = false;
+	public float dialogFadeOutTime = .5f;	
 	
 	public bool logSound = false;
 	public int busIndex = -1;

@@ -51,10 +51,10 @@ public class DynamicSoundGroupCreatorInspector : Editor {
 		
 		_creator = (DynamicSoundGroupCreator)target;
 		
-		var isInProjectView = GUIHelper.IsPrefabInProjectView(_creator);
+		var isInProjectView = DTGUIHelper.IsPrefabInProjectView(_creator);
 		
-		if (_creator.logoTexture != null) {
-			GUIHelper.ShowHeaderTexture(_creator.logoTexture);
+		if (MasterAudioInspectorResources.logoTexture != null) {
+			DTGUIHelper.ShowHeaderTexture(MasterAudioInspectorResources.logoTexture);
 		}
 	
 		MasterAudio.Instance = null;
@@ -93,9 +93,9 @@ public class DynamicSoundGroupCreatorInspector : Editor {
 			_creator.createOnAwake = newAwake;
 		}
 		if (_creator.createOnAwake) {
-			GUIHelper.ShowColorWarning("*Items will be created as soon as this object is in the Scene.");
+			DTGUIHelper.ShowColorWarning("*Items will be created as soon as this object is in the Scene.");
 		} else {
-			GUIHelper.ShowColorWarning("*You will need to call this object's CreateItems method.");
+			DTGUIHelper.ShowLargeBarAlert("You will need to call this object's CreateItems method manually to create the items.");
 		}
 
 		var newRemove = EditorGUILayout.Toggle("Auto-remove Items", _creator.removeGroupsOnSceneChange);
@@ -105,9 +105,9 @@ public class DynamicSoundGroupCreatorInspector : Editor {
 		}
 
 		if (_creator.removeGroupsOnSceneChange) {
-			GUIHelper.ShowColorWarning("*Items will be deleted when the Scene changes.");
+			DTGUIHelper.ShowColorWarning("*Items will be deleted when the Scene changes.");
 		} else {
-			GUIHelper.ShowColorWarning("*Items will persist across Scenes if MasterAudio does.");
+			DTGUIHelper.ShowLargeBarAlert("Items will persist across Scenes if MasterAudio does.");
 		}
 		
 		EditorGUILayout.Separator();
@@ -151,7 +151,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
 			EditorGUILayout.Separator();
 			
 			if (_creator.musicDuckingSounds.Count == 0) {
-				GUIHelper.ShowColorWarning("*You currently have no ducking sounds set up.");
+				DTGUIHelper.ShowColorWarning("*You currently have no ducking sounds set up.");
 			} else {
 				int? duckSoundToRemove = null;
 				
@@ -183,7 +183,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
 					
 					GUILayout.FlexibleSpace();
 					GUILayout.Space(10);
-					if (GUIHelper.AddDynamicDeleteIcon(_creator, "Duck Sound")) {
+					if (DTGUIHelper.AddDeleteIcon("Duck Sound")) {
 						duckSoundToRemove = i;	
 					}
 					
@@ -232,8 +232,8 @@ public class DynamicSoundGroupCreatorInspector : Editor {
             var aEvent = Event.current;
 			
 			if (isInProjectView) {
-				GUIHelper.ShowLargeBarAlert("*You are in Project View and cannot create or navigate Groups.");
-				GUIHelper.ShowLargeBarAlert("*Pull this prefab into the Scene to create Groups.");
+				DTGUIHelper.ShowLargeBarAlert("*You are in Project View and cannot create or navigate Groups.");
+				DTGUIHelper.ShowLargeBarAlert("*Pull this prefab into the Scene to create Groups.");
 			} else {
 				GUI.color = Color.yellow;
 	
@@ -309,10 +309,10 @@ public class DynamicSoundGroupCreatorInspector : Editor {
             if (_creator.soundGroupsToCreate.Count > 0 && !Application.isPlaying)
             {
 				if (isInProjectView) {
-	                GUIHelper.ShowLargeBarAlert("You have data in an old format. Pull this prefab into the Scene, then Upgrade Data.");
+	                DTGUIHelper.ShowLargeBarAlert("You have data in an old format. Pull this prefab into the Scene, then Upgrade Data.");
 				} else {
-	                GUIHelper.ShowRedError("You have data in an old format. It will not be used as is.");
-					GUIHelper.ShowRedError("Upgrade it to the new format by clicking the Upgrade button below.");
+	                DTGUIHelper.ShowRedError("You have data in an old format. It will not be used as is.");
+					DTGUIHelper.ShowRedError("Upgrade it to the new format by clicking the Upgrade button below.");
 	
 	                EditorGUILayout.BeginHorizontal();
 	                GUILayout.Space(154);
@@ -328,7 +328,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
 
             if (_groups.Count == 0)
             {
-                GUIHelper.ShowColorWarning("*You currently have no Dynamic Sound Groups created.");
+                DTGUIHelper.ShowColorWarning("*You currently have no Dynamic Sound Groups created.");
             }
 
             int? indexToDelete = null;
@@ -391,21 +391,21 @@ public class DynamicSoundGroupCreatorInspector : Editor {
 
                 GUI.contentColor = Color.white;
 
-                var buttonPressed = GUIHelper.AddDynamicGroupButtons(_creator);
+                var buttonPressed = DTGUIHelper.AddDynamicGroupButtons();
                 EditorGUILayout.EndHorizontal();
 
                 switch (buttonPressed)
                 {
-                    case GUIHelper.DTFunctionButtons.Go:
+                    case DTGUIHelper.DTFunctionButtons.Go:
                         Selection.activeGameObject = aGroup.gameObject;
                         break;
-                    case GUIHelper.DTFunctionButtons.Remove:
+                    case DTGUIHelper.DTFunctionButtons.Remove:
                         indexToDelete = i;
                         break;
-                    case GUIHelper.DTFunctionButtons.Play:
+                    case DTGUIHelper.DTFunctionButtons.Play:
                         PreviewGroup(aGroup);
                         break;
-                    case GUIHelper.DTFunctionButtons.Stop:
+                    case DTGUIHelper.DTFunctionButtons.Stop:
                         StopPreviewingGroup();
                         break;
                 }
@@ -485,10 +485,10 @@ public class DynamicSoundGroupCreatorInspector : Editor {
 						
 						GUI.contentColor = Color.white;
 					} else {
-						GUIHelper.ShowColorWarning("Existing bus. No control.");
+						DTGUIHelper.ShowColorWarning("Existing bus. No control.");
 					}
 					
-					if (GUIHelper.AddDynamicDeleteIcon(_creator, "Bus")) {
+					if (DTGUIHelper.AddDeleteIcon("Bus")) {
 						busToDelete = i;
 					}
 					
@@ -532,7 +532,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
 			EditorGUILayout.EndHorizontal();
 			
 			if (_creator.customEventsToCreate.Count == 0) {
-				GUIHelper.ShowColorWarning("*You currently have no custom events defined here.");
+				DTGUIHelper.ShowColorWarning("*You currently have no custom events defined here.");
 			}
 			
 			EditorGUILayout.Separator();
@@ -552,13 +552,13 @@ public class DynamicSoundGroupCreatorInspector : Editor {
 					UndoHelper.RecordObjectPropertyForUndo(_creator, "change Proposed Event Name");
 					anEvent.ProspectiveName = newName;
 				}
-				var buttonPressed = GUIHelper.AddCustomEventDeleteIcon(true);
+				var buttonPressed = DTGUIHelper.AddCustomEventDeleteIcon(true);
 				
 				switch (buttonPressed) {
-					case GUIHelper.DTFunctionButtons.Remove:
+					case DTGUIHelper.DTFunctionButtons.Remove:
 						indexToDelete = i;
 						break;
-					case GUIHelper.DTFunctionButtons.Rename:
+					case DTGUIHelper.DTFunctionButtons.Rename:
 						indexToRename = i;
 						break;
 				}
@@ -587,7 +587,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
 	
 	private Transform CreateGroup(AudioClip aClip) {
 		if (_creator.groupTemplate == null) {
-			GUIHelper.ShowAlert("Your 'Group Template' field is empty, please assign it in debug mode. Drag the 'DynamicSoundGroup' prefab from MasterAudio/Sources/Prefabs into that field, then switch back to normal mode.");
+			DTGUIHelper.ShowAlert("Your 'Group Template' field is empty, please assign it in debug mode. Drag the 'DynamicSoundGroup' prefab from MasterAudio/Sources/Prefabs into that field, then switch back to normal mode.");
 			return null;
 		}
 
@@ -598,7 +598,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
 		});
 		
 		if (matchingGroup != null) {
-			GUIHelper.ShowAlert("You already have a Group named '" + groupName + "'. \n\nPlease rename this Group when finished to be unique.");
+			DTGUIHelper.ShowAlert("You already have a Group named '" + groupName + "'. \n\nPlease rename this Group when finished to be unique.");
 		}
 		
 		var spawnedGroup = (GameObject) GameObject.Instantiate(_creator.groupTemplate, _creator.transform.position, Quaternion.identity);
@@ -614,13 +614,13 @@ public class DynamicSoundGroupCreatorInspector : Editor {
 	
 	private void CreateVariation(Transform aGroup, AudioClip aClip) {
 		if (_creator.variationTemplate == null) {
-			GUIHelper.ShowAlert("Your 'Variation Template' field is empty, please assign it in debug mode. Drag the 'DynamicGroupVariation' prefab from MasterAudio/Sources/Prefabs into that field, then switch back to normal mode.");
+			DTGUIHelper.ShowAlert("Your 'Variation Template' field is empty, please assign it in debug mode. Drag the 'DynamicGroupVariation' prefab from MasterAudio/Sources/Prefabs into that field, then switch back to normal mode.");
 			return;
 		}
 			
 		var resourceFileName = string.Empty;
 		if (_creator.bulkVariationMode == MasterAudio.AudioLocation.ResourceFile) {
-			resourceFileName = GUIHelper.GetResourcePath(aClip);
+			resourceFileName = DTGUIHelper.GetResourcePath(aClip);
 			if (string.IsNullOrEmpty(resourceFileName)) {
 				resourceFileName = aClip.name;
 			}
@@ -635,7 +635,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
 		});
 		
 		if (matches.Count > 0) {
-			GUIHelper.ShowAlert("You already have a variation for this Group named '" + clipName + "'. \n\nPlease rename these variations when finished to be unique, or you may not be able to play them by name if you have a need to.");
+			DTGUIHelper.ShowAlert("You already have a variation for this Group named '" + clipName + "'. \n\nPlease rename these variations when finished to be unique, or you may not be able to play them by name if you have a need to.");
 		}
 		
 		var spawnedVar = (GameObject) GameObject.Instantiate(_creator.variationTemplate, _creator.transform.position, Quaternion.identity);
@@ -659,7 +659,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
 		});
 		
 		if (match.Count > 0) {
-			GUIHelper.ShowAlert("You already have a custom event named '" + newEventName + "' configured here. Please choose a different name.");
+			DTGUIHelper.ShowAlert("You already have a custom event named '" + newEventName + "' configured here. Please choose a different name.");
 			return;
 		}
 		
@@ -674,7 +674,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
 		});
 		
 		if (match.Count > 0) {
-			GUIHelper.ShowAlert("You already have a custom event named '" + cEvent.ProspectiveName + "' configured here. Please choose a different name.");
+			DTGUIHelper.ShowAlert("You already have a custom event named '" + cEvent.ProspectiveName + "' configured here. Please choose a different name.");
 			return;
 		}
 		
@@ -777,12 +777,12 @@ public class DynamicSoundGroupCreatorInspector : Editor {
 	
 	private void UpgradeData() {
 		if (_creator.groupTemplate == null) {
-			GUIHelper.ShowAlert("Your 'Group Template' field is empty, please assign it in debug mode. Drag the 'DynamicSoundGroup' prefab from MasterAudio/Sources/Prefabs into that field, then switch back to normal mode. Upgrade data cancelled.");
+			DTGUIHelper.ShowAlert("Your 'Group Template' field is empty, please assign it in debug mode. Drag the 'DynamicSoundGroup' prefab from MasterAudio/Sources/Prefabs into that field, then switch back to normal mode. Upgrade data cancelled.");
 			return;
 		}
 
 		if (_creator.variationTemplate == null) {
-			GUIHelper.ShowAlert("Your 'Variation Template' field is empty, please assign it in debug mode. Drag the 'DynamicGroupVariation' prefab from MasterAudio/Sources/Prefabs into that field, then switch back to normal mode. Upgrade data cancelled");
+			DTGUIHelper.ShowAlert("Your 'Variation Template' field is empty, please assign it in debug mode. Drag the 'DynamicGroupVariation' prefab from MasterAudio/Sources/Prefabs into that field, then switch back to normal mode. Upgrade data cancelled");
 			return;
 		}
 
@@ -912,6 +912,6 @@ public class DynamicSoundGroupCreatorInspector : Editor {
 		}
 
 		_creator.soundGroupsToCreate.Clear();
-		GUIHelper.ShowAlert("Dynamic Sound Group Creator data upgraded successfully!");
+		DTGUIHelper.ShowAlert("Dynamic Sound Group Creator data upgraded successfully!");
 	}
 }

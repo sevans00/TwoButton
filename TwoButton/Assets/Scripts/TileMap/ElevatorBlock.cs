@@ -16,15 +16,31 @@ public class ElevatorBlock : InteractiveTile {
 	private const int TILE_LEFT = 14;
 	private const int TILE_RIGHT = 12;
 
+	private GameObject[] adjacentElevatorBlocks;
+
 	public void Start () {
 		startPosition = transform.position;
 		startDirection = Vector3.right; //
 		currentDirection = startDirection;
 		tilemap = GameObject.FindObjectOfType<tk2dTileMap>();
+		//Link up with adjacent directions!  Yay!
+		int x, y;
+		tilemap.GetTileAtPosition(transform.position, out x, out y );
+		//Check tiles to the left to find the initial direction to move:
+		int tileId_L = tilemap.GetTile(x-1, y, 0);
+		int tileId_R = tilemap.GetTile(x+1, y, 0);
+		if ( isDirectionTile(tileId_L) ) {
+			currentDirection = getDirectionOfTile(tileId_L);
+		}
+		if ( isDirectionTile(tileId_R) ) {
+			currentDirection = getDirectionOfTile(tileId_R);
+		}
+		startDirection = currentDirection;
 	}
 
 	public override void Reset ()
 	{
+		Debug.Log("Reset elevator!");
 		transform.position = startPosition;
 		currentDirection = startDirection;
 	}
@@ -41,10 +57,23 @@ public class ElevatorBlock : InteractiveTile {
 	}
 
 	public void ChangeDirectionCheck () {
-		//Get the block currently under me:
-		int tileId = tilemap.GetTileIdAtPosition(transform.position, 0);
-		if ( !isDirectionTile(tileId)) {
+		tilemap = GameObject.FindObjectOfType<tk2dTileMap>();
+		//Link up with adjacent elevators!  Yay!
+		int x, y;
+		tilemap.GetTileAtPosition(transform.position, out x, out y );
+		//Check tiles to the left to find the initial direction to move:
+		int tileId_L = tilemap.GetTile(x-1, y, 0);
+		int tileId_R = tilemap.GetTile(x+1, y, 0);
+		if ( !isDirectionTile(tileId_L) && !isDirectionTile(tileId_R) ) {
 			return;
+		}
+
+		Vector3 newDirection = Vector3.zero;
+		if ( isDirectionTile(tileId_L) ) {
+			newDirection = getDirectionOfTile(tileId_L);
+		}
+		if ( isDirectionTile(tileId_R) ) {
+			newDirection = getDirectionOfTile(tileId_R);
 		}
 
 		float xfrac;
@@ -52,13 +81,6 @@ public class ElevatorBlock : InteractiveTile {
 		tilemap.GetTileFracAtPosition(transform.position, out xfrac, out yfrac);
 		float xfracfrac = xfrac - Mathf.Floor(xfrac);
 		float yfracfrac = yfrac - Mathf.Floor(yfrac);
-
-		Vector3 newDirection = getDirectionOfTile(tileId);
-		if ( newDirection.Equals ( currentDirection ) ) {
-			return;
-		}
-
-		//Vector3 blockPosition = tilemap.GetTilePosition( Mathf.FloorToInt(xfrac), Mathf.FloorToInt(yfrac) );
 
 		if ( currentDirection.x > 0 && xfracfrac >= 0.5f ) {
 			currentDirection = newDirection;
@@ -84,9 +106,6 @@ public class ElevatorBlock : InteractiveTile {
 			//transform.position = blockPosition;
 			return;
 		}
-
-
-
 	}
 
 	public bool isDirectionTile ( int tileId ) {

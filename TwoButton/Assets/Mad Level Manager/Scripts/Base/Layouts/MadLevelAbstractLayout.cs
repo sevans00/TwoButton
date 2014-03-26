@@ -186,23 +186,25 @@ public abstract class MadLevelAbstractLayout : MadNode {
         if (icon != null) {
             LookAtIcon(icon);
         } else {
-                Debug.LogError("Cannot find icon for level: " + levelName);
+            Debug.LogError("Cannot find icon for level: " + levelName);
         }
     }
     
     /// <summary>
     /// Looks at last played level icon.
     /// </summary>
-    public void LookAtLastPlayedLevel() {
+    /// <returns>true if last level were found</returns>
+    public bool LookAtLastPlayedLevel() {
         if (!Application.isPlaying) {
-            return; // do not do anything if is not in play mode
+            return false; // do not do anything if is not in play mode
         }
     
         string lastPlayedLevelName = MadLevel.lastPlayedLevelName;
         if (!string.IsNullOrEmpty(lastPlayedLevelName)) {
             LookAtLevel(lastPlayedLevelName);
+            return true;
         } else {
-            Debug.LogWarning("Cannot look at the last level: There's no last played level name");
+            return false;
         }
     }
     
@@ -281,9 +283,12 @@ public abstract class MadLevelAbstractLayout : MadNode {
                         "Build configuration of choice is not activate/synchronized with this level select layout "
                         + "(errors will occur). Do it now?",
                         "Yes", "No")) {
-                        MadLevelConfiguration.GetActive().active = false; // workaround
-                        configuration.active = true;
-                        configuration.SynchronizeBuild();
+                            var active = MadLevelConfiguration.GetActive();
+                            if (active != null) {
+                                active.active = false; // workaround
+                            }
+                            configuration.active = true;
+                            configuration.SynchronizeBuild();
                     }
                 }    
             }

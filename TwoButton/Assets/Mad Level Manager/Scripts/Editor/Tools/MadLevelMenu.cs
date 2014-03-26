@@ -17,6 +17,9 @@ public class MadLevelMenu : MonoBehaviour {
     // Constants
     // ===========================================================
     
+    private const string HomePage =
+        "http://madlevelmanager.madpixelmachine.com/documentation.html";
+
     // ===========================================================
     // Fields
     // ===========================================================
@@ -56,8 +59,18 @@ public class MadLevelMenu : MonoBehaviour {
         Selection.activeGameObject = anchor.gameObject;
     }
     
-    [MenuItem("Tools/Mad Level Manager/Create UI/Create Background", false, 149)]
+    [MenuItem("Tools/Mad Level Manager/Create UI/Background", false, 149)]
     static void CreateBackground() {
+        var freeLayout = GameObject.FindObjectOfType(typeof(MadLevelFreeLayout));
+        if (freeLayout != null) {
+            EditorUtility.DisplayDialog(
+                "Create Background",
+                "Free layout has different method of creating backgrounds (this is temporary and will be fixed in future versions). "
+                + "You should look for a 'Background Texture' field in the free layout inspector.", "OK");
+            Selection.activeObject = freeLayout;
+            return;
+        }
+
         MadLevelBackgroundTool.ShowWindow();
     }
     
@@ -84,8 +97,7 @@ public class MadLevelMenu : MonoBehaviour {
     
     [MenuItem("Tools/Mad Level Manager/Create Level Icon", false, 150)]      
     static void CreateIcon() {
-        var wizard = ScriptableWizard.DisplayWizard<MadLevelIconTool>("Create Icon", "Create");
-        wizard.panel = MadPanel.UniqueOrNull();
+        MadLevelIconTool.Display();
     }
     
     [MenuItem("Tools/Mad Level Manager/Create Level Property/Empty", false, 155)]
@@ -103,7 +115,7 @@ public class MadLevelMenu : MonoBehaviour {
         ScriptableWizard.DisplayWizard<MadLevelPropertyTextTool>("Create Text Property", "Create");
     }
     
-    [MenuItem("Tools/Mad Level Manager/Create Grid Layout", false, 200)]
+    [MenuItem("Tools/Mad Level Manager/Grid Layout/Create", false, 200)]
     static void CreateGridLayout() {
         var panel = MadPanel.UniqueOrNull();
         if (panel != null) {
@@ -112,8 +124,15 @@ public class MadLevelMenu : MonoBehaviour {
             ScriptableWizard.DisplayWizard<MadLevelGridTool>("Create Grid Layout", "Create");
         }
     }
+
+    [MenuItem("Tools/Mad Level Manager/Grid Layout/Create Bullets", false, 300)]
+    static void CreateBullets() {
+        var panel = MadPanel.UniqueOrNull();
+        var bullets = MadLevelGridBulletsTool.Create(panel);
+        Selection.activeObject = bullets.gameObject;
+    }
     
-    [MenuItem("Tools/Mad Level Manager/Create Free Layout", false, 200)]
+    [MenuItem("Tools/Mad Level Manager/Free Layout/Create", false, 200)]
     static void CreateFreeLayout() {
         var panel = MadPanel.UniqueOrNull();
         if (panel != null) {
@@ -139,24 +158,36 @@ public class MadLevelMenu : MonoBehaviour {
         }
     }
     
-    [MenuItem("Tools/Mad Level Manager/Online Manual", false, 1000)]
+    [MenuItem("Tools/Mad Level Manager/Wiki, Manual", false, 1000)]
     static void OpenHomepage() {
-        Application.OpenURL(MadLevelHelp.Documentation);
+        Application.OpenURL(HomePage);
     }
     
     //
     // validators
     //
     
-    [MenuItem ("Tools/Mad Level Manager/Create Sprite", true)]
-    [MenuItem ("Tools/Mad Level Manager/Create Level Icon", true)]
-    [MenuItem ("Tools/Mad Level Manager/Create Property/Empty", true)]
-    [MenuItem ("Tools/Mad Level Manager/Create Property/Sprite", true)]
-    [MenuItem ("Tools/Mad Level Manager/Create Property/Text", true)]
-    [MenuItem ("Tools/Mad Level Manager/Create Grid Layout", true)]
-    [MenuItem ("Tools/Mad Level Manager/Create Free Layout", true)]
+    [MenuItem("Tools/Mad Level Manager/Create Sprite", true)]
+    [MenuItem("Tools/Mad Level Manager/Create Level Icon", true)]
+    [MenuItem("Tools/Mad Level Manager/Create Property/Empty", true)]
+    [MenuItem("Tools/Mad Level Manager/Create Property/Sprite", true)]
+    [MenuItem("Tools/Mad Level Manager/Create Property/Text", true)]
+    [MenuItem("Tools/Mad Level Manager/Create Grid Layout", true)]
+    [MenuItem("Tools/Mad Level Manager/Create Free Layout", true)]
+    [MenuItem("Tools/Mad Level Manager/Grid Layout/Create Bullets", true)]
     static bool ValidateHasPanel() {
         return MadPanel.UniqueOrNull() != null;
+    }
+
+    [MenuItem("Tools/Mad Level Manager/Grid Layout/Create Bullets", true)]
+    static bool ValidateHasGridLayout() {
+        var panel = MadPanel.UniqueOrNull();
+        if (panel == null) {
+            return false;
+        }
+
+        var gridLayout = MadTransform.FindChild<MadLevelGridLayout>(panel.transform);
+        return gridLayout != null;
     }
 
     // ===========================================================

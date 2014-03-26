@@ -7,7 +7,6 @@ using System.Collections;
 /// </summary>
 public class SoundGroupVariation : MonoBehaviour
 {
-    public Texture logoTexture;
     public int weight = 1;
     public float randomPitch = 0f;
     public float randomVolume = 0f;
@@ -46,7 +45,8 @@ public class SoundGroupVariation : MonoBehaviour
 
     private Transform trans;
     private Transform objectToFollow = null;
-    private MasterAudioGroup parentGroupScript;
+	private Transform objectToTriggerFrom = null;
+	private MasterAudioGroup parentGroupScript;
     private int timesLocationUpdated = 0;
     private bool attachToSource = false;
     private float lastTimePlayed = 0f;
@@ -161,13 +161,27 @@ public class SoundGroupVariation : MonoBehaviour
         this.curFadeMode = FadeMode.None;
         curDetectEndMode = DetectEndMode.DetectEnd;
 
-        if (audLocation == MasterAudio.AudioLocation.ResourceFile)
-        {
-            AudioResourceOptimizer.PopulateSourcesWithResourceClip(resourceFileName);
-        }
-
         StopAllCoroutines();
-        timesLocationUpdated = 0;
+		
+        if (audLocation == MasterAudio.AudioLocation.Clip) {
+			FinishSetupToPlay(maxVolume);
+			return;
+		}
+
+		StartCoroutine(LoadResourceFileAsync(resourceFileName, maxVolume));
+    }
+	
+	private IEnumerator LoadResourceFileAsync(string resourceFileName, float maxVolume) {
+		yield return new WaitForSeconds(Time.deltaTime); // this lets the thread continue without blocking; For some reason CoRoutine alone isn't enough.
+		
+		AudioResourceOptimizer.PopulateSourcesWithResourceClip(resourceFileName);
+		FinishSetupToPlay(maxVolume);
+		yield break;
+	}
+	
+	private void FinishSetupToPlay(float maxVolume) {
+		//Debug.Log("finishing setup");
+		timesLocationUpdated = 0;
 
         if (!_audio.isPlaying && _audio.time > 0f)
         {
@@ -187,25 +201,25 @@ public class SoundGroupVariation : MonoBehaviour
 
         ParentGroup.AddActiveAudioSourceId(this);
 
-        StartCoroutine(DetectSoundFinished(playParams.delaySoundTime));
+        StartCoroutine(DetectSoundFinished(playSndParams.delaySoundTime));
 
         attachToSource = false;
 
         bool useClipAgePriority = MasterAudio.Instance.prioritizeOnDistance && (MasterAudio.Instance.useClipAgePriority || ParentGroup.useClipAgePriority);
-        if (playParams.attachToSource || useClipAgePriority)
+        if (playSndParams.attachToSource || useClipAgePriority)
         {
-            attachToSource = playParams.attachToSource;
-	        if (ObjectToFollow != null && ObjectToFollow.GetComponentInChildren<AudioListener>() != null)
+            attachToSource = playSndParams.attachToSource;
+	        if (ObjectToFollow != null && ObjectToFollow.root.GetInstanceID() == MasterAudio.ListenerID)
 			{
-				AudioUpdater updater = gameObject.AddComponent<AudioUpdater>(); 
+				AudioUpdater updater = gameObject.AddComponent<AudioUpdater>();
 				updater.FollowTransform = ObjectToFollow;
 				attachToSource = false;	// Do not modify playParams as the sound group may contain more variations
 				ObjectToFollow = null;
 			}
             StartCoroutine(FollowSoundMaker());
         }
-    }
-
+	}
+	
     /// <summary>
     /// This method allows you to jump to a specific time in an already playing or just triggered Audio Clip.
     /// </summary>
@@ -271,9 +285,11 @@ public class SoundGroupVariation : MonoBehaviour
         {
             curDetectEndMode = DetectEndMode.None; // turn off the chain loop endless repeat
         }
-
-        ParentGroup.RemoveActiveAudioSourceId(this);
-
+		
+		objectToFollow = null;	
+        objectToTriggerFrom = null;
+		ParentGroup.RemoveActiveAudioSourceId(this);
+		
         _audio.Stop();
 
         playSndParams = null;
@@ -311,7 +327,7 @@ public class SoundGroupVariation : MonoBehaviour
             yield break;
         }
 
-        yield return new WaitForSeconds(MasterAudio.INNER_LOOP_CHECK_INTERVAL); // wait for the clip to start playing :)
+        yield return MasterAudio.loopDelay; // wait for the clip to start playing :)
 
         var volStep = (targetVolume - _audio.volume) / (fadeTime / MasterAudio.INNER_LOOP_CHECK_INTERVAL);
         float newVol;
@@ -330,7 +346,7 @@ public class SoundGroupVariation : MonoBehaviour
 
             _audio.volume = newVol;
 
-            yield return new WaitForSeconds(MasterAudio.INNER_LOOP_CHECK_INTERVAL); // wait for the clip to start playing :)
+            yield return MasterAudio.loopDelay; // wait for the clip to start playing :)
         }
 
         if (_audio.volume <= 0f)
@@ -368,6 +384,8 @@ public class SoundGroupVariation : MonoBehaviour
         {
             return;
         }
+
+		StopCoroutine("FadeOutEarly"); // in case it's already fading.
         StartCoroutine(FadeOutEarly(fadeTime));
     }
 
@@ -377,10 +395,10 @@ public class SoundGroupVariation : MonoBehaviour
 
         var stepVolumeDown = _audio.volume / fadeTime * MasterAudio.INNER_LOOP_CHECK_INTERVAL;
 
-        while (_audio.isPlaying && curFadeMode == FadeMode.FadeOutEarly)
+        while (_audio.isPlaying && curFadeMode == FadeMode.FadeOutEarly && _audio.volume > 0)
         {
             _audio.volume -= stepVolumeDown;
-            yield return new WaitForSeconds(MasterAudio.INNER_LOOP_CHECK_INTERVAL);
+            yield return MasterAudio.loopDelay;
         }
 
         _audio.volume = 0f;
@@ -398,7 +416,7 @@ public class SoundGroupVariation : MonoBehaviour
     {
         var fadeOutStartTime = _audio.clip.length - (fadeOutTime * _audio.pitch);
 
-        yield return new WaitForSeconds(MasterAudio.INNER_LOOP_CHECK_INTERVAL); // wait for the clip to start playing :)
+        yield return MasterAudio.loopDelay; // wait for the clip to start playing :)
 
         var stepVolumeUp = fadeMaxVolume / fadeInTime * MasterAudio.INNER_LOOP_CHECK_INTERVAL;
 
@@ -409,7 +427,7 @@ public class SoundGroupVariation : MonoBehaviour
             while (_audio.isPlaying && curFadeMode == FadeMode.FadeInOut && _audio.time < fadeInTime)
             {
                 _audio.volume += stepVolumeUp;
-                yield return new WaitForSeconds(MasterAudio.INNER_LOOP_CHECK_INTERVAL);
+                yield return MasterAudio.loopDelay;
             }
         }
 
@@ -428,7 +446,7 @@ public class SoundGroupVariation : MonoBehaviour
         // wait for fade out time.
         while (_audio.isPlaying && curFadeMode == FadeMode.FadeInOut && _audio.time < fadeOutStartTime)
         {
-            yield return new WaitForSeconds(MasterAudio.INNER_LOOP_CHECK_INTERVAL);
+            yield return MasterAudio.loopDelay;
         }
 
         if (curFadeMode != FadeMode.FadeInOut)
@@ -438,10 +456,10 @@ public class SoundGroupVariation : MonoBehaviour
 
         var stepVolumeDown = fadeMaxVolume / fadeOutTime * MasterAudio.INNER_LOOP_CHECK_INTERVAL;
 
-        while (_audio.isPlaying && curFadeMode == FadeMode.FadeInOut)
+        while (_audio.isPlaying && curFadeMode == FadeMode.FadeInOut && _audio.volume > 0)
         {
             _audio.volume -= stepVolumeDown;
-            yield return new WaitForSeconds(MasterAudio.INNER_LOOP_CHECK_INTERVAL);
+            yield return MasterAudio.loopDelay;
         }
 
         audio.volume = 0f;
@@ -512,13 +530,17 @@ public class SoundGroupVariation : MonoBehaviour
         {
             yield break;
         }
+		
+		_audio.Play();
 
-        _audio.Play();
-        lastTimePlayed = Time.time;
-
-        var clipLength = _audio.clip.length / _audio.pitch;
-        yield return new WaitForSeconds(clipLength); // wait for clip to play
-
+		lastTimePlayed = Time.time;
+		
+        // sound play worked! Duck music if a ducking sound.
+		MasterAudio.DuckSoundGroup(ParentGroup.name, _audio);
+		
+        var clipLength = Math.Abs(_audio.clip.length / _audio.pitch);
+		yield return new WaitForSeconds(clipLength); // wait for clip to play
+		
         if (HasActiveFXFilter && fxTailTime > 0f)
         {
             yield return new WaitForSeconds(fxTailTime);
@@ -535,7 +557,7 @@ public class SoundGroupVariation : MonoBehaviour
         {
             yield break;
         }
-
+		
         if (playSnd != null && playSnd.isChainLoop)
         {
 			// check if loop count is over.
@@ -568,7 +590,19 @@ public class SoundGroupVariation : MonoBehaviour
             }
         }
     }
+	
+	public bool WasTriggeredFromTransform(Transform trans) {
+		if (ObjectToFollow == trans || ObjectToTriggerFrom == trans) {
+			return true;
+		}
 
+		var updater = this.GetComponent<AudioUpdater>();
+		if (updater != null && updater.FollowTransform == trans) {
+			return true;
+		}
+		return false;
+	}
+	
     /// <summary>
     /// This property returns you a lazy-loaded reference to the Unity Distortion Filter FX component.
     /// </summary>
@@ -664,7 +698,7 @@ public class SoundGroupVariation : MonoBehaviour
             return hpFilter;
         }
     }
-
+	
     public Transform ObjectToFollow
     {
         get
@@ -676,7 +710,16 @@ public class SoundGroupVariation : MonoBehaviour
             objectToFollow = value;
         }
     }
-
+	
+	public Transform ObjectToTriggerFrom {
+		get {
+			return objectToTriggerFrom;
+		}
+		set {
+			objectToTriggerFrom = value;
+		}
+	}
+			
     public bool HasActiveFXFilter
     {
         get

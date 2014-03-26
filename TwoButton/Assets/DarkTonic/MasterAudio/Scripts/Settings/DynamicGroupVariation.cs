@@ -3,11 +3,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
+[RequireComponent(typeof(AudioSource))]
 public class DynamicGroupVariation : MonoBehaviour {
-	public Texture logoTexture;
-	public Texture playTexture;
-	public Texture stopTrackTexture;
-	
     public float randomPitch = 0f;
     public float randomVolume = 0f;
     public int weight = 1;

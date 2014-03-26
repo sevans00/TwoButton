@@ -40,7 +40,7 @@ public class MadRootNode : MadNode {
     public float pixelSize {
         get {
             if (resizeMode == ResizeMode.FixedSize) {
-                return manualHeight / Screen.height;
+                return Screen.height / (float) manualHeight;
             } else {
                 return 0.5f;
             }

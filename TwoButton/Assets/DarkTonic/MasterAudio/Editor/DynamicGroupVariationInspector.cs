@@ -16,8 +16,8 @@ public class DynamicGroupVariationInspector : Editor {
 		
 		_variation = (DynamicGroupVariation)target;
 		
-		if (_variation.logoTexture != null) {
-			GUIHelper.ShowHeaderTexture(_variation.logoTexture);
+		if (MasterAudioInspectorResources.logoTexture != null) {
+			DTGUIHelper.ShowHeaderTexture(MasterAudioInspectorResources.logoTexture);
 		}
 	
         EditorGUI.indentLevel = 0;  // Space will handle this for the header
@@ -28,7 +28,7 @@ public class DynamicGroupVariationInspector : Editor {
 		}
 		
 		if (creator == null) {
-			GUIHelper.ShowRedError("This prefab must have DynamicSoundGroupCreator 2 parents up.");
+			DTGUIHelper.ShowRedError("This prefab must have DynamicSoundGroupCreator 2 parents up.");
 			return;
 		}
 		
@@ -40,10 +40,10 @@ public class DynamicGroupVariationInspector : Editor {
 		GUILayout.FlexibleSpace();
 		GUI.contentColor = Color.white;
 		
-		var buttonPressed = GUIHelper.AddDynamicVariationButtons(_variation);
+		var buttonPressed = DTGUIHelper.AddDynamicVariationButtons();
 			
 		switch (buttonPressed) {
-			case GUIHelper.DTFunctionButtons.Play:
+			case DTGUIHelper.DTFunctionButtons.Play:
 				isDirty = true;
 				if (_variation.audLocation == MasterAudio.AudioLocation.ResourceFile) {
 					creator.PreviewerInstance.Stop();
@@ -52,7 +52,7 @@ public class DynamicGroupVariationInspector : Editor {
 					PlaySound(_variation.audio);
 				}
 				break;
-			case GUIHelper.DTFunctionButtons.Stop:
+			case DTGUIHelper.DTFunctionButtons.Stop:
 				if (_variation.audLocation == MasterAudio.AudioLocation.ResourceFile) {
 					creator.PreviewerInstance.Stop();
 				} else {
@@ -64,7 +64,7 @@ public class DynamicGroupVariationInspector : Editor {
 		EditorGUILayout.EndHorizontal();
 		
 		if (!Application.isPlaying) {
-			GUIHelper.ShowColorWarning("*Fading & random settings are ignored by preview in edit mode.");
+			DTGUIHelper.ShowColorWarning("*Fading & random settings are ignored by preview in edit mode.");
 		}
 		
 		var oldLocation = _variation.audLocation;
@@ -120,7 +120,7 @@ public class DynamicGroupVariationInspector : Editor {
 									continue;
 								}
 								
-								newFilename = GUIHelper.GetResourcePath(aClip);
+								newFilename = DTGUIHelper.GetResourcePath(aClip);
 								if (string.IsNullOrEmpty(newFilename)) {
 									newFilename = aClip.name;
 								}
@@ -230,7 +230,7 @@ public class DynamicGroupVariationInspector : Editor {
 			}
 			
 			if (_variation.audio.loop) {
-				GUIHelper.ShowColorWarning("*Looped clips cannot have a custom fade out.");
+				DTGUIHelper.ShowColorWarning("*Looped clips cannot have a custom fade out.");
 			} else {
 				var newFadeOut = EditorGUILayout.Slider("Fade Out time (sec)", _variation.fadeOutTime, 0f, 10f);
 				if (newFadeOut != _variation.fadeOutTime) {

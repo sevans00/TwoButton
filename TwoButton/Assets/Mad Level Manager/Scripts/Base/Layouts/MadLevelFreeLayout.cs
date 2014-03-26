@@ -27,9 +27,21 @@ public class MadLevelFreeLayout : MadLevelAbstractLayout {
     public Vector2 offset = new Vector2(16, -16);
     public Texture2D backgroundTexture;
     
+    // if true it will look at last played level
     public bool lookAtLastLevel = true;
-    
-    MadFreeDraggable draggable;
+    // if above cannot be found, will look at the defined level type
+    public LookLevelType lookAtLevel = LookLevelType.FirstLevel;
+
+    public MadFreeDraggable draggable {
+        get {
+            if (_draggable == null) {
+                _draggable = MadTransform.GetOrCreateChild<MadFreeDraggable>(transform, "Draggable");
+            }
+
+            return _draggable;
+        }
+    }
+    private MadFreeDraggable _draggable;
     
     [HideInInspector]    
     public bool dirty;
@@ -85,14 +97,61 @@ public class MadLevelFreeLayout : MadLevelAbstractLayout {
             Debug.LogError("No icon found for level '" + levelName + "'");
         }
     }
-    
+
     #endregion
-    
+
+    #region Public Editor API
+#if UNITY_EDITOR
+    /// <summary>
+    /// Will replace all icons in the layout with selected icon. Position, scale and rotation will be preserved.
+    /// This method is meant for editor-use only.
+    /// </summary>
+    /// <param name="newIcon"></param>
+    public void ReplaceIcons(GameObject newIcon) {
+        MadUndo.LegacyRegisterSceneUndo("Replaced Icons");
+
+        var icons = MadTransform.FindChildren<MadLevelIcon>(draggable.transform);
+        var activeIcons = from i in icons where MadGameObject.IsActive(i.gameObject) select i;
+
+        foreach (var icon in activeIcons) {
+            var position = icon.transform.position;
+            var rotation = icon.transform.rotation;
+            var localScale = icon.transform.localScale;
+            var name = icon.name;
+            var baseDepth = icon.guiDepth;
+
+            MadUndo.DestroyObjectImmediate(icon.gameObject);
+
+            var nIcon = MadTransform.CreateChild(draggable.transform, name, newIcon);
+            nIcon.transform.position = position;
+            nIcon.transform.rotation = rotation;
+            nIcon.transform.localScale = localScale;
+            nIcon.GetComponent<MadLevelIcon>().guiDepth = baseDepth;
+
+            var childSprites = MadTransform.FindChildren<MadSprite>(nIcon.transform);
+            foreach (var cs in childSprites) {
+                cs.guiDepth += baseDepth;
+            }
+
+            MadUndo.RegisterCreatedObjectUndo(nIcon.gameObject, "Replaced Icons");
+        }
+    }
+#endif
+    #endregion
+
     protected override void OnEnable() {
         base.OnEnable();
-        draggable = MadTransform.GetOrCreateChild<MadFreeDraggable>(transform, "Draggable");
-        if (lookAtLastLevel) {
-            LookAtLastPlayedLevel();
+
+        if (Application.isPlaying) {
+            bool looked = false;
+            if (lookAtLastLevel) {
+                looked = LookAtLastPlayedLevel();
+            }
+
+            if (!looked) {
+                // need to look at other type of level
+                LookAtLevel();
+            }
         }
         
         configuration.callbackChanged = () => {
@@ -105,7 +164,59 @@ public class MadLevelFreeLayout : MadLevelAbstractLayout {
             Build();
         }
     }
-    
+
+    private void LookAtLevel() {
+        switch (lookAtLevel) {
+            case LookLevelType.FirstLevel:
+                LookAtFirstLevel();
+                break;
+            case LookLevelType.LastUnlocked:
+                LookAtLastUnlockedLevel();
+                break;
+            case LookLevelType.LastCompleted:
+                LookAtLastCompletedLevel();
+                break;
+            default:
+                Debug.LogError("Unknown level type: " + lookAtLevel);
+                break;
+        }
+    }
+
+    private void LookAtLastCompletedLevel() {
+        var lastCompleted =
+            from l in MadLevel.activeConfiguration.levels
+            where l.type == MadLevel.Type.Level && MadLevelProfile.IsCompleted(l.name)
+            orderby l.order descending
+            select l;
+        var lastCompletedLevel = lastCompleted.FirstOrDefault();
+        if (lastCompletedLevel != null) {
+            var lastCompletedIcon = MadLevelLayout.current.GetIcon(lastCompletedLevel.name);
+            LookAtIcon(lastCompletedIcon);
+        } else {
+            LookAtFirstLevel();
+        }
+    }
+
+    private void LookAtFirstLevel() {
+        var firstIcon = MadLevelLayout.current.GetFirstIcon();
+        LookAtIcon(firstIcon);
+    }
+
+    private void LookAtLastUnlockedLevel() {
+        var firstUnlocked =
+            from l in MadLevel.activeConfiguration.levels
+            where l.type == MadLevel.Type.Level && MadLevelProfile.IsLockedSet(l.name) && MadLevelProfile.IsLocked(l.name) == false
+            orderby l.order descending
+            select l;
+        var firstUnlockedLevel = firstUnlocked.FirstOrDefault();
+        if (firstUnlockedLevel != null) {
+            var firstUnlockedIcon = MadLevelLayout.current.GetIcon(firstUnlockedLevel.name);
+            LookAtIcon(firstUnlockedIcon);
+        } else {
+            LookAtFirstLevel();
+        }
+    }
+
     protected override void Update() {
         base.Update();
     
@@ -225,6 +336,12 @@ public class MadLevelFreeLayout : MadLevelAbstractLayout {
     // ===========================================================
     // Inner and Anonymous Classes
     // ===========================================================
+
+    public enum LookLevelType {
+        FirstLevel,
+        LastUnlocked,
+        LastCompleted,
+    }
 
 }
 

@@ -103,6 +103,10 @@ public class MadTransform {
     public static T FindChild<T>(Transform parent) where T : Component {
         return FindChild(parent, (T t) => true);
     }
+
+    public static T FindChild<T>(Transform parent, int depth) where T : Component {
+        return FindChild(parent, (T t) => true, depth);
+    }
     
     public static T FindChild<T>(Transform parent, Predicate<T> predicate) where T : Component {
         return FindChild<T>(parent, predicate, int.MaxValue, 0);

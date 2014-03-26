@@ -28,8 +28,10 @@ public class MadLevelFreeLayoutInspector : MadLevelAbstractLayoutInspector {
 //    SerializedProperty offset;
     
     SerializedProperty backgroundTexture;
-    
     SerializedProperty lookAtLastLevel;
+    SerializedProperty lookAtLevel;
+
+    MadLevelFreeLayout script;
     
     // ===========================================================
     // Methods for/from SuperClass/Interfaces
@@ -41,9 +43,12 @@ public class MadLevelFreeLayoutInspector : MadLevelAbstractLayoutInspector {
     
     protected override void OnEnable() {
         base.OnEnable();
+
+        script = target as MadLevelFreeLayout;
+
         backgroundTexture = serializedObject.FindProperty("backgroundTexture");
-        
         lookAtLastLevel = serializedObject.FindProperty("lookAtLastLevel");
+        lookAtLevel = serializedObject.FindProperty("lookAtLevel");
     }
 
     public override void OnInspectorGUI() {
@@ -54,6 +59,18 @@ public class MadLevelFreeLayoutInspector : MadLevelAbstractLayoutInspector {
             MadGUI.PropertyField(configuration, "Configuration", MadGUI.ObjectIsSet);
             MadGUI.PropertyField(iconTemplate, "Icon Template", MadGUI.ObjectIsSet);
             MadGUI.PropertyField(backgroundTexture, "Background Texture");
+
+            MadGUI.Info("Use the button below if you've updated your icon template and you want to replace all icons in your layout with it.");
+
+            if (MadGUI.Button("Replace All Icons", Color.yellow)) {
+                ReplaceAllIcons();
+            }
+
+            MadGUI.Info("More customization options are available in the Draggable object.");
+
+            if (MadGUI.Button("Select Draggable", Color.magenta)) {
+                SelectDraggable();
+            }
         });
         
         GUILayout.Label("Mechanics", "HeaderLabel");
@@ -61,11 +78,34 @@ public class MadLevelFreeLayoutInspector : MadLevelAbstractLayoutInspector {
         MadGUI.Indent(() => {
             MadGUI.PropertyField(lookAtLastLevel, "Look At Last Level", "When scene is loaded, it will automatically "
                                  + "go to the previously played level (but only if previous scene is of type Level.");
+
+            GUILayout.Label("If above is disabled or cannot be determined, then...");
+
+            MadGUI.PropertyFieldEnumPopup(lookAtLevel, "Look At Level");
+
+            EditorGUILayout.Space();
+
             HandleMobileBack();
+
+            EditorGUILayout.Space();
+
             TwoStepActivation();
         });
         
         serializedObject.ApplyModifiedProperties();
+    }
+
+    private void SelectDraggable() {
+        Selection.activeGameObject = script.draggable.gameObject;
+    }
+
+    private void ReplaceAllIcons() {
+        if (EditorUtility.DisplayDialog("Replace all icons?",
+            "Are you sure that you want to replace all icons with selected prefab?",
+            "Replace", "Cancel")) {
+
+                script.ReplaceIcons(script.iconTemplate.gameObject);
+        }
     }
 
     // ===========================================================

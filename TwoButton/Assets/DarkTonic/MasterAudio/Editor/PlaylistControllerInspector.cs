@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEditor;
 using System.Collections;
+using System.Collections.Generic;
 
 [CustomEditor(typeof(PlaylistController))]
 public class PlaylistControllerInspector : Editor {
@@ -10,9 +11,11 @@ public class PlaylistControllerInspector : Editor {
 		
 		PlaylistController controller = (PlaylistController)target;
 		
+		MasterAudio.Instance = null;
+		
 		var ma = MasterAudio.Instance;
 		if (ma != null) {
-			GUIHelper.ShowHeaderTexture(ma.logoTexture);
+			DTGUIHelper.ShowHeaderTexture(MasterAudioInspectorResources.logoTexture);
 		}
 		
 		var newVol = EditorGUILayout.Slider("Playlist Volume", controller.playlistVolume, 0f, 1f);
@@ -55,9 +58,9 @@ public class PlaylistControllerInspector : Editor {
 			}
 			
 			if (noPl) {
-				GUIHelper.ShowRedError("Initial Playlist not specified. No music will play.");
+				DTGUIHelper.ShowRedError("Initial Playlist not specified. No music will play.");
 			} else if (noMatch) {
-				GUIHelper.ShowRedError("Initial Playlist found no match. Type in or choose one from 'All Playlists'.");
+				DTGUIHelper.ShowRedError("Initial Playlist found no match. Type in or choose one from 'All Playlists'.");
 			}
 			
 			if (groupIndex.HasValue) {
@@ -70,6 +73,23 @@ public class PlaylistControllerInspector : Editor {
 					controller.startPlaylistName = plNames[groupIndex.Value];
 				}
 			}
+		}
+		
+		
+		var syncGroupList = new List<string>();
+		for (var i = 0; i < 4; i++) {
+			syncGroupList.Add((i + 1).ToString());
+		}
+		syncGroupList.Insert(0, MasterAudio.NO_GROUP_NAME);
+
+		var syncIndex = syncGroupList.IndexOf(controller.syncGroupNum.ToString());
+		if (syncIndex == -1) {
+			syncIndex = 0;
+		}
+		var newSync = EditorGUILayout.Popup("Controller Sync Group", syncIndex, syncGroupList.ToArray());
+		if (newSync != syncIndex) {
+			UndoHelper.RecordObjectPropertyForUndo(controller, "change Controller Sync Group");
+			controller.syncGroupNum = newSync;
 		}
 		
 		EditorGUI.indentLevel = 0;
@@ -85,13 +105,19 @@ public class PlaylistControllerInspector : Editor {
 			controller.isShuffle = newShuffle;
 		}
 		
+		var newLoop = EditorGUILayout.Toggle("Loop Playlists", controller.loopPlaylist);
+		if (newLoop != controller.loopPlaylist) {
+			UndoHelper.RecordObjectPropertyForUndo(controller, "toggle Loop Playlists");
+			controller.loopPlaylist = newLoop;
+		}
+		
 		var newAuto = EditorGUILayout.Toggle("Auto advance clips", controller.isAutoAdvance);
 		if (newAuto != controller.isAutoAdvance) {
 			UndoHelper.RecordObjectPropertyForUndo(controller, "toggle Auto advance clips");
 			controller.isAutoAdvance = newAuto;
 		}
 		
-		GUIHelper.ShowColorWarning("*Note: auto advance will not advance past a looped track.");
+		DTGUIHelper.ShowColorWarning("*Note: auto advance will not advance past a looped track.");
 
 		if (GUI.changed) {
 			EditorUtility.SetDirty(target);

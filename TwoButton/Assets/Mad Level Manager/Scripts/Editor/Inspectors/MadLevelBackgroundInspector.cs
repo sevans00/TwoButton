@@ -59,6 +59,8 @@ public class MadLevelBackgroundInspector : Editor {
         
         serializedObject.ApplyModifiedProperties();
         
+        MadGUI.Info("Add new layers, then select them to edit properties for each layer.");
+        
         var arrayList = new MadGUI.ArrayList<MadLevelBackgroundLayer>(script.layers, (layer) => {
                 if (layer == null) {
                     return;
@@ -96,6 +98,9 @@ public class MadLevelBackgroundInspector : Editor {
                     layer.SetDirty();
                 }
         });
+        
+        arrayList.addLabel = "Add Layer";
+        arrayList.emptyLabel = "There are currently no layers.";
         
         arrayList.createFunctionGeneric = () => {
             var layer = MadTransform.CreateChild<MadLevelBackgroundLayer>(script.transform, "layer (empty)");

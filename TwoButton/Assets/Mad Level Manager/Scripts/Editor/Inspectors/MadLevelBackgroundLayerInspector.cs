@@ -27,6 +27,15 @@ public class MadLevelBackgroundLayerInspector : Editor {
     SerializedProperty texture;
     SerializedProperty tint;
     SerializedProperty scaleMode;
+    SerializedProperty dontStretch;
+	SerializedProperty repeatX;
+	SerializedProperty repeatY;
+
+    SerializedProperty fillMarginLeft;
+    SerializedProperty fillMarginTop;
+    SerializedProperty fillMarginRight;
+    SerializedProperty fillMarginBottom;
+
     SerializedProperty scale;
     SerializedProperty align;
     SerializedProperty position;
@@ -49,6 +58,15 @@ public class MadLevelBackgroundLayerInspector : Editor {
         texture = serializedObject.FindProperty("texture");
         tint = serializedObject.FindProperty("tint");
         scaleMode = serializedObject.FindProperty("scaleMode");
+		dontStretch = serializedObject.FindProperty("dontStretch");
+		repeatX = serializedObject.FindProperty("repeatX");
+		repeatY = serializedObject.FindProperty("repeatY");
+
+        fillMarginLeft = serializedObject.FindProperty("fillMarginLeft");
+        fillMarginTop = serializedObject.FindProperty("fillMarginTop");
+        fillMarginRight = serializedObject.FindProperty("fillMarginRight");
+        fillMarginBottom = serializedObject.FindProperty("fillMarginBottom");
+
         scale = serializedObject.FindProperty("scale");
         align = serializedObject.FindProperty("align");
         position = serializedObject.FindProperty("position");
@@ -72,6 +90,24 @@ public class MadLevelBackgroundLayerInspector : Editor {
         EditorGUILayout.Space();
         
         MadGUI.PropertyField(scaleMode, "Scale Mode");
+        
+		MadGUI.PropertyField(repeatX, "Repeat X");
+		MadGUI.PropertyField(repeatY, "Repeat Y");
+
+        MadGUI.ConditionallyEnabled(layer.scaleMode == MadLevelBackgroundLayer.ScaleMode.Fill && !layer.repeatX && !layer.repeatY, () => {
+            if (MadGUI.Foldout("Margin", false)) {
+                MadGUI.Indent(() => {
+                    MadGUI.PropertyField(fillMarginLeft, "Left");
+                    MadGUI.PropertyField(fillMarginTop, "Top");
+                    MadGUI.PropertyField(fillMarginRight, "Right");
+                    MadGUI.PropertyField(fillMarginBottom, "Bottom");
+                });
+            }
+        });
+
+		MadGUI.ConditionallyEnabled(!layer.repeatX && !layer.repeatY, () => {
+			MadGUI.PropertyField(dontStretch, "Don't Stretch");
+		});
         
         if (scaleMode.enumValueIndex == (int) MadLevelBackgroundLayer.ScaleMode.Manual) {
             MadGUI.PropertyField(align, "Align");

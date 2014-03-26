@@ -35,7 +35,7 @@ public class MadSprite : MadNode {
     public Color tint = Color.white;
     
     public Texture2D texture;
-    Texture2D lastTexture; // for reseting purposes
+    public Texture2D lastTexture; // for reseting purposes
     
     public Vector2 textureOffset;
     public Vector2 textureRepeat = new Vector2(1, 1);
@@ -46,9 +46,9 @@ public class MadSprite : MadNode {
     protected float left, top, right, bottom;
     
     // live area of the texture is normalized bounds where pixels are visible
-    // available only if texture is readable
     public float liveLeft = 0, liveBottom = 0, liveRight = 1, liveTop = 1;
-    bool hasLiveBounds;
+    public bool hasLiveBounds;
+
     bool triedToGetLiveBounds;
     
     public FillType fillType;
@@ -69,13 +69,13 @@ public class MadSprite : MadNode {
     // Properties
     // ===========================================================
     
-    Vector2 _size;
-    public Vector2 size {
+    // the size that this sprite has originally in pixels
+    public Vector2 initialSize {
         get {
             // If size for this sprite was not initially set, then do it now.
             // This causes the sprite to take initial size of texture when texture is set
             // for the first time.
-            if (_size == Vector2.zero) {
+            if (_initialSize == Vector2.zero) {
                 if (texture != null) {
                     ResizeToTexture();
                 } else {
@@ -83,17 +83,22 @@ public class MadSprite : MadNode {
                 }
             }
             
-            return _size;
+            return _initialSize;
         }
         
         set {
-            _size = value;
+            _initialSize = value;
         }
     }
+    Vector2 _initialSize;
     
-    public Vector2 scalePixels {
+    public Vector2 size {
         set {
-            transform.localScale = new Vector3(value.x / size.x, value.y / size.y, 1);
+            transform.localScale = new Vector3(value.x / initialSize.x, value.y / initialSize.y, 1);
+        }
+
+        get {
+            return new Vector2(transform.localScale.x * initialSize.x, transform.localScale.y * initialSize.y);
         }
     }
     
@@ -227,14 +232,26 @@ public class MadSprite : MadNode {
     // returns bounds to draw gizmos
     public virtual Rect GetBounds() {
         UpdatePivotPoint();
-        return new Rect(left * size.x, bottom * size.y, size.x, size.y);
+        var bounds = new Rect(left * initialSize.x, bottom * initialSize.y, initialSize.x, initialSize.y);
+
+        return bounds;
+    }
+
+    /// <returns>Transformed (real) bounds translated and scaled by local trasnform.</returns>
+    public virtual Rect GetTransformedBounds() {
+        UpdatePivotPoint();
+        var bounds = GetBounds();
+        bounds = MadMath.Scale(bounds, transform.localScale);
+        bounds = MadMath.Translate(bounds, transform.localPosition);
+        
+        return bounds;
     }
     
     Rect GetLiveBounds() {
         UpdatePivotPoint();
         return new Rect(
-            (left + liveLeft) * size.x, (bottom + liveBottom) * size.y,
-            (liveRight - liveLeft) * size.x, (liveTop - liveBottom) * size.y);
+            (left + liveLeft) * initialSize.x, (bottom + liveBottom) * initialSize.y,
+            (liveRight - liveLeft) * initialSize.x, (liveTop - liveBottom) * initialSize.y);
     }
     
     protected virtual void OnEnable() {
@@ -297,7 +314,7 @@ public class MadSprite : MadNode {
         if (texture != lastTexture) {
             // texture changed or set as new, reset
             liveLeft = liveBottom = 0;
-            liveRight = liveBottom = 0;
+            liveRight = liveTop = 1;
             hasLiveBounds = false;
             triedToGetLiveBounds = false;
             
@@ -336,7 +353,7 @@ public class MadSprite : MadNode {
         if (box == null) {
             box = gameObject.AddComponent<BoxCollider>();
         }
-        var bounds = GetBounds();
+        var bounds = hasLiveBounds ? GetLiveBounds() : GetBounds();
         box.center = bounds.center;
         box.size = new Vector3(bounds.width, bounds.height, 0.01f);
         
@@ -358,9 +375,10 @@ public class MadSprite : MadNode {
     
         // Draw the gizmo
         Gizmos.matrix = transform.localToWorldMatrix;
-        
-        Gizmos.color = (UnityEditor.Selection.activeGameObject == gameObject)
-            ? Color.green : new Color(1, 1, 1, 0.2f);
+
+        bool selected = UnityEditor.Selection.activeGameObject == gameObject;
+
+        Gizmos.color = hasLiveBounds ? new Color(1, 1, 1, 0.2f) : selected ? Color.green : new Color(1, 1, 1, 0.2f);
         var bounds = GetBounds();
         Gizmos.DrawWireCube(bounds.center, new Vector3(bounds.width, bounds.height, 0));
         
@@ -373,7 +391,7 @@ public class MadSprite : MadNode {
         // Draw live gizmo
         if (texture != null) {
             if (hasLiveBounds) {
-                Gizmos.color = Color.red;
+                Gizmos.color = selected ? Color.green : new Color(1, 1, 1, 0.4f);
                 bounds = GetLiveBounds();
                 Gizmos.DrawWireCube(bounds.center, new Vector3(bounds.width, bounds.height, 0));
             }
@@ -425,8 +443,8 @@ public class MadSprite : MadNode {
         var bounds = GetBounds();
         
         float vLeft = 0;
-        float vTop = size.y;
-        float vRight = size.x;
+        float vTop = initialSize.y;
+        float vRight = initialSize.x;
         float vBottom = 0;
         
         float uvLeft = textureOffset.x;
@@ -443,7 +461,7 @@ public class MadSprite : MadNode {
                     uvRight += LiveCoordX(fillValue) - 1;
                     break;
                 case FillType.RightToLeft:
-                    vLeft += LiveCoordX(1 - fillValue) * size.x;
+                    vLeft += LiveCoordX(1 - fillValue) * initialSize.x;
                     uvLeft += LiveCoordX(1 - fillValue);
                     break;
                 case FillType.BottomToTop:
@@ -451,7 +469,7 @@ public class MadSprite : MadNode {
                     uvTop += LiveCoordY(fillValue) - 1;
                     break;
                 case FillType.TopToBottom:
-                    vBottom += LiveCoordY(1 - fillValue) * size.y;
+                    vBottom += LiveCoordY(1 - fillValue) * initialSize.y;
                     uvBottom += LiveCoordY(1 - fillValue);
                     break;
                 case FillType.ExpandHorizontal:
@@ -459,7 +477,7 @@ public class MadSprite : MadNode {
                         float fv = 0.5f + fillValue / 2;
                         vRight *= LiveCoordX(fv);
                         uvRight += LiveCoordX(fv) - 1;
-                        vLeft += LiveCoordX(1 - fv) * size.x;
+                        vLeft += LiveCoordX(1 - fv) * initialSize.x;
                         uvLeft += LiveCoordX(1 - fv);
                     }
                     break;
@@ -468,7 +486,7 @@ public class MadSprite : MadNode {
                         float fv = 0.5f + fillValue / 2;
                         vTop *= LiveCoordY(fv);
                         uvTop += LiveCoordY(fv) - 1;
-                        vBottom += LiveCoordY(1 - fv) * size.y;
+                        vBottom += LiveCoordY(1 - fv) * initialSize.y;
                         uvBottom += LiveCoordY(1 - fv);
                     }
                     break;
@@ -582,8 +600,8 @@ public class MadSprite : MadNode {
             }
         }
         
-        float sx = size.x;
-        float sy = size.y;
+        float sx = initialSize.x;
+        float sy = initialSize.y;
         float sx2 = sx / 2;
         float sy2 = sy / 2;
         
@@ -1002,7 +1020,9 @@ public class MadSprite : MadNode {
     
     // resizes sprite to match texture size
     public void ResizeToTexture() {
-        size = new Vector2(texture.width, texture.height);
+        if (texture != null) {
+            initialSize = new Vector2(texture.width, texture.height);
+        }
     }
     
     public void MinMaxDepthRecursively(out int min, out int max) {
