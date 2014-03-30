@@ -151,13 +151,17 @@ public class Game : MonoBehaviour {
 		}
 	}
 
+	public void ResetProfile () {
+		MadLevelProfile.Reset();
+	}
+
 	public void EndLevel () {
 		pause();
 		Debug.Log("Level Complete!");
 		float timeElapsed = Time.time - spawnTime;
-		string formattedTime = string.Empty+Mathf.Ceil(timeElapsed % 60);
-		
-		MadLevelProfile.SetLevelString(MadLevel.currentLevelName, "ElapsedTime", formattedTime);
+		string formattedTime = string.Empty+(Mathf.Ceil(timeElapsed*100)/100);
+		MadLevelProfile.SetLevelString(MadLevel.currentLevelName, "time", formattedTime);
+		Debug.Log("Profile set to "+MadLevelProfile.GetLevelString(MadLevel.currentLevelName, "time"));
 		MadLevelProfile.SetCompleted(MadLevel.currentLevelName, true);
 		NextLevel();
 	}

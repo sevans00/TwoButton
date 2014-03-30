@@ -23,6 +23,7 @@ public class InLevelMenu : MonoBehaviour {
 						characterSelectScreen.SetActive(false);
 					} else {
 						inLevelMenu.SetActive(false);
+						Game.instance.unpause();
 					}
 				} else {
 					Show();
