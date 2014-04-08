@@ -5,7 +5,8 @@ using MadLevelManager;
 public class StarBlock : InteractiveTile {
 
 	tk2dSprite sprite;
-	int starId;
+	public int starId;
+	public bool got = false;
 
 	void Start() {
 		sprite = GetComponent<tk2dSprite>();
@@ -21,7 +22,7 @@ public class StarBlock : InteractiveTile {
 	void OnSpriteTriggerEnter () {
 		//Record that I got it!
 		sprite.renderer.enabled = false;
-		MadLevelProfile.SetLevelBoolean(MadLevel.currentLevelName, "star_"+starId, true);
+		got = true;
 	}
 
 	override public void Reset() {

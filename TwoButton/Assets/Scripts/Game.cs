@@ -161,7 +161,13 @@ public class Game : MonoBehaviour {
 		float timeElapsed = Time.time - spawnTime;
 		string formattedTime = string.Empty+(Mathf.Ceil(timeElapsed*100)/100);
 		MadLevelProfile.SetLevelString(MadLevel.currentLevelName, "time", formattedTime);
-		Debug.Log("Profile set to "+MadLevelProfile.GetLevelString(MadLevel.currentLevelName, "time"));
+		//Set stars:
+		StarBlock[] starBlocks = GameObject.FindObjectsOfType<StarBlock>();
+		foreach ( StarBlock starBlock in starBlocks ) {
+			if ( starBlock.got ) {
+				MadLevelProfile.SetLevelBoolean(MadLevel.currentLevelName, "star_"+starBlock.starId, true);
+			}
+		}
 		MadLevelProfile.SetCompleted(MadLevel.currentLevelName, true);
 		NextLevel();
 	}
