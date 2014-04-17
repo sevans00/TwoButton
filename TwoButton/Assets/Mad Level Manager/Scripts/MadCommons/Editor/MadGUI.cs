@@ -47,7 +47,7 @@ public class MadGUI {
         var prevColor = GUI.backgroundColor;
         GUI.backgroundColor = color;
 
-        GUILayout.BeginHorizontal();
+        GUILayout.BeginHorizontal(options);
         GUILayout.Space(15 * EditorGUI.indentLevel);
         bool state = GUILayout.Button(label, options);
         GUILayout.EndHorizontal();
@@ -89,6 +89,10 @@ public class MadGUI {
             get { return _selectionCallback; }
             set { _selectionCallback += value; }
         }
+
+        public HashSet<System.Type> acceptDropTypes = new HashSet<System.Type>();
+
+        public event RunnableVoid2<int, Object> dropCallback;
         
         T _selectedItem;
         public T selectedItem {
@@ -117,6 +121,8 @@ public class MadGUI {
             if (skin == null) {
                 skin = Resources.Load("GUISkins/editorSkin", typeof(GUISkin)) as GUISkin;
             }
+
+            var allRect = EditorGUILayout.BeginVertical();
         
             bool toggleColor = false;
             Color baseColor = GUI.color;
@@ -128,12 +134,14 @@ public class MadGUI {
             float y = 0;
                 
             foreach (var item in items) {
+                var rect = EditorGUILayout.BeginHorizontal();
                 if (scrollToItem == item && Event.current.type == EventType.Repaint) {
-                    position.y = y;
+                    if (y + rect.height > allRect.height || y < 0) {
+                        position.y = y;
+                    }
                     scrollToItem = null;
                 }
-            
-                var rect = EditorGUILayout.BeginHorizontal();
+
                 if (selectionEnabled) {
                     if (Event.current.type == EventType.MouseDown && Event.current.button == 0) {
                         if (rect.Contains(Event.current.mousePosition)) {
@@ -172,8 +180,39 @@ public class MadGUI {
             EditorGUILayout.EndScrollView();
             
             GUI.color = baseColor;
+
+            EditorGUILayout.EndVertical();
+
+            Event evt = Event.current;
+            switch (evt.type) {
+                case EventType.MouseDrag:
+                case EventType.DragUpdated:
+                case EventType.DragPerform:
+                    if (!allRect.Contains(evt.mousePosition)) {
+                        break;
+                    }
+
+                    DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
+
+                    if (evt.type == EventType.DragPerform) {
+                        DragAndDrop.AcceptDrag();
+
+                        foreach (Object draggedObject in DragAndDrop.objectReferences) {
+                            if (acceptDropTypes.Contains(draggedObject.GetType())) {
+                                AcceptDrag(items.Count, draggedObject);
+                            }
+                        }
+                    }
+                    break;
+            }
         }
-        
+
+        private void AcceptDrag(int index, Object obj) {
+            if (dropCallback != null) {
+                dropCallback(index, obj);
+            }
+        }
+
         void DeselectAll() {
             foreach (var i in items) {
                 i.selected = false;
@@ -182,7 +221,7 @@ public class MadGUI {
         
         public void ScrollToItem(T item) {
             scrollToItem = item;
-            Draw();
+            //Draw();
         }
     };
     
@@ -200,11 +239,13 @@ public class MadGUI {
         List<T> items;
         SerializedProperty arrayProperty;
         
-        RunnableVoid1<T> genericRenderer;
+        RunnableGeneric1<T, T> genericRenderer;
         RunnableVoid1<SerializedProperty> propertyRenderer;
         
 		public string emptyLabel = "Use the 'Add' button to add items";
 		public string addLabel = "Add";
+
+        public bool drawSeparator = false;
         
         public RunnableGeneric0<T> createFunctionGeneric = () => { return new T(); };
         public RunnableVoid1<SerializedProperty> createFunctionProperty = (element) => {
@@ -230,8 +271,8 @@ public class MadGUI {
             this.arrayProperty = arrayProperty;
             propertyRenderer = renderer;
         }
-        
-        public ArrayList(List<T> items, RunnableVoid1<T> renderer) {
+
+        public ArrayList(List<T> items, RunnableGeneric1<T, T> renderer) {
             this.items = items;
             genericRenderer = renderer;
         }
@@ -271,11 +312,14 @@ public class MadGUI {
                 var prop = arrayProperty.GetArrayElementAtIndex(ItemCount() - 1);
                 createFunctionProperty(prop);
             }
+
+            var item = ItemAt(ItemCount() - 1);
+            onAdd(item);
         }
         
         void RenderItem(int index) {
             if (items != null) {
-                genericRenderer(items[index]);
+                items[index] = genericRenderer(items[index]);
             } else {
                 propertyRenderer(arrayProperty.GetArrayElementAtIndex(index));
             }
@@ -286,7 +330,9 @@ public class MadGUI {
             if (ItemCount() == 0) {
                 GUILayout.Label("   " + emptyLabel);
             } else {
-                Separator();
+                if (drawSeparator) {
+                    Separator();
+                }
                 int removeIndex = -1;
                 
                 int count = ItemCount();
@@ -307,7 +353,9 @@ public class MadGUI {
                     if (i + 1 > count) {
                         EditorGUILayout.Space();
                     }
-                    Separator();
+                    if (drawSeparator) {
+                        Separator();
+                    }
                 }
                 
                 if (removeIndex != -1) {
@@ -374,7 +422,13 @@ public class MadGUI {
         runnable();
         EditorGUI.indentLevel--;
     }
-    
+
+    public static void Indent(int value, RunnableVoid0 runnable) {
+        EditorGUI.indentLevel += value;
+        runnable();
+        EditorGUI.indentLevel -= value;
+    }
+
     public static void IndentBox(RunnableVoid0 runnable) {
         IndentBox("", runnable);
     }
@@ -492,15 +546,23 @@ public class MadGUI {
 #endregion
 
 #region Properties
-    public static void Validate(Validator0 validator, RunnableVoid0 runnable) {
+
+    public static bool Validate(Validator0 validator, RunnableVoid0 runnable) {
+        bool valid = true;
+    
         Color prevColor = GUI.color;
         if (GUI.enabled && !validator()) {
             GUI.color = Color.red;
+            valid = false;
         }
         
         runnable();
         
-        GUI.color = prevColor;
+        if (!valid) {
+            GUI.color = prevColor;
+        }
+        
+        return valid;
     }
 
     public static void PropertyField(SerializedProperty obj, string label) {
@@ -566,8 +628,10 @@ public class MadGUI {
             var newName = new StringBuilder();
             
             for (int j = 0; j < name.Length; ++j) {
+                bool first = j == 0;
+                char p = first ? ' ' : name[j - 1];
                 char c = name[j];
-                if (char.IsUpper(c) && j > 0) {
+                if (!first && char.IsUpper(c) && !char.IsUpper(p)) {
                     newName.Append(" ");
                 }
                 
@@ -583,6 +647,51 @@ public class MadGUI {
         if (selectedIndex != newIndex) {
             obj.enumValueIndex = newIndex;
         }
+    }
+
+    public static int DynamicPopup(int selectedIndex, string label, int count, RunnableGeneric1<string, int> visitor) {
+
+        if (selectedIndex >= count) {
+            selectedIndex = 0;
+        } else if (selectedIndex < 0) {
+            selectedIndex = 0;
+        }
+
+        string[] labels = new string[count];
+
+        for (int i = 0; i < count; ++i) {
+            string l = visitor(i);
+            labels[i] = l;
+        }
+
+        return EditorGUILayout.Popup(label, selectedIndex, labels);
+    }
+
+    public static Object SceneField(Object obj, string label) {
+        obj = EditorGUILayout.ObjectField(label, obj, typeof(UnityEngine.Object), false);
+        if (!CheckAssetIsScene(obj)) {
+            obj = null;
+        }
+
+        return obj;
+    }
+
+    private static bool CheckAssetIsScene(UnityEngine.Object obj) {
+        if (obj == null) {
+            return false;
+        }
+    
+        string path = AssetDatabase.GetAssetPath(obj);
+        if (!path.EndsWith(".unity")) {
+            EditorUtility.DisplayDialog(
+                "Only scene allowed",
+                "You can only drop scene files into this field.",
+                "OK");
+                
+            return false;
+        }
+        
+        return true;
     }
     
     public static void LookLikeControls(int labelWidth) {
@@ -689,15 +798,16 @@ public class MadGUI {
     public static void Separator() {
         var rect = EditorGUILayout.BeginHorizontal();
         int indentPixels = (EditorGUI.indentLevel + 1) * 10 - 5;
-        GUI.Box(new Rect(indentPixels, rect.yMin, rect.width - indentPixels, rect.height), "");
+        GUI.Box(new Rect(rect.xMin, rect.yMin, rect.width - indentPixels, 1), "");
         EditorGUILayout.EndHorizontal();
     }
 #endregion
     
     public delegate void RunnableVoid0();
     public delegate void RunnableVoid1<T>(T arg1);
+    public delegate void RunnableVoid2<T1, T2>(T1 arg1, T2 arg2);
     public delegate T RunnableGeneric0<T>();
-    public delegate T RunnableGeneric1<T>(T arg1);
+    public delegate T RunnableGeneric1<T, T1>(T1 arg1);
     public delegate bool Validator(SerializedProperty property);
     public delegate bool Validator0();
     

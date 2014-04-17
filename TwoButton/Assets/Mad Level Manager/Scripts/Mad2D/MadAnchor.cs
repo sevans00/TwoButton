@@ -69,7 +69,7 @@ public class MadAnchor : MadNode {
     
     void UpdateScreenAnchor() {
         var input = FromPosition(position);
-        transform.position = input;
+        MadTransform.SetPosition(transform, input);
     }
     
     Vector3 FromPosition(Position position) {

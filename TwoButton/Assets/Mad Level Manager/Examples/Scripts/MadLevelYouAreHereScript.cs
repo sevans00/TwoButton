@@ -33,7 +33,7 @@ public class MadLevelYouAreHereScript : MonoBehaviour {
     // ===========================================================
 
     void Start() {
-        var lastUnlockedLevelName = MadLevel.FindLastUnlockedLevelName();
+        var lastUnlockedLevelName = MadLevel.FindLastUnlockedLevelName(MadLevel.currentGroupName);
         var currentLayout = MadLevelLayout.current;
         var icon = currentLayout.GetIcon(lastUnlockedLevelName);
         lastUnlockedTransform = icon.transform;

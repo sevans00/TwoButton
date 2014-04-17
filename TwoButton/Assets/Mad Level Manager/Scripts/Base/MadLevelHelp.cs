@@ -18,9 +18,18 @@ public class MadLevelHelp {
     public const string Mail = "support@madpixelmachine.com";
 
     public const string Latest = "http://madlevelmanager.madpixelmachine.com/doc/latest/";
-    public const string Safe = "http://madlevelmanager.madpixelmachine.com/doc/1.5.2/";
-    
+    public const string Safe = "http://madlevelmanager.madpixelmachine.com/doc/2.0.0/";
+
+    public const string FAQ = Latest + "faq.html";
+
     public const string ConfigurationWiki = Latest + "basics/working_with_level_configurations.html";
+
+    // Level Configuration Help
+    public const string LevelConfigurationHelp = Latest + "tutorial/your_first_level_select_screen.html#creating-level-configuration";
+
+    // Extensions Editor Help
+
+    public const string ExtensionEditor = Safe + "advanced/extensions_editor.html";
 
     // Mad Level Icon
     public const string IconGenerated = Safe + "context/icon_generated.html";

@@ -38,6 +38,9 @@ public class MadLevelGridLayoutInspector : MadLevelAbstractLayoutInspector {
     
     SerializedProperty gridWidth;
     SerializedProperty gridHeight;
+
+    SerializedProperty horizontalAlign;
+    SerializedProperty verticalAlign;
     
     SerializedProperty pixelsWidth;
     SerializedProperty pixelsHeight;
@@ -83,6 +86,9 @@ public class MadLevelGridLayoutInspector : MadLevelAbstractLayoutInspector {
         
         gridWidth = serializedObject.FindProperty("gridWidth");
         gridHeight = serializedObject.FindProperty("gridHeight");
+
+        horizontalAlign = serializedObject.FindProperty("horizontalAlign");
+        verticalAlign = serializedObject.FindProperty("verticalAlign");
         
         pixelsWidth = serializedObject.FindProperty("pixelsWidth");
         pixelsHeight = serializedObject.FindProperty("pixelsHeight");
@@ -108,10 +114,15 @@ public class MadLevelGridLayoutInspector : MadLevelAbstractLayoutInspector {
                     script.setupMethod = newSetupMethod;
                     script.deepClean = true;
                     EditorUtility.SetDirty(script);
-                } else {
-                    script.setupMethod = newSetupMethod;
-                    EditorUtility.SetDirty(script);
-                }
+            } else if (EditorUtility.DisplayDialog(
+                "Are you sure?",
+                "Are you sure that you want to switch to Manual setup method? Be aware that after doing this:\n"
+                + "- You won't be able to change your level group (currently " + script.configuration.FindGroupById(script.configurationGroup).name + ")\n"
+                + "- You won't be able to regenerate grid without losing custom changes",
+                "Set to Manual", "Cancel")) {
+                script.setupMethod = newSetupMethod;
+                EditorUtility.SetDirty(script);
+            }
         }
     
         serializedObject.UpdateIfDirtyOrScript();
@@ -125,6 +136,23 @@ public class MadLevelGridLayoutInspector : MadLevelAbstractLayoutInspector {
         MadGUI.Indent(() => {
         
             MadGUI.PropertyField(configuration, "Configuration", MadGUI.ObjectIsSet);
+            
+            if (script.configuration != null) {
+                var group = script.configuration.FindGroupById(script.configurationGroup);
+                int index = GroupToIndex(script.configuration, group);
+                var names = GroupNames(script.configuration);
+                
+                GUI.enabled = script.setupMethod == MadLevelGridLayout.SetupMethod.Generate;
+                EditorGUI.BeginChangeCheck();
+                index = EditorGUILayout.Popup("Group", index, names);
+                if (EditorGUI.EndChangeCheck()) {
+                    script.configurationGroup = IndexToGroup(script.configuration, index).id;
+                    Rebuild();
+                }
+                GUI.enabled = true;
+            }
+            
+            EditorGUILayout.Space();
             
             GUI.enabled = generate;
             
@@ -155,10 +183,20 @@ public class MadLevelGridLayoutInspector : MadLevelAbstractLayoutInspector {
         MadGUI.Indent(() => {
             MadGUI.PropertyField(pixelsWidth, "Pixels Width");
             MadGUI.PropertyField(pixelsHeight, "Pixels Height");
+
+            EditorGUILayout.Space();
             GUI.enabled = generate;
             MadGUI.PropertyField(gridHeight, "Grid Rows");
             MadGUI.PropertyField(gridWidth, "Grid Columns");
+
+            EditorGUILayout.Space();
+
+            MadGUI.PropertyFieldEnumPopup(horizontalAlign, "Horizontal Align");
+            MadGUI.PropertyFieldEnumPopup(verticalAlign, "Vertical Align");
+
             GUI.enabled = true;
+            EditorGUILayout.Space();
+
             MadGUI.PropertyField(pagesOffsetFromResolution, "Page Offset Auto");
             MadGUI.ConditionallyEnabled(!pagesOffsetFromResolution.boolValue, () => {
                 MadGUI.Indent(() => {
@@ -198,13 +236,17 @@ public class MadLevelGridLayoutInspector : MadLevelAbstractLayoutInspector {
             EditorGUILayout.Space();
             GUI.color = Color.green;
             if (GUILayout.Button("Rebuild Now")) {
-                script.dirty = true;
-                script.deepClean = true;
-                EditorUtility.SetDirty(script);
+                Rebuild();
             }
             GUI.color = Color.white;
             EditorGUILayout.EndHorizontal();
         });
+    }
+    
+    void Rebuild() {
+        script.dirty = true;
+        script.deepClean = true;
+        EditorUtility.SetDirty(script);
     }
 
     // ===========================================================

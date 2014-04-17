@@ -48,6 +48,7 @@ public class MadLevelAbstractLayoutInspector : Editor {
     protected SerializedProperty handleMobileBackButtonLevelName;
 
     protected SerializedProperty configuration;
+    protected SerializedProperty configurationGroup;
     
     private MadLevelAbstractLayout s;
 
@@ -87,6 +88,7 @@ public class MadLevelAbstractLayoutInspector : Editor {
         handleMobileBackButtonLevelName = serializedObject.FindProperty("handleMobileBackButtonLevelName");
         
         configuration = serializedObject.FindProperty("configuration");
+        configurationGroup = serializedObject.FindProperty("configurationGroup");
     }
 
     protected void TwoStepActivation() {
@@ -171,6 +173,39 @@ public class MadLevelAbstractLayoutInspector : Editor {
     bool FoundAudioListener() {
         var obj = FindObjectOfType(typeof(AudioListener));
         return obj != null;
+    }
+    
+    protected string[] GroupNames(MadLevelConfiguration configuration) {
+        var groups = configuration.groups;
+        var groupNames = new List<string>();
+        groupNames.Add(configuration.defaultGroup.name);
+        
+        foreach (var g in groups) {
+            groupNames.Add(g.name);
+        }
+        
+        return groupNames.ToArray();
+    }
+    
+    protected MadLevelConfiguration.Group IndexToGroup(MadLevelConfiguration configuration, int index) {
+        if (index == 0) {
+            return configuration.defaultGroup;
+        } else {
+            return configuration.groups[index - 1];
+        }
+    }
+    
+    protected int GroupToIndex(MadLevelConfiguration configuration, MadLevelConfiguration.Group group) {
+        if (group == configuration.defaultGroup) {
+            return 0;
+        } else {
+            if (configuration.groups.Contains(group)) {
+                return configuration.groups.IndexOf(group) + 1;
+            } else {
+                Debug.LogError("Group not found: " + group);
+                return 0;
+            }
+        }
     }
     
     protected void HandleMobileBack() {

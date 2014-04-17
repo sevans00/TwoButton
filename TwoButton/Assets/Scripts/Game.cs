@@ -45,6 +45,7 @@ public class Game : MonoBehaviour {
 		} else {
 			Debug.LogWarning("Warning - Game could not find spawn point");
 		}
+
 	}
 	
 	// Update is called once per frame
@@ -174,10 +175,10 @@ public class Game : MonoBehaviour {
 	public void NextLevel () {
 		Debug.Log("Next Level!");
 		unpause();
-		if ( MadLevel.HasNext(MadLevel.Type.Level) ) {
-			MadLevel.LoadNext(MadLevel.Type.Level);
+		if ( MadLevel.HasNextInGroup(MadLevel.Type.Level) ) {
+			MadLevel.LoadNextInGroup(MadLevel.Type.Level);
 		} else {
-			MadLevel.LoadFirst();
+			MadLevel.LoadLevelByName(MadLevel.currentGroupName);
 		}
 		/*
 		int level = Application.loadedLevel + 1;

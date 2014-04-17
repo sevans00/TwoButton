@@ -48,6 +48,9 @@ public class MadLevelGridLayout : MadLevelAbstractLayout {
     
     public int pixelsWidth = 720;
     public int pixelsHeight = 578;
+
+    public HorizontalAlign horizontalAlign = HorizontalAlign.Center;
+    public VerticalAlign verticalAlign = VerticalAlign.Top;
     
     public bool pagesOffsetFromResolution = true;
     public float pagesOffsetManual = 1000;
@@ -236,7 +239,6 @@ public class MadLevelGridLayout : MadLevelAbstractLayout {
     }
     
     int PageIndexForLevel(string levelName) {
-        var configuration = MadLevelConfiguration.GetActive();
         int index = configuration.FindLevelIndex(MadLevel.Type.Level, levelName);
         int levelsPerPage = gridWidth * gridHeight;
         int pageIndex = index / levelsPerPage;
@@ -281,6 +283,8 @@ public class MadLevelGridLayout : MadLevelAbstractLayout {
         hashCode.Add(rightSlideOffset);
         hashCode.Add(gridWidth);
         hashCode.Add(gridHeight);
+        hashCode.Add(horizontalAlign);
+        hashCode.Add(verticalAlign);
         hashCode.Add(pixelsWidth);
         hashCode.Add(pixelsHeight);
         hashCode.Add(pagesOffsetManual);
@@ -295,7 +299,7 @@ public class MadLevelGridLayout : MadLevelAbstractLayout {
     }
     
     void CleanUp(bool forceDelete) {
-        int levelCount = configuration.LevelCount(MadLevel.Type.Level);
+        int levelCount = configuration.LevelCount(MadLevel.Type.Level, configurationGroup);
         var children = MadTransform.FindChildren<MadLevelIcon>(transform, (icon) => icon.hasLevelConfiguration);
         
         if (forceDelete) {
@@ -343,7 +347,7 @@ public class MadLevelGridLayout : MadLevelAbstractLayout {
         
         MadLevelIcon previousIcon = null;
         
-        int levelCount = configuration.LevelCount(MadLevel.Type.Level);
+        int levelCount = configuration.LevelCount(MadLevel.Type.Level, configurationGroup);
         int levelIndex = 0;
         
         int pageIndex = 0;
@@ -354,6 +358,7 @@ public class MadLevelGridLayout : MadLevelAbstractLayout {
                         
             if (createPageInstance) {
                 page = MadTransform.CreateChild<Transform>(draggable.transform, "Page " + (pageIndex + 1));
+                page.hideFlags = generate && hideManagedObjects ? HideFlags.HideInHierarchy : 0;
             }
             
             if (createPageInstance || generate) {
@@ -379,9 +384,9 @@ public class MadLevelGridLayout : MadLevelAbstractLayout {
                         levelIcon = MadTransform.FindChild<MadLevelIcon>(
                             page.transform, (ic) => ic.levelIndex == levelIndex, 0);
                     }
-
+                        
+                    var level = configuration.GetLevel(MadLevel.Type.Level, configurationGroup, levelIndex);
                     bool createNewInstance = levelIcon == null;
-                    var level = configuration.GetLevel(MadLevel.Type.Level, levelIndex);
                     
                     if (createNewInstance) {
                         levelIcon = MadTransform.CreateChild(
@@ -392,19 +397,24 @@ public class MadLevelGridLayout : MadLevelAbstractLayout {
                     
                     levelIcon.gameObject.hideFlags = generate && hideManagedObjects ? HideFlags.HideInHierarchy : 0;
                     
+                    levelIcon.levelGroup = configurationGroup;
+                    levelIcon.levelIndex = levelIndex;
+                    levelIcon.configuration = configuration;
+                    levelIcon.hasLevelConfiguration = true;
+
                     if (!MadGameObject.IsActive(levelIcon.gameObject)) {
                         MadGameObject.SetActive(levelIcon.gameObject, true);
                     }
                     
-                    levelIcon.levelIndex = levelIndex;
-                    levelIcon.configuration = configuration;
-                    levelIcon.hasLevelConfiguration = true;
-                    
                     if (generate || createNewInstance) {
                         levelIcon.pivotPoint = MadSprite.PivotPoint.Center;
-                        
-                        levelIcon.transform.localPosition =
-                            new Vector3(startX + dx * x + iconOffset.x, startY + dy * y + iconOffset.y, 0);
+
+                        if (!generate) {
+                            levelIcon.transform.localPosition =
+                                new Vector3(startX + dx * x + iconOffset.x, startY + dy * y + iconOffset.y, 0);
+                        } else {
+                            levelIcon.transform.localPosition = IconGeneratedPosition(levelIndex, levelCount, x - 1, y - 1);
+                        }
                             
                         levelIcon.transform.localScale = new Vector3(iconScale.x, iconScale.y, 1);
                     
@@ -439,6 +449,69 @@ public class MadLevelGridLayout : MadLevelAbstractLayout {
         foreach (var sprite in sprites) {
             sprite.editorSelectable = !generate;
         }
+    }
+
+    private Vector3 IconGeneratedPosition(int levelIndex, int levelCount, int xIndex, int yIndex) {
+        float startX = -pixelsWidth / 2;
+        float endX = pixelsWidth / 2;
+        float startY = pixelsHeight / 2;
+        float endY = -pixelsHeight / 2;
+
+        float dx = pixelsWidth / (gridWidth + 1);
+        float dy = -pixelsHeight / (gridHeight + 1);
+
+        int pageSize = gridWidth * gridHeight;
+        int pageIndex = (levelIndex / pageSize);
+
+        int levelsOnPage = Mathf.Min(levelCount - pageIndex * pageSize, pageSize);
+
+        int iconsInColumn = (int) Mathf.Ceil(levelsOnPage / (float) gridWidth);
+
+        int iconsInRow;
+        if (yIndex < levelsOnPage / gridWidth) {
+            iconsInRow = gridWidth;
+        } else {
+            iconsInRow = levelsOnPage % gridWidth;
+        }
+
+        //Debug.Log(levelsOnPage);
+
+        float x = dx * xIndex + iconOffset.x;
+        float y = dy * yIndex + iconOffset.y;
+
+        float xMax = dx * (iconsInRow - 1);
+        float yMax = dy * (iconsInColumn - 1);
+
+        switch (horizontalAlign) {
+            case HorizontalAlign.Left:
+                x = startX + dx + x;
+                break;
+            case HorizontalAlign.Center:
+                x -= xMax / 2;
+                break;
+            case HorizontalAlign.Right:
+                x = endX - dx - (xMax - x);
+                break;
+        }
+
+        switch (verticalAlign) {
+            case VerticalAlign.Top:
+                y = startY + dy + y;
+                break;
+            case VerticalAlign.Middle:
+                y -= yMax / 2;
+                break;
+            case VerticalAlign.Bottom:
+                y = endY - dy - (yMax - y);
+                break;
+        }
+
+        //x -= xMax / 2;
+        //y -= yMax / 2;
+
+        return new Vector3(x, y, 0);
+
+        //new Vector3(startX + dx * xIndex + iconOffset.x, startY + dy * yIndex + iconOffset.y, 0);
     }
     
     void BuildDragging(MadDragStopDraggable dragHandler, int dragStops) {
@@ -493,7 +566,7 @@ public class MadLevelGridLayout : MadLevelAbstractLayout {
     }
     
     MadSprite BuildSlide(MadSprite template, string anchorName, bool left) {
-        var slideAnchor = CreateChild<MadAnchor>(anchorName);
+        var slideAnchor = MadTransform.CreateChild<MadAnchor>(transform, anchorName);
         if (hideManagedObjects) {
             slideAnchor.gameObject.hideFlags = HideFlags.HideInHierarchy;
         }
@@ -538,6 +611,18 @@ public class MadLevelGridLayout : MadLevelAbstractLayout {
     public enum SetupMethod {
         Generate,
         Manual,
+    }
+
+    public enum HorizontalAlign {
+        Left,
+        Center,
+        Right,
+    }
+
+    public enum VerticalAlign {
+        Top,
+        Middle,
+        Bottom,
     }
 
 }

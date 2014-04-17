@@ -14,20 +14,16 @@ public class InLevelMenu : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if ( Input.GetKeyDown ( KeyCode.Escape ) ) {
-			if ( MadLevel.currentLevelName == "Level Select" ) {
-				QuitGame();
-			} else {
-				if ( inLevelMenu.activeSelf ) {
-					if ( characterSelectScreen.activeSelf ) {
-						characterSelectScreen.SetActive(false);
-					} else {
-						inLevelMenu.SetActive(false);
-						Game.instance.unpause();
-					}
+		if ( Input.GetKeyDown ( KeyCode.Escape ) && !MadLevel.currentGroupName.Equals(MadLevel.defaultGroupName) ) {
+			if ( inLevelMenu.activeSelf ) {
+				if ( characterSelectScreen.activeSelf ) {
+					characterSelectScreen.SetActive(false);
 				} else {
-					Show();
+					inLevelMenu.SetActive(false);
+					Game.instance.unpause();
 				}
+			} else {
+				Show();
 			}
 		}
 	}
@@ -59,7 +55,9 @@ public class InLevelMenu : MonoBehaviour {
 	}
 	public void ExitLevel() {
 		Hide ();
-		MadLevel.LoadLevelByName("Level Select");
+		string levelName = "World Select";
+		levelName = MadLevel.currentGroupName;
+		MadLevel.LoadLevelByName(levelName); //Note this is a hack
 	}
 	public void QuitGame() {
 		Application.Quit();

@@ -98,13 +98,17 @@ public class MadText : MadSprite {
     public override bool CanDraw() {
         return font != null && !string.IsNullOrEmpty(text);
     }
+    
+    public override Material GetMaterial() {
+        return font.material;
+    }
           
     public override void DrawOn(ref MadList<Vector3> vertices, ref MadList<Color32> colors, ref MadList<Vector2> uv,
                 ref MadList<int> triangles, out Material material) {
             
         UpdatePivotPoint();
         
-        var matrix = PanelToSelfMatrix();
+        var matrix = TransformMatrix();
         var bounds = GetBounds();
         
         material = font.material;

@@ -4,27 +4,15 @@ using MadLevelManager;
 
 public class WorldSelectScreen : MonoBehaviour {
 
-
-	public MadLevelConfiguration config1;
-	public MadLevelConfiguration config2;
-
-
-	// Use this for initialization
-	void Start () {
-
-	}
-	
 	// Update is called once per frame
 	void Update () {
-		if ( Input.GetKeyDown(KeyCode.C) ) {
-			Call ();
+		if ( Input.GetKeyDown(KeyCode.Escape) ) {
+			GotoMainMenu();
 		}
 	}
 
-	public void Call () {
-		Debug.Log("CALL!");
-
-
+	public void GotoMainMenu () {
+		MadLevel.LoadLevelByName("Main Menu");
 	}
 
 }

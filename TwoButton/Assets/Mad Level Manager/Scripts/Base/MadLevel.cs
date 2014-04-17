@@ -22,10 +22,22 @@ public class MadLevel  {
     // Fields
     // ===========================================================
     
-    static MadLevelConfiguration _configuration;
-    static string _arguments = null;
-    static string _currentLevelName = null;
-    
+    private static MadLevelConfiguration _configuration;
+
+    private static string _arguments = null;
+
+    private static string _currentLevelName = null;
+
+    // set to true when extension is set for the first time
+    private static bool extensionDefined = false;
+
+
+    public static string defaultGroupName {
+        get {
+            return activeConfiguration.defaultGroup.name;
+        }
+    }
+
     /// <summary>
     /// Gets the active configuration.
     /// </summary>
@@ -99,6 +111,46 @@ public class MadLevel  {
             _currentLevelName = value;
         }
     }
+
+    public static string currentGroupName {
+        get {
+            var levelName = currentLevelName;
+            var level = activeConfiguration.FindLevelByName(levelName);
+            return level.group.name;
+        }
+    }
+
+    public static bool hasExtension {
+        get {
+            return currentExtension != null;
+        }
+    }
+
+    public static MadLevelExtension currentExtension {
+        get {
+            if (!extensionDefined) {
+                // if extension is undefined, try to get it using level name
+                var levelName = currentLevelName;
+                var level = activeConfiguration.FindLevelByName(levelName);
+                if (level != null) {
+                    currentExtension = level.extension;
+                }
+            }
+
+            return _currentExtension;
+        }
+        set {
+            _currentExtension = value;
+            extensionDefined = true;
+        }
+    }
+
+    private static MadLevelExtension _currentExtension;
+
+    public static int currentExtensionProgress {
+        get;
+        set;
+    }
     
     static void FindCurrentSceneLevel() {
         // find first level with matching scene name
@@ -108,7 +160,7 @@ public class MadLevel  {
             arguments = level.arguments;
             
             Debug.Log("Mad Level Manager: This was first scene opened. Assuming that this was '"
-                + _currentLevelName + "' level. http://goo.gl/9sDjSi");
+                + _currentLevelName + "' level. " + MadLevelHelp.FAQ);
         } else {
             Debug.LogError("Mad Level Manager: Cannot find scene " + Application.loadedLevelName
                 + " in the configuration. Is the level configuration broken or wrong configuration is active?");
@@ -129,7 +181,7 @@ public class MadLevel  {
     }
     
     /// <summary>
-    /// Gets or sets the name of the last visited level.
+    /// Gets or sets the name of the last visited level (of any type).
     /// </summary>
     /// <value>
     /// The name of the last visited level.
@@ -203,6 +255,18 @@ public class MadLevel  {
         CheckHasConfiguration();
         return activeConfiguration.FindNextLevel(currentLevelName) != null;
     }
+
+    /// <summary>
+    /// Determines whether there is next level present in level configuration group
+    /// (are there any other levels further ahead?)
+    /// </summary>
+    /// <returns>
+    /// <c>true</c> if next level is available; otherwise, <c>false</c>.
+    /// </returns>
+    public static bool HasNextInGroup() {
+        CheckHasConfiguration();
+        return activeConfiguration.FindNextLevel(currentLevelName, true) != null;
+    }
     
     /// <summary>
     /// Determines whether there is next level present of the specified levelType in level configuration
@@ -218,6 +282,21 @@ public class MadLevel  {
         CheckHasConfiguration();
         return activeConfiguration.FindNextLevel(currentLevelName, levelType) != null;
     }
+
+    /// <summary>
+    /// Determines whether there is next level present of the specified levelType in level configuration group
+    /// (are there any other levels further ahead?)
+    /// </summary>
+    /// <returns>
+    /// <c>true</c> if next level is present; otherwise, <c>false</c>.
+    /// </returns>
+    /// <param name='levelType'>
+    /// Type of next level to look after.
+    /// </param>
+    public static bool HasNextInGroup(Type levelType) {
+        CheckHasConfiguration();
+        return activeConfiguration.FindNextLevel(currentLevelName, levelType, true) != null;
+    }
     
     /// <summary>
     /// Loads next level defined in level configuration.
@@ -225,6 +304,19 @@ public class MadLevel  {
     public static void LoadNext() {
         CheckHasConfiguration();
         var nextLevel = activeConfiguration.FindNextLevel(currentLevelName);
+        if (nextLevel != null) {
+            LoadLevel(nextLevel);
+        } else {
+            Debug.LogError("Cannot load next level: This is the last level.");
+        }
+    }
+
+    /// <summary>
+    /// Loads next level defined in level configuration group.
+    /// </summary>
+    public static void LoadNextInGroup() {
+        CheckHasConfiguration();
+        var nextLevel = activeConfiguration.FindNextLevel(currentLevelName, true);
         if (nextLevel != null) {
             LoadLevel(nextLevel);
         } else {
@@ -240,6 +332,22 @@ public class MadLevel  {
     public static AsyncOperation LoadNextAsync() {
         CheckHasConfiguration();
         var nextLevel = activeConfiguration.FindNextLevel(currentLevelName);
+        if (nextLevel != null) {
+            return LoadLevelAsync(nextLevel);
+        } else {
+            Debug.LogError("Cannot load next level: This is the last level.");
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// Loads next level defined in level configuration group asynchronously in the background.
+    /// This function requires Unity Pro.
+    /// </summary>
+    /// <returns>AsyncOperation object.</returns>
+    public static AsyncOperation LoadNextInGroupAsync() {
+        CheckHasConfiguration();
+        var nextLevel = activeConfiguration.FindNextLevel(currentLevelName, true);
         if (nextLevel != null) {
             return LoadLevelAsync(nextLevel);
         } else {
@@ -263,7 +371,23 @@ public class MadLevel  {
             Debug.LogError("Cannot load next level: This is the last level of requested type.");
         }
     }
-    
+
+    /// <summary>
+    /// Loads first level with type <code>levelType</code> found after current level in level configuration group.
+    /// </summary>
+    /// <param name='levelType'>
+    /// Level type to load.
+    /// </param>
+    public static void LoadNextInGroup(Type levelType) {
+        CheckHasConfiguration();
+        var nextLevel = activeConfiguration.FindNextLevel(currentLevelName, levelType, true);
+        if (nextLevel != null) {
+            LoadLevel(nextLevel);
+        } else {
+            Debug.LogError("Cannot load next level: This is the last level of requested type.");
+        }
+    }
+
     /// <summary>
     /// Loads first level with type <code>levelType</code> found after current level in level configuration 
     /// asynchronously in the background. This function requires Unity Pro.
@@ -275,6 +399,25 @@ public class MadLevel  {
     public static AsyncOperation LoadNextAsync(Type levelType) {
         CheckHasConfiguration();
         var nextLevel = activeConfiguration.FindNextLevel(currentLevelName, levelType);
+        if (nextLevel != null) {
+            return LoadLevelAsync(nextLevel);
+        } else {
+            Debug.LogError("Cannot load next level: This is the last level of requested type.");
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// Loads first level with type <code>levelType</code> found after current level in level configuration group
+    /// asynchronously in the background. This function requires Unity Pro.
+    /// </summary>
+    /// <param name='levelType'>
+    /// Level type to load.
+    /// </param>
+    /// <returns>AsyncOperation object.</returns>
+    public static AsyncOperation LoadNextInGroupAsync(Type levelType) {
+        CheckHasConfiguration();
+        var nextLevel = activeConfiguration.FindNextLevel(currentLevelName, levelType, true);
         if (nextLevel != null) {
             return LoadLevelAsync(nextLevel);
         } else {
@@ -294,6 +437,18 @@ public class MadLevel  {
         CheckHasConfiguration();
         return activeConfiguration.FindPreviousLevel(currentLevelName) != null;
     }
+
+    /// <summary>
+    /// Determines whether there is previous level present in current level configuration group
+    /// (are there any other levels before this one?)
+    /// </summary>
+    /// <returns>
+    /// <c>true</c> if previous level is available; otherwise, <c>false</c>.
+    /// </returns>
+    public static bool HasPreviousInGroup() {
+        CheckHasConfiguration();
+        return activeConfiguration.FindPreviousLevel(currentLevelName, true) != null;
+    }
     
     /// <summary>
     /// Determines whether there is previous level present of the specified levelType in level configuration
@@ -309,13 +464,41 @@ public class MadLevel  {
         CheckHasConfiguration();
         return activeConfiguration.FindPreviousLevel(currentLevelName, levelType) != null;
     }
-    
+
+    /// <summary>
+    /// Determines whether there is previous level present of the specified levelType in level configuration group
+    /// (are there any other levels further ahead?)
+    /// </summary>
+    /// <returns>
+    /// <c>true</c> if previous level is present; otherwise, <c>false</c>.
+    /// </returns>
+    /// <param name='levelType'>
+    /// Type of previous level to look after.
+    /// </param>
+    public static bool HasPreviousInGroup(Type levelType) {
+        CheckHasConfiguration();
+        return activeConfiguration.FindPreviousLevel(currentLevelName, levelType, true) != null;
+    }
+
     /// <summary>
     /// Loads previous level defined in level configuration.
     /// </summary>
     public static void LoadPrevious() {
         CheckHasConfiguration();
         var previousLevel = activeConfiguration.FindPreviousLevel(currentLevelName);
+        if (previousLevel != null) {
+            LoadLevel(previousLevel);
+        } else {
+            Debug.LogError("Cannot load previous level: This is the first level.");
+        }
+    }
+
+    /// <summary>
+    /// Loads previous level defined in level configuration group.
+    /// </summary>
+    public static void LoadPreviousInGroup() {
+        CheckHasConfiguration();
+        var previousLevel = activeConfiguration.FindPreviousLevel(currentLevelName, true);
         if (previousLevel != null) {
             LoadLevel(previousLevel);
         } else {
@@ -338,6 +521,22 @@ public class MadLevel  {
             return null;
         }
     }
+
+    /// <summary>
+    /// Loads previous level defined in level configuration group asynchronously in the background.
+    /// This function requires Unity Pro.
+    /// </summary>
+    /// <returns>AsyncOperation object.</returns>
+    public static AsyncOperation LoadPreviousInGroupAsync() {
+        CheckHasConfiguration();
+        var previousLevel = activeConfiguration.FindPreviousLevel(currentLevelName, true);
+        if (previousLevel != null) {
+            return LoadLevelAsync(previousLevel);
+        } else {
+            Debug.LogError("Cannot load previous level: This is the first level.");
+            return null;
+        }
+    }
     
     /// <summary>
     /// Loads first level with type <code>levelType</code> found before current level in level configuration.
@@ -348,6 +547,22 @@ public class MadLevel  {
     public static void LoadPrevious(Type levelType) {
         CheckHasConfiguration();
         var previousLevel = activeConfiguration.FindPreviousLevel(currentLevelName, levelType);
+        if (previousLevel != null) {
+            LoadLevel(previousLevel);
+        } else {
+            Debug.LogError("Cannot load previous level: This is the first level of requested type.");
+        }
+    }
+
+    /// <summary>
+    /// Loads first level with type <code>levelType</code> found before current level in level configuration group.
+    /// </summary>
+    /// <param name='levelType'>
+    /// Level type to load.
+    /// </param>
+    public static void LoadPreviousInGroup(Type levelType) {
+        CheckHasConfiguration();
+        var previousLevel = activeConfiguration.FindPreviousLevel(currentLevelName, levelType, true);
         if (previousLevel != null) {
             LoadLevel(previousLevel);
         } else {
@@ -373,6 +588,25 @@ public class MadLevel  {
             return null;
         }
     }
+
+    /// <summary>
+    /// Loads first level with type <code>levelType</code> found before current level in level configuration group
+    /// asynchronously in the background. This function requires Unity Pro.
+    /// </summary>
+    /// <param name='levelType'>
+    /// Level type to load.
+    /// </param>
+    /// <returns>AsyncOperation object.</returns>
+    public static AsyncOperation LoadPreviousInGroupAsync(Type levelType) {
+        CheckHasConfiguration();
+        var previousLevel = activeConfiguration.FindPreviousLevel(currentLevelName, levelType, true);
+        if (previousLevel != null) {
+            return LoadLevelAsync(previousLevel);
+        } else {
+            Debug.LogError("Cannot load previous level: This is the first level of requested type.");
+            return null;
+        }
+    }
     
     /// <summary>
     /// Tells if there is at least one level set in active level configuration.
@@ -382,6 +616,24 @@ public class MadLevel  {
     /// </returns>
     public static bool HasFirst() {
         return activeConfiguration.LevelCount() != 0;
+    }
+
+    /// <summary>
+    /// Tells if there is at least one level set in active level configuration group.
+    /// </summary>
+    /// <param name="groupName">Name of a group.</param>
+    /// <returns>
+    /// <c>true</c> if there is at least one level configured; otherwise, <c>false</c>.
+    /// </returns>
+    public static bool HasFirstInGroup(string groupName) {
+        var group = activeConfiguration.FindGroupByName(groupName);
+        if (group == null) {
+            Debug.LogError("There's no group named " + groupName);
+            return false;
+        }
+
+        var level = activeConfiguration.GetLevel(group.id, 0);
+        return level != null;
     }
     
     /// <summary>
@@ -396,6 +648,26 @@ public class MadLevel  {
     public static bool HasFirst(Type levelType) {
         return activeConfiguration.LevelCount(levelType) != 0;
     }
+
+    /// <summary>
+    /// Tells if there is at least one level of type <code>levelType</code> set in active level configuration group.
+    /// </summary>
+    /// <param name='levelType'>
+    /// Level type to find.
+    /// </param>
+    /// <returns>
+    /// <c>true</c> if there is at least one level of given type configured; otherwise, <c>false</c>.
+    /// </returns>
+    public static bool HasFirstInGroup(Type levelType, string groupName) {
+        var group = activeConfiguration.FindGroupByName(groupName);
+        if (group == null) {
+            Debug.LogError("There's no group named " + groupName);
+            return false;
+        }
+
+        var level = activeConfiguration.GetLevel(levelType, group.id, 0);
+        return level != null;
+    }
     
     /// <summary>
     /// Loads the first level set in level configuration.
@@ -406,6 +678,24 @@ public class MadLevel  {
             LoadLevel(firstLevel);
         } else {
             Debug.LogError("Cannot load first level: there's no levels defined");
+        }
+    }
+
+    /// <summary>
+    /// Loads the first level set in level configuration group.
+    /// </summary>
+    public static void LoadFirstInGroup(string groupName) {
+        var group = activeConfiguration.FindGroupByName(groupName);
+        if (group == null) {
+            Debug.LogError("There's no group named " + groupName);
+            return;
+        }
+
+        var level = activeConfiguration.GetLevel(group.id, 0);
+        if (level != null) {
+            LoadLevel(level);
+        } else {
+            Debug.LogError("Cannot load first level: there are no levels defined in this group");
         }
     }
     
@@ -419,7 +709,28 @@ public class MadLevel  {
             var firstLevel = activeConfiguration.GetLevel(0);
             return LoadLevelAsync(firstLevel);
         } else {
-            Debug.LogError("Cannot load first level: there's no levels defined");
+            Debug.LogError("Cannot load first level: there are no levels defined");
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// Loads the first level set in level configuration group asynchronously in the background.
+    /// This function requires Unity Pro.
+    /// </summary>
+    /// <returns>AsyncOperation object.</returns>
+    public static AsyncOperation LoadFirstInGroupAsync(string groupName) {
+        var group = activeConfiguration.FindGroupByName(groupName);
+        if (group == null) {
+            Debug.LogError("There's no group named " + groupName);
+            return null;
+        }
+
+        var level = activeConfiguration.GetLevel(group.id, 0);
+        if (level != null) {
+            return LoadLevelAsync(level);
+        } else {
+            Debug.LogError("Cannot load first level: there are no levels defined in that group");
             return null;
         }
     }
@@ -436,6 +747,27 @@ public class MadLevel  {
             LoadLevel(firstLevel);
         } else {
             Debug.LogError("Cannot load first level: there's no level of type " + levelType);
+        }
+    }
+
+    /// <summary>
+    /// Loads the first level of type <code>levelType</code> set in level configuration group.
+    /// </summary>
+    /// <param name='levelType'>
+    /// Level type.
+    /// </param>
+    public static void LoadFirstInGroup(Type levelType, string groupName) {
+        var group = activeConfiguration.FindGroupByName(groupName);
+        if (group == null) {
+            Debug.LogError("There's no group named " + groupName);
+            return;
+        }
+
+        var level = activeConfiguration.GetLevel(levelType, group.id, 0);
+        if (level != null) {
+            LoadLevel(level);
+        } else {
+            Debug.LogError("Cannot find requested level.");
         }
     }
     
@@ -456,30 +788,109 @@ public class MadLevel  {
             return null;
         }
     }
+
+    /// <summary>
+    /// Loads the first level of type <code>levelType</code> set in level configuration group asynchronously in the
+    /// background. This function requires Unity Pro.
+    /// </summary>
+    /// <param name='levelType'>
+    /// Level type.
+    /// </param>
+    /// <returns>AsyncOperation object.</returns>
+    public static AsyncOperation LoadFirstInGroupAsync(Type levelType, string groupName) {
+        var group = activeConfiguration.FindGroupByName(groupName);
+        if (group == null) {
+            Debug.LogError("There's no group named " + groupName);
+            return null;
+        }
+
+        var level = activeConfiguration.GetLevel(levelType, group.id, 0);
+        if (level != null) {
+            return LoadLevelAsync(level);
+        } else {
+            Debug.LogError("Cannot find requested level");
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// When game is currently in a level with an extension set, this method will tell if the level can be
+    /// continued using the MadLevel.Continue() method.
+    /// </summary>
+    /// <returns></returns>
+    public static bool CanContinue() {
+        if (currentExtension == null) {
+            Debug.LogWarning("CanContinue() should be called only within levels with extensions.");
+            return false;
+        }
+
+        var currentLevel = activeConfiguration.FindLevelByName(currentLevelName);
+        return currentExtension.CanContinue(currentLevel, currentExtensionProgress);
+    }
+
+    /// <summary>
+    /// When game is currently in a level with an extension set, this method will load the next scene defined by that
+    /// extension (if exists). Remember to always check if there is a possibility of continuation using MadLevel.CanContinue()
+    /// </summary>
+    public static void Continue() {
+        if (currentExtension == null) {
+            Debug.LogWarning("Continue() should be called only within levels with extensions.");
+            return;
+        }
+
+        var currentLevel = activeConfiguration.FindLevelByName(currentLevelName);
+        currentExtension.Continue(currentLevel, currentExtensionProgress);
+    }
+
+    /// <summary>
+    /// When game is currently in a level with an extension set, this method will load the next scene defined by that
+    /// extension (if exists). Remember to always check if there is a possibility of continuation using MadLevel.CanContinue().
+    /// This is an async operation and will return AsyncOperation object.
+    /// </summary>
+    public static AsyncOperation ContinueAsync() {
+        if (currentExtension == null) {
+            Debug.LogWarning("Continue() should be called only within levels with extensions.");
+            return null;
+        }
+
+        var currentLevel = activeConfiguration.FindLevelByName(currentLevelName);
+        return currentExtension.ContinueAsync(currentLevel, currentExtensionProgress);
+    }
     
     /// <summary>
     /// Gets the all defined level names.
     /// </summary>
     /// <returns>The all defined level names.</returns>
-    public static string[] GetAllLevelNames() {
+    public static string[] GetAllLevelNames(string group = null) {
         CheckHasConfiguration();
-        string[] result = new string[activeConfiguration.levels.Count];
+
+        List<string> result = new List<string>();
+
         for (int i = 0; i < activeConfiguration.levels.Count; ++i) {
-            result[i] = activeConfiguration.levels[i].name;
+            var level = activeConfiguration.levels[i];
+            if (group != null && level.group.name != group) {
+                continue;
+            }
+
+            result.Add(level.name);
         }
-        
-        return result;
+
+        return result.ToArray();
     }
     
     /// <summary>
     /// Gets the all defined level names of given type.
     /// </summary>
     /// <returns>The all defined level names of given type.</returns>
-    public static string[] GetAllLevelNames(MadLevel.Type type) {
+    public static string[] GetAllLevelNames(MadLevel.Type type, string group = null) {
         CheckHasConfiguration();
         var output = new List<string>();
         for (int i = 0; i < activeConfiguration.levels.Count; ++i) {
             var level = activeConfiguration.levels[i];
+            if (group != null && level.group.name != group) {
+                continue;
+            }
+
             if (level.type == type) {
                 output.Add(level.name);
             }
@@ -493,8 +904,8 @@ public class MadLevel  {
     /// </summary>
     /// <returns>The first completed level name or <code>null</code> if there's no level
     /// that is marked as completed.</returns>
-    public static string FindFirstCompletedLevelName() {
-        return FindFirstLevelName((level) => MadLevelProfile.IsCompleted(level.name));
+    public static string FindFirstCompletedLevelName(string groupName) {
+        return FindFirstLevelName(groupName, (level) => MadLevelProfile.IsCompleted(level.name));
     }
     
     /// <summary>
@@ -502,8 +913,8 @@ public class MadLevel  {
     /// </summary>
     /// <returns>The last completed level name or <code>null</code> if there's no level
     /// that is marked as completed.</returns>
-    public static string FindLastCompletedLevelName() {
-        return FindLastLevelName((level) => MadLevelProfile.IsCompleted(level.name));
+    public static string FindLastCompletedLevelName(string groupName) {
+        return FindLastLevelName(groupName, (level) => MadLevelProfile.IsCompleted(level.name));
     }
     
     /// <summary>
@@ -512,8 +923,8 @@ public class MadLevel  {
     /// </summary>
     /// <returns>The first locked level name or <code>null</code> if there's no level
     /// that is marked as locked.</returns>
-    public static string FindFirstLockedLevelName() {
-        return FindFirstLevelName((level) => MadLevelProfile.IsLocked(level.name));
+    public static string FindFirstLockedLevelName(string groupName) {
+        return FindFirstLevelName(groupName, (level) => MadLevelProfile.IsLocked(level.name));
     }
     
     /// <summary>
@@ -522,8 +933,8 @@ public class MadLevel  {
     /// </summary>
     /// <returns>The last locked level name or <code>null</code> if there's no level
     /// that is marked as locked.</returns>
-    public static string FindLastLockedLevelName() {
-        return FindLastLevelName((level) => MadLevelProfile.IsLocked(level.name));
+    public static string FindLastLockedLevelName(string groupName) {
+        return FindLastLevelName(groupName, (level) => MadLevelProfile.IsLocked(level.name));
     }
     
     /// <summary>
@@ -532,8 +943,8 @@ public class MadLevel  {
     /// </summary>
     /// <returns>The first locked level name or <code>null</code> if there's no level
     /// that is marked as locked.</returns>
-    public static string FindFirstUnlockedLevelName() {
-        return FindFirstLevelName((level) => !MadLevelProfile.IsLocked(level.name));
+    public static string FindFirstUnlockedLevelName(string groupName) {
+        return FindFirstLevelName(groupName, (level) => !MadLevelProfile.IsLocked(level.name));
     }
     
     /// <summary>
@@ -542,8 +953,8 @@ public class MadLevel  {
     /// </summary>
     /// <returns>The first locked level name or <code>null</code> if there's no level
     /// that is marked as locked.</returns>
-    public static string FindLastUnlockedLevelName() {
-        return FindLastLevelName((level) => !MadLevelProfile.IsLocked(level.name));
+    public static string FindLastUnlockedLevelName(string groupName) {
+        return FindLastLevelName(groupName, (level) => !MadLevelProfile.IsLocked(level.name));
     }
     
     /// <summary>
@@ -551,12 +962,23 @@ public class MadLevel  {
     /// </summary>
     /// <returns>The first found level or <code>null<code> if not found.</returns>
     /// <param name="predicate">The predicate.</param>
-    public static string FindFirstLevelName(LevelPredicate predicate) {
+    public static string FindFirstLevelName(string groupName, LevelPredicate predicate) {
         CheckHasConfiguration();
+
+        var group = activeConfiguration.FindGroupByName(groupName);
+        if (group == null) {
+            Debug.LogError("Cannot find group named " + groupName);
+            return null;
+        }
         
         var levels = activeConfiguration.GetLevelsInOrder();
         for (int i = 0; i < levels.Length; i++) {
             var level = levels[i];
+
+            if (level.groupId != group.id) {
+                continue;
+            }
+
             if (predicate(level)) {
                 return level.name;
             }
@@ -570,8 +992,8 @@ public class MadLevel  {
     /// </summary>
     /// <returns>The first found level or <code>null<code> if not found.</returns>
     /// <param name="levelType">The level type.</param>
-    public static string FindFirstLevelName(MadLevel.Type levelType) {
-        return FindFirstLevelName((level) => level.type == levelType);
+    public static string FindFirstLevelName(MadLevel.Type levelType, string groupName) {
+        return FindFirstLevelName(groupName, (level) => level.type == levelType);
     }
     
     /// <summary>
@@ -579,12 +1001,23 @@ public class MadLevel  {
     /// </summary>
     /// <returns>The last found level or <code>null<code> if not found.</returns>
     /// <param name="predicate">The predicate.</param>
-    public static string FindLastLevelName(LevelPredicate predicate) {
+    public static string FindLastLevelName(string groupName, LevelPredicate predicate) {
         CheckHasConfiguration();
+
+        var group = activeConfiguration.FindGroupByName(groupName);
+        if (group == null) {
+            Debug.LogError("Cannot find group named " + groupName);
+            return null;
+        }
     
         var levels = activeConfiguration.GetLevelsInOrder();
         for (int i = levels.Length - 1; i >= 0; i--) {
             var level = levels[i];
+
+            if (level.groupId != group.id) {
+                continue;
+            }
+
             if (predicate(level)) {
                 return level.name;
             }
@@ -598,8 +1031,8 @@ public class MadLevel  {
     /// </summary>
     /// <returns>The last found level or <code>null<code> if not found.</returns>
     /// <param name="levelType">The level type.</param>
-    public static string FindLastLevelName(MadLevel.Type levelType) {
-        return FindLastLevelName((level) => level.type == levelType);
+    public static string FindLastLevelName(MadLevel.Type levelType, string groupName) {
+        return FindLastLevelName(groupName, (level) => level.type == levelType);
     }
     
     /// <summary>
@@ -712,25 +1145,27 @@ public class MadLevel  {
             "This method may only be used when level configuration is set. Please refer to "
             + MadLevelHelp.ConfigurationWiki);
     }
-    
+
     static void LoadLevel(MadLevelConfiguration.Level level) {
-        lastPlayedLevelName = currentLevelName;
-        // arguments must be set after reading currentLevelName
-        // because reading it may overwrite arguments in result
-        // TODO: find a better way to solve this
-        arguments = level.arguments;
-        currentLevelName = level.name;
-        Application.LoadLevel(level.sceneName); // TODO: change it to scene index
+        currentExtension = null; // loading level that way resets the extension
+
+        if (level.hasExtension) {
+            var extension = level.extension;
+            extension.Load(level);
+        } else {
+            level.Load();
+        }
     }
-    
+
     static AsyncOperation LoadLevelAsync(MadLevelConfiguration.Level level) {
-        lastPlayedLevelName = currentLevelName;
-        // arguments must be set after reading currentLevelName
-        // because reading it may overwrite arguments in result
-        // TODO: find a better way to solve this
-        arguments = level.arguments;
-        currentLevelName = level.name;
-        return Application.LoadLevelAsync(level.sceneName); // TODO: change it to scene index
+        currentExtension = null; // loading level that way resets the extension
+
+        if (level.hasExtension) {
+            var extension = level.extension;
+            return extension.LoadAsync(level);
+        } else {
+            return level.LoadAsync();
+        }
     }
     
     // ===========================================================

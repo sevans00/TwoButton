@@ -69,8 +69,8 @@ public class MadAssets : MonoBehaviour {
         string path = AssetDatabase.GetAssetPath(Selection.activeObject);
         if (path == "")  {
             path = "Assets";
-        } else if (Path.GetExtension (path) != "")  {
-            path = path.Replace (Path.GetFileName (AssetDatabase.GetAssetPath (Selection.activeObject)), "");
+        } else if (System.IO.Path.GetExtension (path) != "")  {
+            path = path.Replace (System.IO.Path.GetFileName (AssetDatabase.GetAssetPath (Selection.activeObject)), "");
         }
         
         string assetPathAndName = AssetDatabase.GenerateUniqueAssetPath (path + "/" + baseName + ".asset");

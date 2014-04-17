@@ -261,18 +261,18 @@ public class MadFontBuilder {
     public static void CreateFont() {
         var go = new GameObject();
         go.AddComponent<MadFont>();
-        
-        string path = AssetDatabase.GetAssetPath(Selection.activeObject);
-        
-        FileAttributes attr = File.GetAttributes(path);
-        
-        if (string.IsNullOrEmpty(path)) {
-            path = "Assets";
-        } else if((attr & FileAttributes.Directory) != FileAttributes.Directory) {
-            path = Path.GetDirectoryName(path);
+
+        string saveFolder = "Assets";
+        if (Selection.activeObject != null) {
+            saveFolder = System.IO.Path.GetDirectoryName(AssetDatabase.GetAssetPath(Selection.activeObject));
         }
-        
-        string assetPathAndName = AssetDatabase.GenerateUniqueAssetPath (path + "/newFont.prefab");
+
+        var assetPathAndName = EditorUtility.SaveFilePanel("Save Font", saveFolder, "New Font", "prefab");
+        if (string.IsNullOrEmpty(assetPathAndName)) {
+            return;
+        }
+
+        assetPathAndName = MadPath.MakeRelative(assetPathAndName);
         
         var prefab = PrefabUtility.CreatePrefab(assetPathAndName, go);
         GameObject.DestroyImmediate(go);

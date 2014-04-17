@@ -26,9 +26,12 @@ public class MadPanel : MadNode {
     // ===========================================================
     // Fields
     // ===========================================================
+
+    private static List<MadPanel> panels = new List<MadPanel>();
     
     public bool halfPixelOffset = true;
     
+    [NonSerialized]
     public HashSet<MadSprite> sprites = new HashSet<MadSprite>();
     
     public MadMaterialStore materialStore {
@@ -59,8 +62,33 @@ public class MadPanel : MadNode {
             }
         }
     }
-    
-    Camera parentCamera;
+
+    Camera currentCamera {
+        get {
+            if (_currentCamera == null || (_currentCamera.cullingMask & (1 << gameObject.layer)) == 0) {
+                _currentCamera = null;
+
+                Camera[] cameras = FindObjectsOfType(typeof(Camera)) as Camera[];
+
+                for (int i = 0; i < cameras.Length; ++i) {
+                    var camera = cameras[i];
+                    if ((camera.cullingMask & (1 << gameObject.layer)) != 0) {
+                        if (_currentCamera != null) {
+                            Debug.Log("There are multiple cameras that are rendering the \""
+                                + LayerMask.LayerToName(gameObject.layer)
+                                + "\" layer. Please adjust your culling masks and/or change layer of this Panel object.", this);
+                        } else {
+                            _currentCamera = camera;
+                        }
+                    }
+                }
+            }
+
+            return _currentCamera;
+        }
+    }
+
+    private Camera _currentCamera;
     
     // input helpers
     HashSet<MadSprite> hoverSprites = new HashSet<MadSprite>();
@@ -83,16 +111,30 @@ public class MadPanel : MadNode {
     // ===========================================================
     // Methods
     // ===========================================================
+
+    void Awake() {
+        panels.Add(this);
+    }
+
+    void OnDestroy() {
+        panels.Remove(this);
+    }
     
     void OnEnable() {
         materialStore = GetComponent<MadMaterialStore>();
-        parentCamera = FindParent<Camera>();
+        
+        var meshRenderer = gameObject.GetComponent<MeshRenderer>();
+        if (meshRenderer != null) {
+            MadGameObject.SafeDestroy(meshRenderer);
+        }
+
+        var meshFilter = gameObject.GetComponent<MeshFilter>();
+        if (meshFilter != null) {
+            MadGameObject.SafeDestroy(meshFilter);
+        }
+
     }
 
-    void Awake() {
-        sprites.Clear();
-    }
-    
     void Update() {
         // fix the offset
         if (halfPixelOffset) {
@@ -108,7 +150,7 @@ public class MadPanel : MadNode {
                 x = pixelSize;
             }
             
-            transform.localPosition = new Vector3(x, y, 0);
+            MadTransform.SetLocalPosition(transform, new Vector3(x, y, 0));
         }
         
         UpdateInput();
@@ -215,12 +257,12 @@ public class MadPanel : MadNode {
     }
     
     IEnumerable<MadSprite> AllSpritesForScreenPoint(Vector2 point) {
-        var ray = parentCamera.ScreenPointToRay(point);
+        var ray = currentCamera.ScreenPointToRay(point);
         RaycastHit[] hits = Physics.RaycastAll(ray, 4);
         foreach (var hit in hits) {
             var collider = hit.collider;
             var sprite = collider.GetComponent<MadSprite>();
-            if (sprite != null) {
+            if (sprite != null && sprite.panel == this) {
                 yield return sprite;
             }
         }
@@ -229,8 +271,30 @@ public class MadPanel : MadNode {
     // ===========================================================
     // Static Methods
     // ===========================================================
-    
+
+    public static MadPanel FirstOrNull(Transform currentTransform) {
+        // first try to find panel as parent
+        if (currentTransform != null) {
+            var panel = MadTransform.FindParent<MadPanel>(currentTransform);
+            if (panel != null) {
+                return panel;
+            }
+        }
+
+        // then try to locate the panel on the static list
+        if (panels.Count > 0) {
+            return panels[0];
+        }
+
+        // if all above fails, try to locate panel using the slow FindObjectOfType method
+        return GameObject.FindObjectOfType(typeof(MadPanel)) as MadPanel;
+    }
+
     public static MadPanel UniqueOrNull() {
+        if (MadPanel.panels.Count == 1) {
+            return MadPanel.panels[0];
+        }
+
         var panels = GameObject.FindObjectsOfType(typeof(MadPanel));
         if (panels.Length == 1) {
             return panels[0] as MadPanel;

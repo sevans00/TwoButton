@@ -113,21 +113,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &56052
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -183,21 +194,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 1
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: 169eb563361fa12418f5be81e78ec5c3, type: 1}
+  lastTexture: {fileID: 2800000, guid: 169eb563361fa12418f5be81e78ec5c3, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 2
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &15277956
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -254,21 +276,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d36029d3533291b49a960aa04139fa4a, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 0}
+  lastTexture: {fileID: 0}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 1
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
   liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
   font: {fileID: 11400000, guid: 7fd3c65ab8c2c7a4cb5be2ccd1aee57c, type: 2}
   text: 14
   scale: 90
@@ -289,59 +322,6 @@ MonoBehaviour:
   showWhenDisabled: []
   textFromProperty: 0
   textPropertyName: 
---- !u!1 &28322367
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 3
-  m_Component:
-  - 4: {fileID: 28322368}
-  - 114: {fileID: 28322369}
-  m_Layer: 0
-  m_Name: slide
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &28322368
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 28322367}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1520556823}
---- !u!114 &28322369
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 28322367}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
-  m_Name: 
-  managed: 0
-  visible: 1
-  editorSelectable: 1
-  pivotPoint: 8
-  tint: {r: 1, g: 1, b: 1, a: 0}
-  texture: {fileID: 2800000, guid: 58b896c343cf17e40819a116368fc7e2, type: 1}
-  textureOffset: {x: 0, y: 0}
-  textureRepeat: {x: 1, y: 1}
-  guiDepth: 1000
-  eventFlags: 15
-  liveLeft: 0
-  liveBottom: 0
-  liveRight: 0
-  liveTop: 1
-  fillType: 0
-  fillValue: 1
 --- !u!1 &29387236
 GameObject:
   m_ObjectHideFlags: 0
@@ -381,21 +361,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &29387239
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -451,21 +442,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 1
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: 169eb563361fa12418f5be81e78ec5c3, type: 1}
+  lastTexture: {fileID: 2800000, guid: 169eb563361fa12418f5be81e78ec5c3, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 2
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &47476206
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -522,21 +524,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &57021580
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -592,21 +605,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &59547436
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -662,21 +686,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 1
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: 169eb563361fa12418f5be81e78ec5c3, type: 1}
+  lastTexture: {fileID: 2800000, guid: 169eb563361fa12418f5be81e78ec5c3, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 2
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &63289619
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -733,21 +768,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d36029d3533291b49a960aa04139fa4a, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 1
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 0}
+  lastTexture: {fileID: 0}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 1
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
   liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
   font: {fileID: 11400000, guid: 7fd3c65ab8c2c7a4cb5be2ccd1aee57c, type: 2}
   text: 1
   scale: 90
@@ -811,51 +857,6 @@ MonoBehaviour:
   showWhenDisabled: []
   textFromProperty: 0
   textPropertyName: 
---- !u!1 &175400465
-GameObject:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 3
-  m_Component:
-  - 4: {fileID: 175400466}
-  - 114: {fileID: 175400467}
-  m_Layer: 0
-  m_Name: SlideRightAnchor
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &175400466
-Transform:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 175400465}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 720.568665, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1317968729}
-  m_Father: {fileID: 878526176}
---- !u!114 &175400467
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 175400465}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 787b8e0fd3029054aa84ae29be4eabf1, type: 1}
-  m_Name: 
-  managed: 0
-  mode: 0
-  position: 2
-  anchorObject: {fileID: 0}
-  anchorCamera: {fileID: 0}
-  moveIn3D: 0
-  faceCamera: 0
 --- !u!1 &177728387
 GameObject:
   m_ObjectHideFlags: 0
@@ -906,7 +907,6 @@ MonoBehaviour:
     y: -200
     width: 400
     height: 400
-  freeDragStartPosition: {x: -200, y: 200}
   allowScaling: 0
   scaleMax: 2
   scaleMin: .25
@@ -1052,23 +1052,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f91db2b97c1910a4dbc0260796527970, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 1
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: 65e09bf3b78ef3542af0c23a92590df0, type: 1}
+  lastTexture: {fileID: 2800000, guid: 65e09bf3b78ef3542af0c23a92590df0, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 0
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
   hasLevelConfiguration: 1
-  configuration: {fileID: 11400000, guid: 31b40b3d45d5d444db2b1aa3eee62c62, type: 2}
   levelIndex: 17
   levelSceneName: MadLevelTester
   levelArguments: 
@@ -1117,21 +1127,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &228501345
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1187,21 +1208,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 1
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: 169eb563361fa12418f5be81e78ec5c3, type: 1}
+  lastTexture: {fileID: 2800000, guid: 169eb563361fa12418f5be81e78ec5c3, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 2
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &245741166
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1412,21 +1444,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 1
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: 169eb563361fa12418f5be81e78ec5c3, type: 1}
+  lastTexture: {fileID: 2800000, guid: 169eb563361fa12418f5be81e78ec5c3, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 2
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &293483171
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1526,21 +1569,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &320343939
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1596,21 +1650,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 1
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: 169eb563361fa12418f5be81e78ec5c3, type: 1}
+  lastTexture: {fileID: 2800000, guid: 169eb563361fa12418f5be81e78ec5c3, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 2
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &321198875
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1667,21 +1732,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &329114145
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1737,21 +1813,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d36029d3533291b49a960aa04139fa4a, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 0}
+  lastTexture: {fileID: 0}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 1
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
   liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
   font: {fileID: 11400000, guid: 7fd3c65ab8c2c7a4cb5be2ccd1aee57c, type: 2}
   text: 11
   scale: 90
@@ -1811,21 +1898,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &347043275
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1881,21 +1979,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &360960513
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2011,23 +2120,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f91db2b97c1910a4dbc0260796527970, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 1
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: 65e09bf3b78ef3542af0c23a92590df0, type: 1}
+  lastTexture: {fileID: 2800000, guid: 65e09bf3b78ef3542af0c23a92590df0, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 0
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
   hasLevelConfiguration: 1
-  configuration: {fileID: 11400000, guid: 31b40b3d45d5d444db2b1aa3eee62c62, type: 2}
   levelIndex: 14
   levelSceneName: MadLevelTester
   levelArguments: 
@@ -2111,21 +2230,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d36029d3533291b49a960aa04139fa4a, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 0}
+  lastTexture: {fileID: 0}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 1
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
   liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
   font: {fileID: 11400000, guid: 7fd3c65ab8c2c7a4cb5be2ccd1aee57c, type: 2}
   text: 7
   scale: 90
@@ -2185,21 +2315,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &378131216
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2358,23 +2499,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f91db2b97c1910a4dbc0260796527970, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 1
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: 65e09bf3b78ef3542af0c23a92590df0, type: 1}
+  lastTexture: {fileID: 2800000, guid: 65e09bf3b78ef3542af0c23a92590df0, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 0
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
   hasLevelConfiguration: 1
-  configuration: {fileID: 11400000, guid: 31b40b3d45d5d444db2b1aa3eee62c62, type: 2}
   levelIndex: 12
   levelSceneName: MadLevelTester
   levelArguments: 
@@ -2423,21 +2574,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &477672587
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2536,21 +2698,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &502155326
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2666,23 +2839,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f91db2b97c1910a4dbc0260796527970, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 1
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: 65e09bf3b78ef3542af0c23a92590df0, type: 1}
+  lastTexture: {fileID: 2800000, guid: 65e09bf3b78ef3542af0c23a92590df0, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 0
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
   hasLevelConfiguration: 1
-  configuration: {fileID: 11400000, guid: 31b40b3d45d5d444db2b1aa3eee62c62, type: 2}
   levelIndex: 9
   levelSceneName: MadLevelTester
   levelArguments: 
@@ -2731,21 +2914,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &570295774
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2801,21 +2995,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d36029d3533291b49a960aa04139fa4a, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 0}
+  lastTexture: {fileID: 0}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 1
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
   liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
   font: {fileID: 11400000, guid: 7fd3c65ab8c2c7a4cb5be2ccd1aee57c, type: 2}
   text: 13
   scale: 90
@@ -2935,23 +3140,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f91db2b97c1910a4dbc0260796527970, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 1
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: 65e09bf3b78ef3542af0c23a92590df0, type: 1}
+  lastTexture: {fileID: 2800000, guid: 65e09bf3b78ef3542af0c23a92590df0, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 0
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
   hasLevelConfiguration: 1
-  configuration: {fileID: 11400000, guid: 31b40b3d45d5d444db2b1aa3eee62c62, type: 2}
   levelIndex: 7
   levelSceneName: MadLevelTester
   levelArguments: 
@@ -3055,21 +3270,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &646823625
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3168,21 +3394,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 1
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: 169eb563361fa12418f5be81e78ec5c3, type: 1}
+  lastTexture: {fileID: 2800000, guid: 169eb563361fa12418f5be81e78ec5c3, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 2
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &663137497
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3200,6 +3437,70 @@ MonoBehaviour:
   - {fileID: 1980216610}
   textFromProperty: 0
   textPropertyName: 
+--- !u!1 &676636807
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 3
+  m_Component:
+  - 4: {fileID: 676636808}
+  - 114: {fileID: 676636809}
+  m_Layer: 0
+  m_Name: slide
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &676636808
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 676636807}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1586900826}
+--- !u!114 &676636809
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 676636807}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
+  m_Name: 
+  managed: 0
+  panel: {fileID: 1119062177}
+  visible: 1
+  editorSelectable: 1
+  pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
+  tint: {r: 1, g: 1, b: 1, a: 0}
+  inputType: 0
+  texture: {fileID: 2800000, guid: 58b896c343cf17e40819a116368fc7e2, type: 1}
+  lastTexture: {fileID: 2800000, guid: 58b896c343cf17e40819a116368fc7e2, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
+  textureOffset: {x: 0, y: 0}
+  textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
+  guiDepth: 1000
+  eventFlags: 15
+  liveLeft: 0
+  liveBottom: 0
+  liveRight: 1
+  liveTop: 1
+  hasLiveBounds: 0
+  fillType: 0
+  fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!1 &683129164
 GameObject:
   m_ObjectHideFlags: 0
@@ -3239,21 +3540,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 1
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: 169eb563361fa12418f5be81e78ec5c3, type: 1}
+  lastTexture: {fileID: 2800000, guid: 169eb563361fa12418f5be81e78ec5c3, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 2
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &683129167
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3413,23 +3725,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f91db2b97c1910a4dbc0260796527970, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 1
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: 65e09bf3b78ef3542af0c23a92590df0, type: 1}
+  lastTexture: {fileID: 2800000, guid: 65e09bf3b78ef3542af0c23a92590df0, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 0
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
   hasLevelConfiguration: 1
-  configuration: {fileID: 11400000, guid: 31b40b3d45d5d444db2b1aa3eee62c62, type: 2}
   levelIndex: 4
   levelSceneName: MadLevelTester
   levelArguments: 
@@ -3521,21 +3843,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d36029d3533291b49a960aa04139fa4a, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 0}
+  lastTexture: {fileID: 0}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 1
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
   liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
   font: {fileID: 11400000, guid: 7fd3c65ab8c2c7a4cb5be2ccd1aee57c, type: 2}
   text: 15
   scale: 90
@@ -3595,21 +3928,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &794647508
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3665,21 +4009,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &805126956
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3696,463 +4051,6 @@ MonoBehaviour:
   showWhenDisabled: []
   textFromProperty: 0
   textPropertyName: 
---- !u!43 &816064103
-Mesh:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_Name: Generated Mesh
-  serializedVersion: 6
-  m_SubMeshes:
-  - firstByte: 0
-    indexCount: 6
-    isTriStrip: 0
-    triangleCount: 2
-    firstVertex: 0
-    vertexCount: 4
-    localAABB:
-      m_Center: {x: 1621.13733, y: -143, z: 0}
-      m_Extent: {x: 64, y: 64, z: 0}
-  - firstByte: 12
-    indexCount: 6
-    isTriStrip: 0
-    triangleCount: 2
-    firstVertex: 4
-    vertexCount: 4
-    localAABB:
-      m_Center: {x: 1261.13733, y: 1, z: 0}
-      m_Extent: {x: 64, y: 64, z: 0}
-  - firstByte: 24
-    indexCount: 6
-    isTriStrip: 0
-    triangleCount: 2
-    firstVertex: 8
-    vertexCount: 4
-    localAABB:
-      m_Center: {x: 180, y: 1, z: 0}
-      m_Extent: {x: 64, y: 64, z: 0}
-  - firstByte: 36
-    indexCount: 6
-    isTriStrip: 0
-    triangleCount: 2
-    firstVertex: 12
-    vertexCount: 4
-    localAABB:
-      m_Center: {x: 1441.13733, y: 1, z: 0}
-      m_Extent: {x: 64, y: 64, z: 0}
-  - firstByte: 48
-    indexCount: 6
-    isTriStrip: 0
-    triangleCount: 2
-    firstVertex: 16
-    vertexCount: 4
-    localAABB:
-      m_Center: {x: 1621.13733, y: 1, z: 0}
-      m_Extent: {x: 64, y: 64, z: 0}
-  - firstByte: 60
-    indexCount: 6
-    isTriStrip: 0
-    triangleCount: 2
-    firstVertex: 20
-    vertexCount: 4
-    localAABB:
-      m_Center: {x: -180, y: 1, z: 0}
-      m_Extent: {x: 64, y: 64, z: 0}
-  - firstByte: 72
-    indexCount: 6
-    isTriStrip: 0
-    triangleCount: 2
-    firstVertex: 24
-    vertexCount: 4
-    localAABB:
-      m_Center: {x: 180, y: 145, z: 0}
-      m_Extent: {x: 64, y: 64, z: 0}
-  - firstByte: 84
-    indexCount: 6
-    isTriStrip: 0
-    triangleCount: 2
-    firstVertex: 28
-    vertexCount: 4
-    localAABB:
-      m_Center: {x: 1621.13733, y: 145, z: 0}
-      m_Extent: {x: 64, y: 64, z: 0}
-  - firstByte: 96
-    indexCount: 6
-    isTriStrip: 0
-    triangleCount: 2
-    firstVertex: 32
-    vertexCount: 4
-    localAABB:
-      m_Center: {x: 2702.27466, y: 145, z: 0}
-      m_Extent: {x: 64, y: 64, z: 0}
-  - firstByte: 108
-    indexCount: 6
-    isTriStrip: 0
-    triangleCount: 2
-    firstVertex: 36
-    vertexCount: 4
-    localAABB:
-      m_Center: {x: 0, y: -143, z: 0}
-      m_Extent: {x: 64, y: 64, z: 0}
-  - firstByte: 120
-    indexCount: 30
-    isTriStrip: 0
-    triangleCount: 10
-    firstVertex: 40
-    vertexCount: 20
-    localAABB:
-      m_Center: {x: -322.222961, y: -234.303711, z: 0}
-      m_Extent: {x: 46.5882416, y: 22, z: 0}
-  - firstByte: 180
-    indexCount: 6
-    isTriStrip: 0
-    triangleCount: 2
-    firstVertex: 60
-    vertexCount: 4
-    localAABB:
-      m_Center: {x: 1441.13733, y: 145, z: 0}
-      m_Extent: {x: 64, y: 64, z: 0}
-  - firstByte: 192
-    indexCount: 6
-    isTriStrip: 0
-    triangleCount: 2
-    firstVertex: 64
-    vertexCount: 4
-    localAABB:
-      m_Center: {x: -180, y: -143, z: 0}
-      m_Extent: {x: 64, y: 64, z: 0}
-  - firstByte: 204
-    indexCount: 6
-    isTriStrip: 0
-    triangleCount: 2
-    firstVertex: 68
-    vertexCount: 4
-    localAABB:
-      m_Center: {x: 1441.13733, y: -143, z: 0}
-      m_Extent: {x: 64, y: 64, z: 0}
-  - firstByte: 216
-    indexCount: 6
-    isTriStrip: 0
-    triangleCount: 2
-    firstVertex: 72
-    vertexCount: 4
-    localAABB:
-      m_Center: {x: 0, y: 145, z: 0}
-      m_Extent: {x: 64, y: 64, z: 0}
-  - firstByte: 228
-    indexCount: 6
-    isTriStrip: 0
-    triangleCount: 2
-    firstVertex: 76
-    vertexCount: 4
-    localAABB:
-      m_Center: {x: 1261.13733, y: -143, z: 0}
-      m_Extent: {x: 64, y: 64, z: 0}
-  - firstByte: 240
-    indexCount: 6
-    isTriStrip: 0
-    triangleCount: 2
-    firstVertex: 80
-    vertexCount: 4
-    localAABB:
-      m_Center: {x: 1261.13733, y: 145, z: 0}
-      m_Extent: {x: 64, y: 64, z: 0}
-  - firstByte: 252
-    indexCount: 6
-    isTriStrip: 0
-    triangleCount: 2
-    firstVertex: 84
-    vertexCount: 4
-    localAABB:
-      m_Center: {x: -180, y: 145, z: 0}
-      m_Extent: {x: 64, y: 64, z: 0}
-  - firstByte: 264
-    indexCount: 6
-    isTriStrip: 0
-    triangleCount: 2
-    firstVertex: 88
-    vertexCount: 4
-    localAABB:
-      m_Center: {x: 180, y: -143, z: 0}
-      m_Extent: {x: 64, y: 64, z: 0}
-  - firstByte: 276
-    indexCount: 6
-    isTriStrip: 0
-    triangleCount: 2
-    firstVertex: 92
-    vertexCount: 4
-    localAABB:
-      m_Center: {x: 0, y: 1, z: 0}
-      m_Extent: {x: 64, y: 64, z: 0}
-  - firstByte: 288
-    indexCount: 6
-    isTriStrip: 0
-    triangleCount: 2
-    firstVertex: 96
-    vertexCount: 4
-    localAABB:
-      m_Center: {x: -181.323532, y: 161.429718, z: 0}
-      m_Extent: {x: 14.1176453, y: 45, z: 0}
-  - firstByte: 300
-    indexCount: 6
-    isTriStrip: 0
-    triangleCount: 2
-    firstVertex: 100
-    vertexCount: 4
-    localAABB:
-      m_Center: {x: 1621.13733, y: 16.2094574, z: 0}
-      m_Extent: {x: 32, y: 32, z: 0}
-  - firstByte: 312
-    indexCount: 6
-    isTriStrip: 0
-    triangleCount: 2
-    firstVertex: 104
-    vertexCount: 4
-    localAABB:
-      m_Center: {x: 1621.13733, y: 160.209457, z: 0}
-      m_Extent: {x: 32, y: 32, z: 0}
-  - firstByte: 324
-    indexCount: 6
-    isTriStrip: 0
-    triangleCount: 2
-    firstVertex: 108
-    vertexCount: 4
-    localAABB:
-      m_Center: {x: 0, y: 16.2094574, z: 0}
-      m_Extent: {x: 32, y: 32, z: 0}
-  - firstByte: 336
-    indexCount: 6
-    isTriStrip: 0
-    triangleCount: 2
-    firstVertex: 112
-    vertexCount: 4
-    localAABB:
-      m_Center: {x: 1441.13733, y: 16.2094574, z: 0}
-      m_Extent: {x: 32, y: 32, z: 0}
-  - firstByte: 348
-    indexCount: 6
-    isTriStrip: 0
-    triangleCount: 2
-    firstVertex: 116
-    vertexCount: 4
-    localAABB:
-      m_Center: {x: 1441.13733, y: -127.790543, z: 0}
-      m_Extent: {x: 32, y: 32, z: 0}
-  - firstByte: 360
-    indexCount: 6
-    isTriStrip: 0
-    triangleCount: 2
-    firstVertex: 120
-    vertexCount: 4
-    localAABB:
-      m_Center: {x: 1261.13733, y: 160.209457, z: 0}
-      m_Extent: {x: 32, y: 32, z: 0}
-  - firstByte: 372
-    indexCount: 6
-    isTriStrip: 0
-    triangleCount: 2
-    firstVertex: 124
-    vertexCount: 4
-    localAABB:
-      m_Center: {x: 1621.13733, y: -127.790543, z: 0}
-      m_Extent: {x: 32, y: 32, z: 0}
-  - firstByte: 384
-    indexCount: 6
-    isTriStrip: 0
-    triangleCount: 2
-    firstVertex: 128
-    vertexCount: 4
-    localAABB:
-      m_Center: {x: 1441.13733, y: 160.209457, z: 0}
-      m_Extent: {x: 32, y: 32, z: 0}
-  - firstByte: 396
-    indexCount: 6
-    isTriStrip: 0
-    triangleCount: 2
-    firstVertex: 132
-    vertexCount: 4
-    localAABB:
-      m_Center: {x: 2702.27466, y: 160.209457, z: 0}
-      m_Extent: {x: 32, y: 32, z: 0}
-  - firstByte: 408
-    indexCount: 6
-    isTriStrip: 0
-    triangleCount: 2
-    firstVertex: 136
-    vertexCount: 4
-    localAABB:
-      m_Center: {x: 180, y: 16.2094574, z: 0}
-      m_Extent: {x: 32, y: 32, z: 0}
-  - firstByte: 420
-    indexCount: 6
-    isTriStrip: 0
-    triangleCount: 2
-    firstVertex: 140
-    vertexCount: 4
-    localAABB:
-      m_Center: {x: 180, y: 160.209457, z: 0}
-      m_Extent: {x: 32, y: 32, z: 0}
-  - firstByte: 432
-    indexCount: 6
-    isTriStrip: 0
-    triangleCount: 2
-    firstVertex: 144
-    vertexCount: 4
-    localAABB:
-      m_Center: {x: 0, y: 160.209457, z: 0}
-      m_Extent: {x: 32, y: 32, z: 0}
-  - firstByte: 444
-    indexCount: 6
-    isTriStrip: 0
-    triangleCount: 2
-    firstVertex: 148
-    vertexCount: 4
-    localAABB:
-      m_Center: {x: 180, y: -127.790543, z: 0}
-      m_Extent: {x: 32, y: 32, z: 0}
-  - firstByte: 456
-    indexCount: 6
-    isTriStrip: 0
-    triangleCount: 2
-    firstVertex: 152
-    vertexCount: 4
-    localAABB:
-      m_Center: {x: 0, y: -127.790543, z: 0}
-      m_Extent: {x: 32, y: 32, z: 0}
-  - firstByte: 468
-    indexCount: 6
-    isTriStrip: 0
-    triangleCount: 2
-    firstVertex: 156
-    vertexCount: 4
-    localAABB:
-      m_Center: {x: -180, y: 16.2094574, z: 0}
-      m_Extent: {x: 32, y: 32, z: 0}
-  - firstByte: 480
-    indexCount: 6
-    isTriStrip: 0
-    triangleCount: 2
-    firstVertex: 160
-    vertexCount: 4
-    localAABB:
-      m_Center: {x: -180, y: -127.790543, z: 0}
-      m_Extent: {x: 32, y: 32, z: 0}
-  - firstByte: 492
-    indexCount: 6
-    isTriStrip: 0
-    triangleCount: 2
-    firstVertex: 164
-    vertexCount: 4
-    localAABB:
-      m_Center: {x: 1261.13733, y: 16.2094574, z: 0}
-      m_Extent: {x: 32, y: 32, z: 0}
-  - firstByte: 504
-    indexCount: 6
-    isTriStrip: 0
-    triangleCount: 2
-    firstVertex: 168
-    vertexCount: 4
-    localAABB:
-      m_Center: {x: 1261.13733, y: -127.790543, z: 0}
-      m_Extent: {x: 32, y: 32, z: 0}
-  - firstByte: 516
-    indexCount: 6
-    isTriStrip: 0
-    triangleCount: 2
-    firstVertex: 172
-    vertexCount: 4
-    localAABB:
-      m_Center: {x: 656.568665, y: 0, z: 0}
-      m_Extent: {x: 64, y: 64, z: 0}
-  m_MeshCompression: 0
-  m_IndexBuffer: 000001000200000002000300040005000600040006000700080009000a0008000a000b000c000d000e000c000e000f00100011001200100012001300140015001600140016001700180019001a0018001a001b001c001d001e001c001e001f00200021002200200022002300240025002600240026002700280029002a0028002a002b002c002d002e002c002e002f00300031003200300032003300340035003600340036003700380039003a0038003a003b003c003d003e003c003e003f00400041004200400042004300440045004600440046004700480049004a0048004a004b004c004d004e004c004e004f00500051005200500052005300540055005600540056005700580059005a0058005a005b005c005d005e005c005e005f00600061006200600062006300640065006600640066006700680069006a0068006a006b006c006d006e006c006e006f00700071007200700072007300740075007600740076007700780079007a0078007a007b007c007d007e007c007e007f00800081008200800082008300840085008600840086008700880089008a0088008a008b008c008d008e008c008e008f00900091009200900092009300940095009600940096009700980099009a0098009a009b009c009d009e009c009e009f00a000a100a200a000a200a300a400a500a600a400a600a700a800a900aa00a800aa00ab00ac00ad00ae00ac00ae00af00
-  m_Skin: []
-  m_BindPose: []
-  m_VertexData:
-    m_CurrentChannels: 15
-    m_VertexCount: 176
-    m_Streams[0]:
-      channelMask: 15
-      offset: 0
-      stride: 36
-      align: 16
-    m_Streams[1]:
-      channelMask: 0
-      offset: 0
-      stride: 0
-      align: 16
-    m_Streams[2]:
-      channelMask: 0
-      offset: 0
-      stride: 0
-      align: 16
-    m_Streams[3]:
-      channelMask: 0
-      offset: 0
-      stride: 0
-      align: 16
-    m_DataSize: 6336
-    _typelessdata: 65a4c24400004fc300000000000000000000000000000000ffffffff000000000000000065a4c24400009ec200000000000000000000000000000000ffffffff000000000000803f65a4d24400009ec200000000000000000000000000000000ffffffff0000803f0000803f65a4d24400004fc300000000000000000000000000000000ffffffff0000803f0000000065a4954400007cc200000000000000000000000000000000ffffffff000000000000000065a495440000824200000000000000000000000000000000ffffffff000000000000803f65a4a5440000824200000000000000000000000000000000ffffffff0000803f0000803f65a4a54400007cc200000000000000000000000000000000ffffffff0000803f000000000000e84200007cc200000000000000000000000000000000ffffffff00000000000000000000e8420000824200000000000000000000000000000000ffffffff000000000000803f000074430000824200000000000000000000000000000000ffffffff0000803f0000803f0000744300007cc200000000000000000000000000000000ffffffff0000803f000000006524ac4400007cc200000000000000000000000000000000ffffffff00000000000000006524ac440000824200000000000000000000000000000000ffffffff000000000000803f6524bc440000824200000000000000000000000000000000ffffffff0000803f0000803f6524bc4400007cc200000000000000000000000000000000ffffffff0000803f0000000065a4c24400007cc200000000000000000000000000000000ffffffff000000000000000065a4c2440000824200000000000000000000000000000000ffffffff000000000000803f65a4d2440000824200000000000000000000000000000000ffffffff0000803f0000803f65a4d24400007cc200000000000000000000000000000000ffffffff0000803f00000000000074c300007cc200000000000000000000000000000000ffffffff0000000000000000000074c30000824200000000000000000000000000000000ffffffff000000000000803f0000e8c20000824200000000000000000000000000000000ffffffff0000803f0000803f0000e8c200007cc200000000000000000000000000000000ffffffff0000803f000000000000e8420000a24200000000000000000000000000000000ffffffff00000000000000000000e8420000514300000000000000000000000000000000ffffffff000000000000803f000074430000514300000000000000000000000000000000ffffffff0000803f0000803f000074430000a24200000000000000000000000000000000ffffffff0000803f0000000065a4c2440000a24200000000000000000000000000000000ffffffff000000000000000065a4c2440000514300000000000000000000000000000000ffffffff000000000000803f65a4d2440000514300000000000000000000000000000000ffffffff0000803f0000803f65a4d2440000a24200000000000000000000000000000000ffffffff0000803f0000000065e424450000a24200000000000000000000000000000000ffffffff000000000000000065e424450000514300000000000000000000000000000000ffffffff000000000000803f65e42c450000514300000000000000000000000000000000ffffffff0000803f0000803f65e42c450000a24200000000000000000000000000000000ffffffff0000803f00000000000080c200004fc300000000000000000000000000000000ffffffff0000000000000000000080c200009ec200000000000000000000000000000000ffffffff000000000000803f0000804200009ec200000000000000000000000000000000ffffffff0000803f0000803f0000804200004fc300000000000000000000000000000000ffffffff0000803f00000000d567b8c3e02680c300000000000000000000000000000000ffffffff00402a3f00001a3fd567b8c3c04d54c300000000000000000000000000000000ffffffff00402a3f00004d3f2fc2acc3c04d54c300000000000000000000000000000000ffffffff00c0373f00004d3f2fc2acc3e02680c300000000000000000000000000000000ffffffff00c0373f00001a3f8a1cacc3e02680c300000000000000000000000000000000ffffffff0080e43e0000ce3e8a1cacc3c04d54c300000000000000000000000000000000ffffffff0080e43e00001a3fe97ba3c3c04d54c300000000000000000000000000000000ffffffff0080f83e00001a3fe97ba3c3e02680c300000000000000000000000000000000ffffffff0080f83e0000ce3e44d6a2c3e02680c300000000000000000000000000000000ffffffff0000103e0000503e44d6a2c3c04d54c300000000000000000000000000000000ffffffff0000103e0000ce3e11a49ac3c04d54c300000000000000000000000000000000ffffffff0000363e0000ce3e11a49ac3e02680c300000000000000000000000000000000ffffffff0000363e0000503e6cfe99c3e02680c300000000000000000000000000000000ffffffff0080e43e0000ce3e6cfe99c3c04d54c300000000000000000000000000000000ffffffff0080e43e00001a3fcb5d91c3c04d54c300000000000000000000000000000000ffffffff0080f83e00001a3fcb5d91c3e02680c300000000000000000000000000000000ffffffff0080f83e0000ce3e26b890c3e02680c300000000000000000000000000000000ffffffff00003c3e0000503e26b890c3c04d54c300000000000000000000000000000000ffffffff00003c3e0000ce3e3ed189c3c04d54c300000000000000000000000000000000ffffffff00005c3e0000ce3e3ed189c3e02680c300000000000000000000000000000000ffffffff00005c3e0000503e6524ac440000a24200000000000000000000000000000000ffffffff00000000000000006524ac440000514300000000000000000000000000000000ffffffff000000000000803f6524bc440000514300000000000000000000000000000000ffffffff0000803f0000803f6524bc440000a24200000000000000000000000000000000ffffffff0000803f00000000000074c300004fc300000000000000000000000000000000ffffffff0000000000000000000074c300009ec200000000000000000000000000000000ffffffff000000000000803f0000e8c200009ec200000000000000000000000000000000ffffffff0000803f0000803f0000e8c200004fc300000000000000000000000000000000ffffffff0000803f000000006524ac4400004fc300000000000000000000000000000000ffffffff00000000000000006524ac4400009ec200000000000000000000000000000000ffffffff000000000000803f6524bc4400009ec200000000000000000000000000000000ffffffff0000803f0000803f6524bc4400004fc300000000000000000000000000000000ffffffff0000803f00000000000080c20000a24200000000000000000000000000000000ffffffff0000000000000000000080c20000514300000000000000000000000000000000ffffffff000000000000803f000080420000514300000000000000000000000000000000ffffffff0000803f0000803f000080420000a24200000000000000000000000000000000ffffffff0000803f0000000065a4954400004fc300000000000000000000000000000000ffffffff000000000000000065a4954400009ec200000000000000000000000000000000ffffffff000000000000803f65a4a54400009ec200000000000000000000000000000000ffffffff0000803f0000803f65a4a54400004fc300000000000000000000000000000000ffffffff0000803f0000000065a495440000a24200000000000000000000000000000000ffffffff000000000000000065a495440000514300000000000000000000000000000000ffffffff000000000000803f65a4a5440000514300000000000000000000000000000000ffffffff0000803f0000803f65a4a5440000a24200000000000000000000000000000000ffffffff0000803f00000000000074c30000a24200000000000000000000000000000000ffffffff0000000000000000000074c30000514300000000000000000000000000000000ffffffff000000000000803f0000e8c20000514300000000000000000000000000000000ffffffff0000803f0000803f0000e8c20000a24200000000000000000000000000000000ffffffff0000803f000000000000e84200004fc300000000000000000000000000000000ffffffff00000000000000000000e84200009ec200000000000000000000000000000000ffffffff000000000000803f0000744300009ec200000000000000000000000000000000ffffffff0000803f0000803f0000744300004fc300000000000000000000000000000000ffffffff0000803f00000000000080c200007cc200000000000000000000000000000000ffffffff0000000000000000000080c20000824200000000000000000000000000000000ffffffff000000000000803f000080420000824200000000000000000000000000000000ffffffff0000803f0000803f0000804200007cc200000000000000000000000000000000ffffffff0000803f00000000f17043c304dce84200000000000000000000000000000000ffffffff00008c3d00004d3ff17043c3026e4e4300000000000000000000000000000000ffffffff00008c3d0000803fb53427c3026e4e4300000000000000000000000000000000ffffffff0000cc3d0000803fb53427c304dce84200000000000000000000000000000000ffffffff0000cc3d00004d3f65a4c64412a67cc100000000000000000000000000000000ffffffff000000000000000065a4c6447cd6404200000000000000000000000000000000ffffffff000000000000803f65a4ce447cd6404200000000000000000000000000000000ffffffff0000803f0000803f65a4ce4412a67cc100000000000000000000000000000000ffffffff0000803f0000000065a4c6449f35004300000000000000000000000000000000ffffffff000000000000000065a4c6449f35404300000000000000000000000000000000ffffffff000000000000803f65a4ce449f35404300000000000000000000000000000000ffffffff0000803f0000803f65a4ce449f35004300000000000000000000000000000000ffffffff0000803f00000000000000c212a67cc100000000000000000000000000000000ffffffff0000000000000000000000c27cd6404200000000000000000000000000000000ffffffff000000000000803f000000427cd6404200000000000000000000000000000000ffffffff0000803f0000803f0000004212a67cc100000000000000000000000000000000ffffffff0000803f000000006524b04412a67cc100000000000000000000000000000000ffffffff00000000000000006524b0447cd6404200000000000000000000000000000000ffffffff000000000000803f6524b8447cd6404200000000000000000000000000000000ffffffff0000803f0000803f6524b84412a67cc100000000000000000000000000000000ffffffff0000803f000000006524b04461ca1fc300000000000000000000000000000000ffffffff00000000000000006524b044c294bfc200000000000000000000000000000000ffffffff000000000000803f6524b844c294bfc200000000000000000000000000000000ffffffff0000803f0000803f6524b84461ca1fc300000000000000000000000000000000ffffffff0000803f0000000065a499449f35004300000000000000000000000000000000ffffffff000000000000000065a499449f35404300000000000000000000000000000000ffffffff000000000000803f65a4a1449f35404300000000000000000000000000000000ffffffff0000803f0000803f65a4a1449f35004300000000000000000000000000000000ffffffff0000803f0000000065a4c64461ca1fc300000000000000000000000000000000ffffffff000000000000000065a4c644c294bfc200000000000000000000000000000000ffffffff000000000000803f65a4ce44c294bfc200000000000000000000000000000000ffffffff0000803f0000803f65a4ce4461ca1fc300000000000000000000000000000000ffffffff0000803f000000006524b0449f35004300000000000000000000000000000000ffffffff00000000000000006524b0449f35404300000000000000000000000000000000ffffffff000000000000803f6524b8449f35404300000000000000000000000000000000ffffffff0000803f0000803f6524b8449f35004300000000000000000000000000000000ffffffff0000803f0000000065e426459f35004300000000000000000000000000000000ffffffff000000000000000065e426459f35404300000000000000000000000000000000ffffffff000000000000803f65e42a459f35404300000000000000000000000000000000ffffffff0000803f0000803f65e42a459f35004300000000000000000000000000000000ffffffff0000803f000000000000144312a67cc100000000000000000000000000000000ffffffff0000000000000000000014437cd6404200000000000000000000000000000000ffffffff000000000000803f000054437cd6404200000000000000000000000000000000ffffffff0000803f0000803f0000544312a67cc100000000000000000000000000000000ffffffff0000803f00000000000014439f35004300000000000000000000000000000000ffffffff0000000000000000000014439f35404300000000000000000000000000000000ffffffff000000000000803f000054439f35404300000000000000000000000000000000ffffffff0000803f0000803f000054439f35004300000000000000000000000000000000ffffffff0000803f00000000000000c29f35004300000000000000000000000000000000ffffffff0000000000000000000000c29f35404300000000000000000000000000000000ffffffff000000000000803f000000429f35404300000000000000000000000000000000ffffffff0000803f0000803f000000429f35004300000000000000000000000000000000ffffffff0000803f000000000000144361ca1fc300000000000000000000000000000000ffffffff000000000000000000001443c294bfc200000000000000000000000000000000ffffffff000000000000803f00005443c294bfc200000000000000000000000000000000ffffffff0000803f0000803f0000544361ca1fc300000000000000000000000000000000ffffffff0000803f00000000000000c261ca1fc300000000000000000000000000000000ffffffff0000000000000000000000c2c294bfc200000000000000000000000000000000ffffffff000000000000803f00000042c294bfc200000000000000000000000000000000ffffffff0000803f0000803f0000004261ca1fc300000000000000000000000000000000ffffffff0000803f00000000000054c312a67cc100000000000000000000000000000000ffffffff0000000000000000000054c37cd6404200000000000000000000000000000000ffffffff000000000000803f000014c37cd6404200000000000000000000000000000000ffffffff0000803f0000803f000014c312a67cc100000000000000000000000000000000ffffffff0000803f00000000000054c361ca1fc300000000000000000000000000000000ffffffff0000000000000000000054c3c294bfc200000000000000000000000000000000ffffffff000000000000803f000014c3c294bfc200000000000000000000000000000000ffffffff0000803f0000803f000014c361ca1fc300000000000000000000000000000000ffffffff0000803f0000000065a4994412a67cc100000000000000000000000000000000ffffffff000000000000000065a499447cd6404200000000000000000000000000000000ffffffff000000000000803f65a4a1447cd6404200000000000000000000000000000000ffffffff0000803f0000803f65a4a14412a67cc100000000000000000000000000000000ffffffff0000803f0000000065a4994461ca1fc300000000000000000000000000000000ffffffff000000000000000065a49944c294bfc200000000000000000000000000000000ffffffff000000000000803f65a4a144c294bfc200000000000000000000000000000000ffffffff0000803f0000803f65a4a14461ca1fc300000000000000000000000000000000ffffffff0000803f0000000065241444000080c200000000000000000000000000000000ffffffff0000000000000000652414440000804200000000000000000000000000000000ffffffff000000000000803f652434440000804200000000000000000000000000000000ffffffff0000803f0000803f65243444000080c200000000000000000000000000000000ffffffff0000803f00000000
-  m_CompressedMesh:
-    m_Vertices:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_UV:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_BindPoses:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Normals:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Tangents:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Weights:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_NormalSigns:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_TangentSigns:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_BoneIndices:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Triangles:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Colors:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-  m_LocalAABB:
-    m_Center: {x: 1198.73169, y: -23.6518555, z: 0}
-    m_Extent: {x: 1567.54297, y: 232.651855, z: 0}
-  m_MeshUsageFlags: 0
-  m_MeshOptimized: 0
 --- !u!1 &845838087
 GameObject:
   m_ObjectHideFlags: 0
@@ -4192,21 +4090,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &845838090
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4262,21 +4171,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 1
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: 169eb563361fa12418f5be81e78ec5c3, type: 1}
+  lastTexture: {fileID: 2800000, guid: 169eb563361fa12418f5be81e78ec5c3, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 2
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &847255916
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4321,8 +4241,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 177728388}
-  - {fileID: 1624235842}
-  - {fileID: 175400466}
+  - {fileID: 1971499272}
+  - {fileID: 922590427}
   m_Father: {fileID: 1119062174}
 --- !u!114 &878526177
 MonoBehaviour:
@@ -4354,6 +4274,7 @@ MonoBehaviour:
   handleMobileBackButtonAction: 0
   handleMobileBackButtonLevelName: 
   configuration: {fileID: 11400000, guid: 31b40b3d45d5d444db2b1aa3eee62c62, type: 2}
+  configurationGroup: 0
   setupMethod: 1
   rightSlideSprite: {fileID: 11400000, guid: 640571df6b5f5244ea807ef008ac9985, type: 2}
   leftSlideSprite: {fileID: 11400000, guid: bf4251ffacf0daa46bd260901b6b77ee, type: 2}
@@ -4411,21 +4332,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d36029d3533291b49a960aa04139fa4a, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 0}
+  lastTexture: {fileID: 0}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 1
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
   liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
   font: {fileID: 11400000, guid: 7fd3c65ab8c2c7a4cb5be2ccd1aee57c, type: 2}
   text: 2
   scale: 90
@@ -4485,21 +4417,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &894023209
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4642,23 +4585,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f91db2b97c1910a4dbc0260796527970, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 1
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: 65e09bf3b78ef3542af0c23a92590df0, type: 1}
+  lastTexture: {fileID: 2800000, guid: 65e09bf3b78ef3542af0c23a92590df0, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 0
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
   hasLevelConfiguration: 1
-  configuration: {fileID: 11400000, guid: 31b40b3d45d5d444db2b1aa3eee62c62, type: 2}
   levelIndex: 10
   levelSceneName: MadLevelTester
   levelArguments: 
@@ -4668,6 +4621,51 @@ MonoBehaviour:
   unlockOnComplete:
   - {fileID: 1292512094}
   version: 1
+--- !u!1 &922590426
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 3
+  m_Component:
+  - 4: {fileID: 922590427}
+  - 114: {fileID: 922590428}
+  m_Layer: 0
+  m_Name: SlideRightAnchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &922590427
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 922590426}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1285.30115, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1609472551}
+  m_Father: {fileID: 878526176}
+--- !u!114 &922590428
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 922590426}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 787b8e0fd3029054aa84ae29be4eabf1, type: 1}
+  m_Name: 
+  managed: 0
+  mode: 0
+  position: 2
+  anchorObject: {fileID: 0}
+  anchorCamera: {fileID: 0}
+  moveIn3D: 0
+  faceCamera: 0
 --- !u!1 &932676472
 GameObject:
   m_ObjectHideFlags: 0
@@ -4707,21 +4705,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &932676475
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4777,21 +4786,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &945804566
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4933,21 +4953,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 1
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: 169eb563361fa12418f5be81e78ec5c3, type: 1}
+  lastTexture: {fileID: 2800000, guid: 169eb563361fa12418f5be81e78ec5c3, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 2
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &1058022548
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5004,21 +5035,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &1073356660
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5074,21 +5116,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &1083806848
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5144,21 +5197,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &1102064294
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5214,21 +5278,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &1115406950
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5253,8 +5328,6 @@ GameObject:
   serializedVersion: 3
   m_Component:
   - 4: {fileID: 1119062174}
-  - 33: {fileID: 1119062176}
-  - 23: {fileID: 1119062175}
   - 114: {fileID: 1119062179}
   - 114: {fileID: 1119062178}
   - 114: {fileID: 1119062177}
@@ -5272,76 +5345,12 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1119062173}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 100}
   m_Children:
   - {fileID: 1598868365}
   - {fileID: 878526176}
   m_Father: {fileID: 278396594}
---- !u!23 &1119062175
-Renderer:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1119062173}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_LightmapIndex: 255
-  m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
-  m_Materials:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 2100000, guid: 10b19ef6f77fd704daa1b2f323ff1829, type: 2}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 2100000, guid: 10b19ef6f77fd704daa1b2f323ff1829, type: 2}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  m_SubsetIndices: 
-  m_StaticBatchRoot: {fileID: 0}
-  m_UseLightProbes: 0
-  m_LightProbeAnchor: {fileID: 0}
-  m_ScaleInLightmap: 1
---- !u!33 &1119062176
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1119062173}
-  m_Mesh: {fileID: 816064103}
 --- !u!114 &1119062177
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5413,21 +5422,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &1125945025
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5483,21 +5503,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 1
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: 169eb563361fa12418f5be81e78ec5c3, type: 1}
+  lastTexture: {fileID: 2800000, guid: 169eb563361fa12418f5be81e78ec5c3, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 2
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &1127220274
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5554,21 +5585,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &1131324234
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5624,21 +5666,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &1181672235
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5737,21 +5790,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &1195850876
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5807,21 +5871,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d36029d3533291b49a960aa04139fa4a, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 0}
+  lastTexture: {fileID: 0}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 1
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
   liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
   font: {fileID: 11400000, guid: 7fd3c65ab8c2c7a4cb5be2ccd1aee57c, type: 2}
   text: 3
   scale: 90
@@ -5881,21 +5956,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d36029d3533291b49a960aa04139fa4a, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 0}
+  lastTexture: {fileID: 0}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 1
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
   liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
   font: {fileID: 11400000, guid: 7fd3c65ab8c2c7a4cb5be2ccd1aee57c, type: 2}
   text: 10
   scale: 90
@@ -5955,21 +6041,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d36029d3533291b49a960aa04139fa4a, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 0}
+  lastTexture: {fileID: 0}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 1
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
   liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
   font: {fileID: 11400000, guid: 7fd3c65ab8c2c7a4cb5be2ccd1aee57c, type: 2}
   text: 9
   scale: 90
@@ -6089,23 +6186,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f91db2b97c1910a4dbc0260796527970, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 1
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: 65e09bf3b78ef3542af0c23a92590df0, type: 1}
+  lastTexture: {fileID: 2800000, guid: 65e09bf3b78ef3542af0c23a92590df0, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 0
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
   hasLevelConfiguration: 1
-  configuration: {fileID: 11400000, guid: 31b40b3d45d5d444db2b1aa3eee62c62, type: 2}
   levelIndex: 8
   levelSceneName: MadLevelTester
   levelArguments: 
@@ -6154,21 +6261,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &1235384746
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6224,21 +6342,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &1237533569
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6380,21 +6509,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &1259921690
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6450,21 +6590,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 1
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: 169eb563361fa12418f5be81e78ec5c3, type: 1}
+  lastTexture: {fileID: 2800000, guid: 169eb563361fa12418f5be81e78ec5c3, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 2
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &1283499737
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6521,21 +6672,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 1
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: 169eb563361fa12418f5be81e78ec5c3, type: 1}
+  lastTexture: {fileID: 2800000, guid: 169eb563361fa12418f5be81e78ec5c3, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 2
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &1284907264
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6592,21 +6754,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d36029d3533291b49a960aa04139fa4a, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 0}
+  lastTexture: {fileID: 0}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 1
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
   liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
   font: {fileID: 11400000, guid: 7fd3c65ab8c2c7a4cb5be2ccd1aee57c, type: 2}
   text: 12
   scale: 90
@@ -6726,23 +6899,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f91db2b97c1910a4dbc0260796527970, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 1
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: 65e09bf3b78ef3542af0c23a92590df0, type: 1}
+  lastTexture: {fileID: 2800000, guid: 65e09bf3b78ef3542af0c23a92590df0, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 0
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
   hasLevelConfiguration: 1
-  configuration: {fileID: 11400000, guid: 31b40b3d45d5d444db2b1aa3eee62c62, type: 2}
   levelIndex: 11
   levelSceneName: MadLevelTester
   levelArguments: 
@@ -6851,23 +7034,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f91db2b97c1910a4dbc0260796527970, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 1
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: 65e09bf3b78ef3542af0c23a92590df0, type: 1}
+  lastTexture: {fileID: 2800000, guid: 65e09bf3b78ef3542af0c23a92590df0, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 0
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
   hasLevelConfiguration: 1
-  configuration: {fileID: 11400000, guid: 31b40b3d45d5d444db2b1aa3eee62c62, type: 2}
   levelIndex: 5
   levelSceneName: MadLevelTester
   levelArguments: 
@@ -6916,21 +7109,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &1306079263
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6947,33 +7151,6 @@ MonoBehaviour:
   showWhenDisabled: []
   textFromProperty: 0
   textPropertyName: 
---- !u!1 &1317968728
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 3
-  m_Component:
-  - 4: {fileID: 1317968729}
-  m_Layer: 0
-  m_Name: Offset
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1317968729
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1317968728}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -64, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1737989029}
-  m_Father: {fileID: 175400466}
 --- !u!1 &1363608892
 GameObject:
   m_ObjectHideFlags: 0
@@ -7073,23 +7250,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f91db2b97c1910a4dbc0260796527970, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 1
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: 65e09bf3b78ef3542af0c23a92590df0, type: 1}
+  lastTexture: {fileID: 2800000, guid: 65e09bf3b78ef3542af0c23a92590df0, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 0
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
   hasLevelConfiguration: 1
-  configuration: {fileID: 11400000, guid: 31b40b3d45d5d444db2b1aa3eee62c62, type: 2}
   levelIndex: 2
   levelSceneName: MadLevelTester
   levelArguments: 
@@ -7138,21 +7325,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &1363685627
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7268,23 +7466,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f91db2b97c1910a4dbc0260796527970, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 1
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: 65e09bf3b78ef3542af0c23a92590df0, type: 1}
+  lastTexture: {fileID: 2800000, guid: 65e09bf3b78ef3542af0c23a92590df0, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 0
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
   hasLevelConfiguration: 1
-  configuration: {fileID: 11400000, guid: 31b40b3d45d5d444db2b1aa3eee62c62, type: 2}
   levelIndex: 15
   levelSceneName: MadLevelTester
   levelArguments: 
@@ -7333,21 +7541,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d36029d3533291b49a960aa04139fa4a, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 0}
+  lastTexture: {fileID: 0}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 1
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
   liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
   font: {fileID: 11400000, guid: 7fd3c65ab8c2c7a4cb5be2ccd1aee57c, type: 2}
   text: 17
   scale: 90
@@ -7407,21 +7626,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &1401593763
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7477,21 +7707,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &1401883089
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7547,21 +7788,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d36029d3533291b49a960aa04139fa4a, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 0}
+  lastTexture: {fileID: 0}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 1
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
   liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
   font: {fileID: 11400000, guid: 7fd3c65ab8c2c7a4cb5be2ccd1aee57c, type: 2}
   text: 5
   scale: 90
@@ -7664,21 +7916,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &1454534058
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7734,21 +7997,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 1
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: 169eb563361fa12418f5be81e78ec5c3, type: 1}
+  lastTexture: {fileID: 2800000, guid: 169eb563361fa12418f5be81e78ec5c3, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 2
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &1493163075
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7848,21 +8122,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d36029d3533291b49a960aa04139fa4a, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 0}
+  lastTexture: {fileID: 0}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 1
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
   liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
   font: {fileID: 11400000, guid: 7fd3c65ab8c2c7a4cb5be2ccd1aee57c, type: 2}
   text: 19
   scale: 90
@@ -7926,33 +8211,6 @@ MonoBehaviour:
   showWhenDisabled: []
   textFromProperty: 0
   textPropertyName: 
---- !u!1 &1520556822
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 3
-  m_Component:
-  - 4: {fileID: 1520556823}
-  m_Layer: 0
-  m_Name: Offset
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1520556823
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1520556822}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 64, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 28322368}
-  m_Father: {fileID: 1624235842}
 --- !u!1 &1535409760
 GameObject:
   m_ObjectHideFlags: 0
@@ -8035,21 +8293,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &1547413599
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8105,21 +8374,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 1
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: 169eb563361fa12418f5be81e78ec5c3, type: 1}
+  lastTexture: {fileID: 2800000, guid: 169eb563361fa12418f5be81e78ec5c3, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 2
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &1547653252
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8176,21 +8456,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &1576078337
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8207,6 +8498,33 @@ MonoBehaviour:
   showWhenDisabled: []
   textFromProperty: 0
   textPropertyName: 
+--- !u!1 &1586900825
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 3
+  m_Component:
+  - 4: {fileID: 1586900826}
+  m_Layer: 0
+  m_Name: Offset
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1586900826
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1586900825}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 64, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 676636808}
+  m_Father: {fileID: 1971499272}
 --- !u!1 &1598868364
 GameObject:
   m_ObjectHideFlags: 0
@@ -8246,21 +8564,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d36029d3533291b49a960aa04139fa4a, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 1
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 0}
+  lastTexture: {fileID: 0}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 0
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
   liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
   font: {fileID: 11400000, guid: 7fd3c65ab8c2c7a4cb5be2ccd1aee57c, type: 2}
   text: Reset
   scale: 44
@@ -8315,21 +8644,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &1607099815
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8346,51 +8686,33 @@ MonoBehaviour:
   showWhenDisabled: []
   textFromProperty: 0
   textPropertyName: 
---- !u!1 &1624235841
+--- !u!1 &1609472550
 GameObject:
-  m_ObjectHideFlags: 1
+  m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   serializedVersion: 3
   m_Component:
-  - 4: {fileID: 1624235842}
-  - 114: {fileID: 1624235843}
+  - 4: {fileID: 1609472551}
   m_Layer: 0
-  m_Name: SlideLeftAnchor
+  m_Name: Offset
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1624235842
+--- !u!4 &1609472551
 Transform:
-  m_ObjectHideFlags: 1
+  m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1624235841}
+  m_GameObject: {fileID: 1609472550}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -722.568665, y: 0, z: 0}
+  m_LocalPosition: {x: -64, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 1520556823}
-  m_Father: {fileID: 878526176}
---- !u!114 &1624235843
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1624235841}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 787b8e0fd3029054aa84ae29be4eabf1, type: 1}
-  m_Name: 
-  managed: 0
-  mode: 0
-  position: 0
-  anchorObject: {fileID: 0}
-  anchorCamera: {fileID: 0}
-  moveIn3D: 0
-  faceCamera: 0
+  - {fileID: 1870866147}
+  m_Father: {fileID: 922590427}
 --- !u!1 &1637853524
 GameObject:
   m_ObjectHideFlags: 0
@@ -8430,21 +8752,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &1637853527
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8560,23 +8893,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f91db2b97c1910a4dbc0260796527970, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 1
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: 65e09bf3b78ef3542af0c23a92590df0, type: 1}
+  lastTexture: {fileID: 2800000, guid: 65e09bf3b78ef3542af0c23a92590df0, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 0
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
   hasLevelConfiguration: 1
-  configuration: {fileID: 11400000, guid: 31b40b3d45d5d444db2b1aa3eee62c62, type: 2}
   levelIndex: 6
   levelSceneName: MadLevelTester
   levelArguments: 
@@ -8625,21 +8968,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &1661934445
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8695,21 +9049,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &1695274924
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8765,21 +9130,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &1695388055
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8835,21 +9211,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 1
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: 169eb563361fa12418f5be81e78ec5c3, type: 1}
+  lastTexture: {fileID: 2800000, guid: 169eb563361fa12418f5be81e78ec5c3, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 2
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &1702238342
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8966,23 +9353,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f91db2b97c1910a4dbc0260796527970, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 1
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: 65e09bf3b78ef3542af0c23a92590df0, type: 1}
+  lastTexture: {fileID: 2800000, guid: 65e09bf3b78ef3542af0c23a92590df0, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 0
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
   hasLevelConfiguration: 1
-  configuration: {fileID: 11400000, guid: 31b40b3d45d5d444db2b1aa3eee62c62, type: 2}
   levelIndex: 18
   levelSceneName: MadLevelTester
   levelArguments: 
@@ -9030,21 +9427,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &1726133590
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9061,59 +9469,6 @@ MonoBehaviour:
   showWhenDisabled: []
   textFromProperty: 0
   textPropertyName: 
---- !u!1 &1737989028
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 3
-  m_Component:
-  - 4: {fileID: 1737989029}
-  - 114: {fileID: 1737989030}
-  m_Layer: 0
-  m_Name: slide
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1737989029
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1737989028}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1317968729}
---- !u!114 &1737989030
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1737989028}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
-  m_Name: 
-  managed: 0
-  visible: 1
-  editorSelectable: 1
-  pivotPoint: 8
-  tint: {r: 1, g: 1, b: 1, a: 1}
-  texture: {fileID: 2800000, guid: 2be1b9ba0f9b30b49812f1b7dba19c90, type: 1}
-  textureOffset: {x: 0, y: 0}
-  textureRepeat: {x: 1, y: 1}
-  guiDepth: 1000
-  eventFlags: 15
-  liveLeft: 0
-  liveBottom: 0
-  liveRight: 0
-  liveTop: 1
-  fillType: 0
-  fillValue: 1
 --- !u!1 &1747763863
 GameObject:
   m_ObjectHideFlags: 0
@@ -9153,21 +9508,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &1747763866
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9266,21 +9632,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &1797258433
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9336,21 +9713,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d36029d3533291b49a960aa04139fa4a, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 0}
+  lastTexture: {fileID: 0}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 1
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
   liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
   font: {fileID: 11400000, guid: 7fd3c65ab8c2c7a4cb5be2ccd1aee57c, type: 2}
   text: 4
   scale: 90
@@ -9410,21 +9798,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &1828951506
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9480,21 +9879,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &1840490900
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9610,23 +10020,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f91db2b97c1910a4dbc0260796527970, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 1
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: 65e09bf3b78ef3542af0c23a92590df0, type: 1}
+  lastTexture: {fileID: 2800000, guid: 65e09bf3b78ef3542af0c23a92590df0, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 0
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
   hasLevelConfiguration: 1
-  configuration: {fileID: 11400000, guid: 31b40b3d45d5d444db2b1aa3eee62c62, type: 2}
   levelIndex: 3
   levelSceneName: MadLevelTester
   levelArguments: 
@@ -9675,21 +10095,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 1
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: 169eb563361fa12418f5be81e78ec5c3, type: 1}
+  lastTexture: {fileID: 2800000, guid: 169eb563361fa12418f5be81e78ec5c3, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 2
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &1863509090
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9746,21 +10177,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d36029d3533291b49a960aa04139fa4a, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 0}
+  lastTexture: {fileID: 0}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 1
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
   liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
   font: {fileID: 11400000, guid: 7fd3c65ab8c2c7a4cb5be2ccd1aee57c, type: 2}
   text: 16
   scale: 90
@@ -9781,6 +10223,70 @@ MonoBehaviour:
   showWhenDisabled: []
   textFromProperty: 0
   textPropertyName: 
+--- !u!1 &1870866146
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 3
+  m_Component:
+  - 4: {fileID: 1870866147}
+  - 114: {fileID: 1870866148}
+  m_Layer: 0
+  m_Name: slide
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1870866147
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1870866146}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1609472551}
+--- !u!114 &1870866148
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1870866146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
+  m_Name: 
+  managed: 0
+  panel: {fileID: 1119062177}
+  visible: 1
+  editorSelectable: 1
+  pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
+  tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
+  texture: {fileID: 2800000, guid: 2be1b9ba0f9b30b49812f1b7dba19c90, type: 1}
+  lastTexture: {fileID: 2800000, guid: 2be1b9ba0f9b30b49812f1b7dba19c90, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
+  textureOffset: {x: 0, y: 0}
+  textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
+  guiDepth: 1000
+  eventFlags: 15
+  liveLeft: 0
+  liveBottom: 0
+  liveRight: 1
+  liveTop: 1
+  hasLiveBounds: 0
+  fillType: 0
+  fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!1 &1893564874
 GameObject:
   m_ObjectHideFlags: 0
@@ -9820,21 +10326,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &1893564877
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9950,23 +10467,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f91db2b97c1910a4dbc0260796527970, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 1
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: 65e09bf3b78ef3542af0c23a92590df0, type: 1}
+  lastTexture: {fileID: 2800000, guid: 65e09bf3b78ef3542af0c23a92590df0, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 0
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
   hasLevelConfiguration: 1
-  configuration: {fileID: 11400000, guid: 31b40b3d45d5d444db2b1aa3eee62c62, type: 2}
   levelIndex: 0
   levelSceneName: MadLevelTester
   levelArguments: 
@@ -10015,21 +10542,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: 169eb563361fa12418f5be81e78ec5c3, type: 1}
+  lastTexture: {fileID: 2800000, guid: 169eb563361fa12418f5be81e78ec5c3, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 2
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &1916210289
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10086,21 +10624,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &1924927321
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10156,21 +10705,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &1929427658
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10226,21 +10786,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d36029d3533291b49a960aa04139fa4a, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 0}
+  lastTexture: {fileID: 0}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 1
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
   liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
   font: {fileID: 11400000, guid: 7fd3c65ab8c2c7a4cb5be2ccd1aee57c, type: 2}
   text: 18
   scale: 90
@@ -10300,21 +10871,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &1961008909
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10430,23 +11012,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f91db2b97c1910a4dbc0260796527970, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 1
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: 65e09bf3b78ef3542af0c23a92590df0, type: 1}
+  lastTexture: {fileID: 2800000, guid: 65e09bf3b78ef3542af0c23a92590df0, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 0
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
   hasLevelConfiguration: 1
-  configuration: {fileID: 11400000, guid: 31b40b3d45d5d444db2b1aa3eee62c62, type: 2}
   levelIndex: 16
   levelSceneName: MadLevelTester
   levelArguments: 
@@ -10456,6 +11048,51 @@ MonoBehaviour:
   unlockOnComplete:
   - {fileID: 189464833}
   version: 1
+--- !u!1 &1971499271
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 3
+  m_Component:
+  - 4: {fileID: 1971499272}
+  - 114: {fileID: 1971499273}
+  m_Layer: 0
+  m_Name: SlideLeftAnchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1971499272
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1971499271}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1285.30115, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1586900826}
+  m_Father: {fileID: 878526176}
+--- !u!114 &1971499273
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1971499271}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 787b8e0fd3029054aa84ae29be4eabf1, type: 1}
+  m_Name: 
+  managed: 0
+  mode: 0
+  position: 0
+  anchorObject: {fileID: 0}
+  anchorCamera: {fileID: 0}
+  moveIn3D: 0
+  faceCamera: 0
 --- !u!1 &1980216608
 GameObject:
   m_ObjectHideFlags: 0
@@ -10495,21 +11132,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d36029d3533291b49a960aa04139fa4a, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 0}
+  lastTexture: {fileID: 0}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 1
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
   liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
   font: {fileID: 11400000, guid: 7fd3c65ab8c2c7a4cb5be2ccd1aee57c, type: 2}
   text: 6
   scale: 90
@@ -10629,23 +11277,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f91db2b97c1910a4dbc0260796527970, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 1
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: 65e09bf3b78ef3542af0c23a92590df0, type: 1}
+  lastTexture: {fileID: 2800000, guid: 65e09bf3b78ef3542af0c23a92590df0, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 0
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
   hasLevelConfiguration: 1
-  configuration: {fileID: 11400000, guid: 31b40b3d45d5d444db2b1aa3eee62c62, type: 2}
   levelIndex: 13
   levelSceneName: MadLevelTester
   levelArguments: 
@@ -10694,21 +11352,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &2009715944
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10824,23 +11493,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f91db2b97c1910a4dbc0260796527970, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 1
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: 65e09bf3b78ef3542af0c23a92590df0, type: 1}
+  lastTexture: {fileID: 2800000, guid: 65e09bf3b78ef3542af0c23a92590df0, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 0
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
   hasLevelConfiguration: 1
-  configuration: {fileID: 11400000, guid: 31b40b3d45d5d444db2b1aa3eee62c62, type: 2}
   levelIndex: 1
   levelSceneName: MadLevelTester
   levelArguments: 
@@ -10889,21 +11568,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 1
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: 169eb563361fa12418f5be81e78ec5c3, type: 1}
+  lastTexture: {fileID: 2800000, guid: 169eb563361fa12418f5be81e78ec5c3, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 2
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &2026954968
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10960,21 +11650,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &2033890319
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11030,21 +11731,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &2035249110
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11100,21 +11812,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &2060458697
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11170,21 +11893,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d36029d3533291b49a960aa04139fa4a, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 0}
+  lastTexture: {fileID: 0}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 1
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
   liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
   font: {fileID: 11400000, guid: 7fd3c65ab8c2c7a4cb5be2ccd1aee57c, type: 2}
   text: 8
   scale: 90
@@ -11244,21 +11978,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 1}
   m_Name: 
   managed: 0
+  panel: {fileID: 1119062177}
   visible: 0
   editorSelectable: 1
   pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
   tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
   texture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  lastTexture: {fileID: 2800000, guid: b89786c0718b5404daa72c738164fd2e, type: 1}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
   textureOffset: {x: 0, y: 0}
   textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
   guiDepth: 3
   eventFlags: 15
   liveLeft: 0
   liveBottom: 0
-  liveRight: 0
+  liveRight: 1
   liveTop: 1
+  hasLiveBounds: 0
   fillType: 0
   fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
 --- !u!114 &2122491179
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -44,6 +44,10 @@ public class MadDragStopDraggable : MadDraggable {
     // ===========================================================
     
     protected override void Update() {
+        if (!Application.isPlaying) {
+            return;
+        }
+
         base.Update();
         
         if (dragStops.Count == 0) {

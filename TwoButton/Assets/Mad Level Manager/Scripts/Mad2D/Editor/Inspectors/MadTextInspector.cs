@@ -23,7 +23,8 @@ public class MadTextInspector : MadSpriteInspector {
     // ===========================================================
     // Fields
     // ===========================================================
-    
+
+    SerializedProperty panel;
     SerializedProperty font;
     SerializedProperty text;
     SerializedProperty scale;
@@ -35,7 +36,8 @@ public class MadTextInspector : MadSpriteInspector {
     
     protected new void OnEnable() {
         base.OnEnable();
-        
+
+        panel = serializedObject.FindProperty("panel");
         font = serializedObject.FindProperty("font");
         text = serializedObject.FindProperty("text");
         scale = serializedObject.FindProperty("scale");
@@ -48,6 +50,9 @@ public class MadTextInspector : MadSpriteInspector {
         SectionSprite(DisplayFlag.WithoutSize | DisplayFlag.WithoutMaterial | DisplayFlag.WithoutFill);
         
         serializedObject.Update();
+        MadGUI.PropertyField(panel, "Panel", MadGUI.ObjectIsSet);
+        EditorGUILayout.Space();
+
         MadGUI.PropertyField(font, "Font");
         EditorGUILayout.LabelField("Text");
         text.stringValue = EditorGUILayout.TextArea(text.stringValue);

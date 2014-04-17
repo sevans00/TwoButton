@@ -6,13 +6,13 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using MadLevelManager;
 
 #if !UNITY_3_5
 namespace MadLevelManager {
 #endif
 
 [ExecuteInEditMode]
-[RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]   
 public class MadBigMeshRenderer : MonoBehaviour {
 
     // ===========================================================
@@ -31,6 +31,8 @@ public class MadBigMeshRenderer : MonoBehaviour {
     MadList<Vector2> uv = new MadList<Vector2>();
     MadList<MadList<int>> triangleList = new MadList<MadList<int>>();
 
+    private MadDrawCall drawCall;
+
     // ===========================================================
     // Methods for/from SuperClass/Interfaces
     // ===========================================================
@@ -38,76 +40,90 @@ public class MadBigMeshRenderer : MonoBehaviour {
     // ===========================================================
     // Methods
     // ===========================================================
-    
-    void Start() {
-        panel = GetComponent<MadPanel>();
-        
-        var meshFilter = transform.GetComponent<MeshFilter>();
-        var mesh = meshFilter.sharedMesh;
-        if (mesh == null) {
-            mesh = new Mesh();
-            mesh.name = "Generated Mesh";
-            meshFilter.sharedMesh = mesh;
-        }
-#if !UNITY_3_5
-        mesh.MarkDynamic();
-#endif
 
-#if UNITY_4_2
-        if (Application.unityVersion.StartsWith("4.2.0")) {
-            Debug.LogError("Unity 4.2 comes with terrible bug that breaks down Mad Level Manager rendering process. "
-                + "Please upgrade/downgrade to different version. http://forum.unity3d.com/threads/192467-Unity-4-2-submesh-draw-order");
-            }
-#endif
+    void OnEnable() {
+        if (drawCall != null) {
+            MadGameObject.SetActive(drawCall.gameObject, true);
+        }
+    }
+
+    void OnDisable() {
+        if (drawCall != null) {
+            MadGameObject.SetActive(drawCall.gameObject, false);
+        }
+    }
+
+    void Start() {
+        drawCall = MadDrawCall.Create();
+        drawCall.gameObject.layer = gameObject.layer;
+        panel = GetComponent<MadPanel>();
+
+        MadTransform.SetLocalScale(drawCall.transform, transform.lossyScale);
+    }
+
+    void Update() {
+        MadTransform.SetLocalScale(drawCall.transform, transform.lossyScale);
+        drawCall.gameObject.layer = gameObject.layer;
     }
 
     void LateUpdate() {
-        var meshFilter = transform.GetComponent<MeshFilter>();
-        var mesh = meshFilter.sharedMesh;
+        var mesh = drawCall.mesh;
+
         mesh.Clear();
-        
-        var sprites = VisibleSprites(panel.sprites);
-        SortByGUIDepth(sprites);
-        
-        Material[] materials = new Material[sprites.Count];
-        
-        mesh.subMeshCount = sprites.Count;
-        
-        for (int i = 0; i < sprites.Count; ++i) {
-            var sprite = sprites[i];
-            Material material;
+
+        var visibleSprites = VisibleSprites(panel.sprites);
+        SortByGUIDepth(visibleSprites);
+        var batchedSprites = Batch(visibleSprites);
+
+        Material[] materials = new Material[batchedSprites.Count];
+
+        mesh.subMeshCount = batchedSprites.Count;
+
+        for (int i = 0; i < batchedSprites.Count; ++i) {
+            List<MadSprite> sprites = batchedSprites[i];
             MadList<int> triangles = new MadList<int>();
-            
-            sprite.DrawOn(ref vertices, ref colors, ref uv, ref triangles, out material);
-            
+
+            for (int j = 0; j < sprites.Count; ++j) {
+                var sprite = sprites[j];
+                Material material;
+                sprite.DrawOn(ref vertices, ref colors, ref uv, ref triangles, out material);
+                materials[i] = material;
+            }
+        
             triangles.Trim();
             triangleList.Add(triangles);
-            materials[i] = material;
         }
-        
+
         vertices.Trim();
         colors.Trim();
         uv.Trim();
         triangleList.Trim();
-        
+
         mesh.vertices = vertices.Array;
         mesh.colors32 = colors.Array;
         mesh.uv = uv.Array;
         mesh.RecalculateNormals();
-        
+
         for (int i = 0; i < triangleList.Count; ++i) {
             MadList<int> triangles = triangleList[i];
             mesh.SetTriangles(triangles.Array, i);
         }
-        
-        renderer.sharedMaterials = materials;
-        
+
+        //renderer.sharedMaterials = materials;
+        drawCall.SetMaterials(materials);
+
         vertices.Clear();
         colors.Clear();
         uv.Clear();
         triangleList.Clear();
     }
-    
+
+    void OnDestroy() {
+        if (drawCall != null) {
+            drawCall.Destroy();
+        }
+    }
+
     List<MadSprite> VisibleSprites(ICollection<MadSprite> sprites) {
         List<MadSprite> output = new List<MadSprite>();
         
@@ -129,7 +145,38 @@ public class MadBigMeshRenderer : MonoBehaviour {
     void SortByGUIDepth(List<MadSprite> sprites) {
         sprites.Sort((x, y) => x.guiDepth.CompareTo(y.guiDepth));
     }
-
+    
+    List<List<MadSprite>> Batch(List<MadSprite> sprites) {
+        var output = new List<List<MadSprite>>();
+        
+        int count = sprites.Count;
+        List<MadSprite> batched = null;
+        for (int i = 0; i < count; ++i) {
+            var currentSprite = sprites[i];
+            if (batched == null) {
+                batched = new List<MadSprite>();
+            } else if (!CanBatch(currentSprite, batched[batched.Count - 1])) {
+                output.Add(batched);
+                batched = new List<MadSprite>();
+            }
+            
+            batched.Add(currentSprite);
+        }
+        
+        if (batched != null) {
+            output.Add(batched);
+        }
+        
+        return output;
+    }
+    
+    bool CanBatch(MadSprite a, MadSprite b) {
+        var materialA = a.GetMaterial();
+        var materialB = b.GetMaterial();
+        
+        return materialA.Equals(materialB);
+    }
+    
     // ===========================================================
     // Static Methods
     // ===========================================================

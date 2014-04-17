@@ -16,6 +16,7 @@ public class MadShaders {
     // ===========================================================
     
     public const string UnlitTint = "Tools/Mad Level Manager/Unlit/Transparent Tint";
+    public const string UnlitTintPre = "Tools/Mad Level Manager/Unlit/Transparent Tint Pre";
     public const string Font = "Tools/Mad Level Manager/Unlit/Font";
     public const string FontWhite = "Tools/Mad Level Manager/Unlit/Font White";
 

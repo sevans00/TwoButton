@@ -26,13 +26,19 @@ public class MadSpriteInspector : Editor {
     // ===========================================================
     // Fields
     // ===========================================================
-    
+
+    private SerializedProperty panel;
     private SerializedProperty visible;
     private SerializedProperty pivotPoint;
+    private SerializedProperty customPivotPoint;
     private SerializedProperty tint;
+    private SerializedProperty inputType;
     private SerializedProperty texture;
+    private SerializedProperty textureAtlas;
+    private SerializedProperty textureAtlasSpriteGUID;
     private SerializedProperty textureOffset;
     private SerializedProperty textureRepeat;
+    private SerializedProperty hasPremultipliedAlpha;
     private SerializedProperty guiDepth;
     private SerializedProperty fillType;
     private SerializedProperty fillValue;
@@ -58,13 +64,19 @@ public class MadSpriteInspector : Editor {
     
     protected void OnEnable() {
         sprite = target as MadSprite;
-    
+
+        panel = serializedObject.FindProperty("panel");
         visible = serializedObject.FindProperty("visible");
         pivotPoint = serializedObject.FindProperty("pivotPoint");
+        customPivotPoint = serializedObject.FindProperty("customPivotPoint");
         tint = serializedObject.FindProperty("tint");
+        inputType = serializedObject.FindProperty("inputType");
         texture = serializedObject.FindProperty("texture");
+        textureAtlas = serializedObject.FindProperty("textureAtlas");
+        textureAtlasSpriteGUID = serializedObject.FindProperty("textureAtlasSpriteGUID");
         textureOffset = serializedObject.FindProperty("textureOffset");
         textureRepeat = serializedObject.FindProperty("textureRepeat");
+        hasPremultipliedAlpha = serializedObject.FindProperty("hasPremultipliedAlpha");
         guiDepth = serializedObject.FindProperty("guiDepth");
         fillType = serializedObject.FindProperty("fillType");
         fillValue = serializedObject.FindProperty("fillValue");
@@ -105,19 +117,45 @@ public class MadSpriteInspector : Editor {
     
     protected void SectionSprite(DisplayFlag flags) {
         serializedObject.Update();
+        MadGUI.PropertyField(panel, "Panel", MadGUI.ObjectIsSet);
+        EditorGUILayout.Space();
+
         MadGUI.PropertyField(visible, "Visible");
     
         if ((flags & DisplayFlag.WithoutMaterial) == 0) {
-            MadGUI.PropertyField(texture, "Texture", MadGUI.ObjectIsSet);
+            MadGUI.PropertyFieldEnumPopup(inputType, "Input Type");
             MadGUI.Indent(() => {
-                MadGUI.PropertyFieldVector2(textureRepeat, "Repeat");
-                MadGUI.PropertyFieldVector2(textureOffset, "Offset");
+            
+                switch (sprite.inputType) {
+                    case MadSprite.InputType.SingleTexture:
+                        MadGUI.PropertyField(texture, "Texture", MadGUI.ObjectIsSet);
+                        MadGUI.Indent(() => {
+                            MadGUI.PropertyFieldVector2(textureRepeat, "Repeat");
+                            MadGUI.PropertyFieldVector2(textureOffset, "Offset");
+                        });
+                        break;
+                    case MadSprite.InputType.TextureAtlas:
+                        MadGUI.PropertyField(textureAtlas, "Texture Atlas", MadGUI.ObjectIsSet);
+                        
+                        if (sprite.textureAtlas != null) {
+                            MadAtlasUtil.AtlasField(textureAtlasSpriteGUID, sprite.textureAtlas, "Sprite");
+                        }
+                        
+                        break;
+                    default:
+                        Debug.LogError("Unknown input type: " + sprite.inputType);
+                        break;
+                }
+            
             });
+            
         }
 
-        EditorGUILayout.Space();
+        MadGUI.PropertyField(hasPremultipliedAlpha, "Has Pre-Alpha");
         
         MadGUI.PropertyField(tint, "Tint");
+        
+        EditorGUILayout.Space();
         
         if ((flags & DisplayFlag.WithoutSize) == 0) {
             EditorGUILayout.Space();
@@ -132,8 +170,18 @@ public class MadSpriteInspector : Editor {
             EditorGUILayout.Space();
         }
         
+        EditorGUILayout.Space();
+        
         MadGUI.PropertyField(pivotPoint, "Pivot Point");
+        if (sprite.pivotPoint == MadSprite.PivotPoint.Custom) {
+            MadGUI.Indent(() => {
+                MadGUI.PropertyFieldVector2(customPivotPoint, "Custom Pivot Point");
+            });
+        }
+
         MadGUI.PropertyField(guiDepth, "GUI Depth");
+        
+        EditorGUILayout.Space();
         
         if ((flags & DisplayFlag.WithoutFill) == 0) {
             MadGUI.PropertyField(fillType, "Fill Type");

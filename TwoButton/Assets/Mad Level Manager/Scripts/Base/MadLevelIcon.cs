@@ -27,9 +27,7 @@ public class MadLevelIcon : MadSprite {
     
     // if true then levelSceneName and levelArguments are loaded from configuration
     public bool hasLevelConfiguration;
-    
-    public MadLevelConfiguration configuration;
-    
+
     // level index in group
     public int levelIndex;
     
@@ -41,7 +39,7 @@ public class MadLevelIcon : MadSprite {
     public MadText levelNumber;
     
     // list of level icons to unlock on completion of this one
-    public List<MadLevelIcon> unlockOnComplete;
+    public List<MadLevelIcon> unlockOnComplete = new List<MadLevelIcon>();
     
     [HideInInspector]
     public int version = 0;
@@ -49,6 +47,39 @@ public class MadLevelIcon : MadSprite {
     // ===========================================================
     // Properties
     // ===========================================================
+
+    public MadLevelConfiguration configuration {
+        get {
+            if (_configuration == null) {
+                var layout = MadTransform.FindParent<MadLevelAbstractLayout>(transform);
+                _configuration = layout.configuration;
+            }
+
+            return _configuration;
+        }
+
+        set {
+            _configuration = value;
+        }
+    }
+    private MadLevelConfiguration _configuration;
+
+    // level group
+    public int levelGroup {
+        get {
+            if (_levelGroup == -1) {
+                var layout = MadTransform.FindParent<MadLevelAbstractLayout>(transform);
+                _levelGroup = layout.configurationGroup;
+            }
+
+            return _levelGroup;
+        }
+
+        set {
+            _levelGroup = value;
+        }
+    }
+    private int _levelGroup = -1;
 
     public bool generated {
         get {
@@ -104,7 +135,7 @@ public class MadLevelIcon : MadSprite {
     public MadLevelConfiguration.Level level {
         get {
         	if (configuration != null) {
-	            return configuration.GetLevel(MadLevel.Type.Level, levelIndex);
+                    return configuration.GetLevel(MadLevel.Type.Level, levelGroup, levelIndex);
             } else {
             	return null;
             }
@@ -202,7 +233,7 @@ public class MadLevelIcon : MadSprite {
     
     public void LoadLevel() {
         if (hasLevelConfiguration) {
-            var level = configuration.GetLevel(MadLevel.Type.Level, levelIndex);
+            var level = configuration.GetLevel(MadLevel.Type.Level, levelGroup, levelIndex);
             MadLevel.LoadLevelByName(level.name);
         } else {
             if (!string.IsNullOrEmpty(levelSceneName)) {

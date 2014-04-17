@@ -14,6 +14,10 @@ public class MadTransform {
     // ===========================================================
     // Constants
     // ===========================================================
+    
+    public static bool instantiating {
+        get; set;
+    }
 
     #region Public Static Fields
 
@@ -30,10 +34,14 @@ public class MadTransform {
     // Static Methods
     // ===========================================================
     
-    public static T CreateChild<T>(Transform parent, string name) where T : Component {
+    public static T CreateChild<T>(Transform parent, string name, bool disabled = false) where T : Component {
         GameObject go = null;
     
         go = new GameObject(name);
+        if (disabled) {
+            MadGameObject.SetActive(go, false);
+        }
+
         go.transform.parent = parent;
         
         go.transform.localRotation = Quaternion.identity;
@@ -89,12 +97,19 @@ public class MadTransform {
     
     public static GameObject CreateChild(Transform parent, string name, GameObject template) {
         GameObject go = null;
-        go = GameObject.Instantiate(template) as GameObject;
-        go.transform.parent = parent;
-        go.name = name;
-
-        if (registerUndo) {
-            MadUndo.RegisterCreatedObjectUndo(go, "Created " + name);
+        
+        instantiating = true;
+        try {
+        
+            go = GameObject.Instantiate(template) as GameObject;
+            go.transform.parent = parent;
+            go.name = name;
+            
+            if (registerUndo) {
+                MadUndo.RegisterCreatedObjectUndo(go, "Created " + name);
+            }
+        } finally {
+            instantiating = false;
         }
         
         return go;
@@ -198,6 +213,38 @@ public class MadTransform {
         }
         
         return null;
+    }
+
+    public static void SetLocalScale(Transform transform, float scale) {
+        SetLocalScale(transform, scale, scale, scale);
+    }
+
+    public static void SetLocalScale(Transform transform, float x, float y, float z) {
+        SetLocalScale(transform, new Vector3(x, y, z));
+    }
+
+    public static void SetLocalScale(Transform transform, Vector3 localScale) {
+        if (Application.isPlaying || transform.localScale != localScale) {
+            transform.localScale = localScale;
+        }
+    }
+
+    public static void SetPosition(Transform transform, Vector3 position) {
+        if (Application.isPlaying || transform.position != position) {
+            transform.position = position;
+        }
+    }
+
+    public static void SetLocalPosition(Transform transform, Vector3 localPosition) {
+        if (Application.isPlaying || transform.localPosition != localPosition) {
+            transform.localPosition = localPosition;
+        }
+    }
+
+    public static void SetLocalEulerAngles(Transform transform, Vector3 localEulerAngles) {
+        if (Application.isPlaying || transform.localEulerAngles != localEulerAngles) {
+            transform.localEulerAngles = localEulerAngles;
+        }
     }
     
     // ===========================================================

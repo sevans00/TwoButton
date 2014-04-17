@@ -57,17 +57,26 @@ public class MadInitTool : EditorWindow {
             }
         
             if (doInit) {
-                Init(rootObjectName, layer);
+                root = Init(rootObjectName, layer);
+                AfterCreate(root);
             }
         }
     }
     
-    MadRootNode Init(string rootObjectName, int layer) {
+    public static MadRootNode Init(string rootObjectName, int layer) {
         var go = new GameObject();
         go.name = rootObjectName;
         var root = go.AddComponent<MadRootNode>();
-        
-        bool hasOtherCamera = GameObject.FindObjectOfType(typeof(Camera)) != null;
+
+        Camera[] otherCameras = GameObject.FindObjectsOfType(typeof(Camera)) as Camera[];
+        bool hasOtherCamera = otherCameras.Length > 0;
+
+        float maxDepth = 0;
+        for (int i = 0; i < otherCameras.Length; ++i) {
+            if (otherCameras[i].depth > maxDepth) {
+                maxDepth = otherCameras[i].depth;
+            }
+        }
         
         var camera = MadTransform.CreateChild<MadNode>(go.transform, "Camera 2D");
         var cam = camera.gameObject.AddComponent<Camera>();
@@ -75,20 +84,19 @@ public class MadInitTool : EditorWindow {
         cam.orthographic = true;
         cam.orthographicSize = 1;
         cam.nearClipPlane = -2;
-        cam.farClipPlane = 2;
-        cam.transform.localScale = new Vector3(1, 1, 0.01f);
+        cam.farClipPlane = 20;
+        //cam.transform.localScale = new Vector3(1, 1, 0.01f);
+        cam.depth = maxDepth + 1;
         
         if (hasOtherCamera) {
             cam.clearFlags = CameraClearFlags.Depth;
         }
-        
-        var panel = camera.CreateChild<MadPanel>("Panel");
+
+        var panel = MadTransform.CreateChild<MadPanel>(go.transform, "Panel");
         
         // setup layers
         cam.cullingMask = 1 << layer;
         panel.gameObject.layer = layer;
-        
-        AfterCreate(root);
         
         return root;
     }

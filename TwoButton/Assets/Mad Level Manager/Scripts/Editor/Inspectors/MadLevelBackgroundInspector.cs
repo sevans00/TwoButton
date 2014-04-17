@@ -63,7 +63,7 @@ public class MadLevelBackgroundInspector : Editor {
         
         var arrayList = new MadGUI.ArrayList<MadLevelBackgroundLayer>(script.layers, (layer) => {
                 if (layer == null) {
-                    return;
+                    return null;
                 }
             
                 var so = new SerializedObject(layer);
@@ -97,6 +97,8 @@ public class MadLevelBackgroundInspector : Editor {
                 if (so.ApplyModifiedProperties()) {
                     layer.SetDirty();
                 }
+
+                return layer;
         });
         
         arrayList.addLabel = "Add Layer";

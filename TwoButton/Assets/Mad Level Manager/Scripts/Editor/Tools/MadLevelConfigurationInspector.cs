@@ -32,12 +32,67 @@ public class MadLevelConfigurationInspector : Editor {
     
     MadGUI.ScrollableList<LevelItem> list;
     List<LevelItem> items;
+
+    private List<MadGUI.RunnableVoid0> executionQueue = new List<MadGUI.RunnableVoid0>();
+
+    int extensionIndex = 0;
+    
+    MadLevelConfiguration.Group currentGroup {
+        get {
+            return IndexToGroup(currentGroupIndex);
+        }
+        
+        set {
+            currentGroupIndex = GroupToIndex(value);
+        }
+    }
+    
+    string GUID {
+        get {
+            var path = AssetDatabase.GetAssetPath(configuration);
+            return AssetDatabase.AssetPathToGUID(path);
+        }
+    }
+    
+    int currentGroupIndex {
+        get {
+            if (configuration.groups.Count == 0) {
+                return 0;
+            } else {
+                // not Count - 1 because the default group is not on the list
+                return Mathf.Clamp(_currentGroupIndex, 0, configuration.groups.Count);
+            }
+        }
+        
+        set {
+            bool reset = false;
+            if (_currentGroupIndex != value) {
+                reset = true;
+            }
+            _currentGroupIndex = value;
+            
+            if (reset) {
+                items.Clear();
+                list.selectedItem = null;
+            }
+        }
+    }
+    int _currentGroupIndex {
+        get {
+            return EditorPrefs.GetInt(GUID + "_currentGroupIndex", 0);
+        }
+        
+        set {
+            EditorPrefs.SetInt(GUID + "_currentGroupIndex", value);
+        }
+    }
     
     static bool texturesLoaded;
     static Texture textureOther;
     static Texture textureLevel;
     static Texture textureExtra;
     static Texture textureError;
+    static Texture textureStar;
     
     // ===========================================================
     // Methods for/from SuperClass/Interfaces
@@ -58,6 +113,21 @@ public class MadLevelConfigurationInspector : Editor {
         list.selectionEnabled = true;
         
         list.selectionCallback = (item) => ItemSelected(item);
+        list.acceptDropTypes.Add(typeof(UnityEngine.Object));
+        list.dropCallback += (index, obj) => {
+            if (CheckAssetIsScene(obj)) {
+                executionQueue.Add(() => {
+                    var item = AddLevel();
+                    item.level.sceneObject = obj;
+                    item.level.type = MadLevel.Type.Other;
+
+                    item.level.name = "";
+                    item.level.name = UniqueLevelName(obj.name);
+
+                    configuration.SetDirty();
+                });
+            }
+        };
     }
     
     void LoadTextures() {
@@ -69,6 +139,7 @@ public class MadLevelConfigurationInspector : Editor {
         textureLevel = Resources.Load("MadLevelManager/Textures/icon_level") as Texture;
         textureExtra = Resources.Load("MadLevelManager/Textures/icon_extra") as Texture;
         textureError = Resources.Load("MadLevelManager/Textures/icon_error") as Texture;
+        textureStar = Resources.Load("MadLevelManager/Textures/icon_star") as Texture;
         
         texturesLoaded = true;
     }
@@ -86,23 +157,26 @@ public class MadLevelConfigurationInspector : Editor {
         LoadTextures(); // loading textures with delay to prevent editor errors
         CheckAssetLocation();
         ActiveInfo();
+        
+        GUIGroupPopup();
 
         LoadItems();
+
         list.Draw();
         
         EditorGUILayout.BeginHorizontal();
-        GUI.color = Color.green;
+        GUI.backgroundColor = Color.green;
         if (GUILayout.Button("Add")) {
             AddLevel();
         }
-        GUI.color = Color.white;
+        GUI.backgroundColor = Color.white;
         
         GUI.enabled = list.selectedItem != null;
-        GUI.color = Color.red;
+        GUI.backgroundColor = Color.red;
         if (GUILayout.Button("Remove")) {
             RemoveLevel();
         }
-        GUI.color = Color.white;
+        GUI.backgroundColor = Color.white;
         
         GUILayout.FlexibleSpace();
         
@@ -164,6 +238,39 @@ public class MadLevelConfigurationInspector : Editor {
             
             GUI.SetNextControlName("arguments"); // needs names to unfocus
             item.level.arguments = EditorGUILayout.TextField("Arguments", item.level.arguments);
+
+            EditorGUILayout.Space();
+
+            EditorGUI.BeginChangeCheck();
+            extensionIndex = configuration.extensions.FindIndex((e) => e == item.level.extension) + 1;
+            extensionIndex = MadGUI.DynamicPopup(extensionIndex, "Extension", configuration.extensions.Count + 1, (index) => {
+                if (index == 0) {
+                    return "(none)";
+                } else {
+                    return configuration.extensions[index - 1].name;
+                }
+            });
+            if (EditorGUI.EndChangeCheck()) {
+                if (extensionIndex == 0) {
+                    item.level.extension = null;
+                } else {
+                    item.level.extension = configuration.extensions[extensionIndex - 1];
+                    configuration.SetDirty();
+                }
+            }
+
+            bool enabledState = GUI.enabled;
+            GUI.enabled = true;
+            if (MadGUI.Button("Open Extension Editor", Color.magenta)) {
+                MadLevelExtensionEditor.Show(configuration);
+            }
+            GUI.enabled = enabledState;
+
+            EditorGUILayout.Space();
+
+            int groupIndex = GroupToIndex(item.level.group);
+            groupIndex = EditorGUILayout.Popup("Move To Group:", groupIndex, GroupNames());
+            item.level.group = IndexToGroup(groupIndex);
             
             if (EditorGUI.EndChangeCheck()) {
                 configuration.SetDirty();
@@ -176,7 +283,7 @@ public class MadLevelConfigurationInspector : Editor {
         EditorGUILayout.Space();
         EditorGUILayout.BeginHorizontal();
         if (GUILayout.Button("Help")) {
-            Help.BrowseURL("http://redmine.madpixelmachine.com/projects/mad-level-manager/wiki/Creating_Level_Configuration");
+            Help.BrowseURL(MadLevelHelp.LevelConfigurationHelp);
         }
         GUILayout.FlexibleSpace();
         EditorGUILayout.EndHorizontal();
@@ -194,6 +301,141 @@ public class MadLevelConfigurationInspector : Editor {
             }
         }
 
+        foreach (var ex in executionQueue) {
+            ex();
+        }
+
+        executionQueue.Clear();
+    }
+
+    string newGroupName = "";
+    
+    void GUIGroupPopup() {
+        MadGUI.Box("Groups", () => {
+
+            EditorGUILayout.BeginHorizontal();        
+            currentGroupIndex = EditorGUILayout.Popup("Group", currentGroupIndex, GroupNames());
+
+            GUI.enabled = currentGroup != configuration.defaultGroup;
+            if (MadGUI.Button("Remove", Color.red, GUILayout.Width(70))) {
+                RemoveGroup(currentGroup);
+            }
+
+            if (MadGUI.Button("Rename", Color.yellow, GUILayout.Width(70))) {
+                RenameGroup(currentGroup);
+            }
+            GUI.enabled = true;
+            
+            EditorGUILayout.EndHorizontal();
+            
+            EditorGUILayout.Space();
+            
+            EditorGUILayout.BeginHorizontal();
+                MadGUI.Indent(() => {
+                    newGroupName = EditorGUILayout.TextField("New Group", newGroupName);
+                    GUI.enabled = !string.IsNullOrEmpty(newGroupName);
+
+                    GUI.backgroundColor = Color.green;
+                    if (GUILayout.Button("Add", GUILayout.Width(40))) {
+                        if (AddGroup(newGroupName)) {
+//                            newGroupName = "";
+                        }
+                    }
+                    GUI.backgroundColor = Color.white;
+                    GUI.enabled = true;
+                });
+            EditorGUILayout.EndHorizontal();
+        });
+    }
+
+    private void RenameGroup(MadLevelConfiguration.Group currentGroup) {
+        var builder = new MadInputDialog.Builder("Enter Group Name", "Enter a new name for group \"" + currentGroup.name + "\".", (name) => {
+            if (!string.IsNullOrEmpty(name)) {
+                currentGroup.name = name;
+                EditorUtility.SetDirty(configuration);
+            }
+        });
+        builder.defaultValue = currentGroup.name;
+        builder.allowEmpty = false;
+        builder.BuildAndShow();
+    }
+    
+    string[] GroupNames() {
+        var groups = configuration.groups;
+        var groupNames = new List<string>();
+        groupNames.Add(configuration.defaultGroup.name);
+        
+        foreach (var g in groups) {
+            groupNames.Add(g.name);
+        }
+        
+        return groupNames.ToArray();
+    }
+    
+    MadLevelConfiguration.Group IndexToGroup(int index) {
+        if (index == 0) {
+            return configuration.defaultGroup;
+        } else {
+            return configuration.groups[index - 1];
+        }
+    }
+    
+    int GroupToIndex(MadLevelConfiguration.Group group) {
+        if (group == configuration.defaultGroup) {
+            return 0;
+        } else {
+            if (configuration.groups.Contains(group)) {
+                return configuration.groups.IndexOf(group) + 1;
+            } else {
+                Debug.LogError("Group not found: " + group);
+                return 0;
+            }
+        }
+    }
+    
+    bool AddGroup(string name) {
+        if (configuration.FindGroupByName(name) != null) {
+            EditorUtility.DisplayDialog("Group Exists", "Group '" + name + "' already exists.", "OK");
+            return false;
+        }
+    
+        MadUndo.RecordObject2(configuration, "Add Group");
+        var group = configuration.CreateGroup();
+        group.name = name;
+        configuration.AddGroup(group);
+        currentGroup = group;
+        
+        return true;
+    }
+    
+    void RemoveGroup(MadLevelConfiguration.Group group) {
+        if (group == configuration.defaultGroup) {
+            Debug.LogError("Cannot remove default group");
+            return;
+        }
+        
+        bool removeLevels = false;
+        
+        if (group.GetLevels().Count > 0) {
+            if (EditorUtility.DisplayDialog("Remove Levels As Well?",
+                "Do you want to remove all levels in this group as well? "
+                + "If no, all levels will be moved to default group.", "Yes", "No")) {
+                removeLevels = true;
+            }
+        }
+        
+        MadUndo.RecordObject2(configuration, "Remove Group");
+        
+        if (currentGroup == group) {
+            currentGroup = configuration.defaultGroup;
+        }
+
+        if (removeLevels) {        
+            var levels = group.GetLevels();
+            configuration.levels.RemoveAll((level) => levels.Contains(level));
+        }
+        
+        configuration.RemoveGroup(group);
     }
     
     bool CheckAssetIsScene(UnityEngine.Object obj) {
@@ -214,10 +456,11 @@ public class MadLevelConfigurationInspector : Editor {
         return true;
     }
     
-    void AddLevel() {
+    LevelItem AddLevel() {
         MadUndo.RecordObject2(configuration, "Add Level");
         
         var levelItem = new LevelItem(configuration);
+        levelItem.level.group = currentGroup;
         
         LevelItem template = null;
         
@@ -230,7 +473,7 @@ public class MadLevelConfigurationInspector : Editor {
         if (template != null) {
             levelItem.level.order = template.level.order + 1;
             
-            levelItem.level.name = IncreaseNumber(template.level.name);
+            levelItem.level.name = UniqueLevelName(template.level.name);
             levelItem.level.sceneObject = template.level.sceneObject;
             levelItem.level.type = template.level.type;
         } else {
@@ -249,18 +492,27 @@ public class MadLevelConfigurationInspector : Editor {
         
         list.selectedItem = levelItem;
         list.ScrollToItem(levelItem);
+
+        return levelItem;
     }
     
-    string IncreaseNumber(string name) {
+    string UniqueLevelName(string name) {
         int num = 1;
-        var match = Regex.Match(name, @".* \(([0-9]+)\)$");
-        if (match.Success) {
-            var numStr = match.Groups[1].Value;
-            num = int.Parse(numStr) + 1;
-            name = name.Substring(0, name.Length - (3 + numStr.Length));
+
+        while (items.Find((i) => i.level.name == name) != null) {
+            var match = Regex.Match(name, @".* \(([0-9]+)\)$");
+            if (match.Success) {
+                var numStr = match.Groups[1].Value;
+                num = int.Parse(numStr) + 1;
+                name = name.Substring(0, name.Length - (3 + numStr.Length));
+            }
+
+            name = name + " (" + num + ")";
+
+            num++;
         }
-        
-        return name + " (" + num + ")";
+
+        return name;
     }
     
     void RemoveLevel() {
@@ -318,10 +570,11 @@ public class MadLevelConfigurationInspector : Editor {
     }
     
     void LoadItems() {
-        if (items.Count != configuration.levels.Count) {
+        var configurationLevels = currentGroup.GetLevels();
+        if (items.Count != configurationLevels.Count) {
         
             items.Clear();
-            foreach (var level in configuration.levels) {
+            foreach (var level in configurationLevels) {
                 var item = new LevelItem(level);
                 items.Add(item);
             }
@@ -335,12 +588,6 @@ public class MadLevelConfigurationInspector : Editor {
         items.Sort((a, b) => {
             return a.level.order.CompareTo(b.level.order);
         });
-        
-        int i = 0;
-        foreach (var item in items) {
-            item.level.order = i;
-            i += 10;
-        }
     }
     
     void MoveUp() {
@@ -399,6 +646,8 @@ public class MadLevelConfigurationInspector : Editor {
             EditorGUILayout.Space();
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField(level.name);
+
+            GUILayout.FlexibleSpace();
             
             Color origColor = GUI.color;
             GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, 0.5f);
@@ -410,6 +659,7 @@ public class MadLevelConfigurationInspector : Editor {
             EditorGUILayout.EndVertical();
             
             Texture texture = textureOther;
+
             switch (level.type) {
                 case MadLevel.Type.Other:
                     texture = textureOther;
@@ -431,12 +681,17 @@ public class MadLevelConfigurationInspector : Editor {
             }
             
             GUI.DrawTexture(new Rect(rect.x, rect.y, 28, 34), texture);
+            if (level.hasExtension) {
+                GUI.DrawTexture(new Rect(rect.x, rect.y, 28, 34), textureStar);
+            }
+
             EditorGUILayout.EndHorizontal();
             
         }
     }
 
 }
+
 #if !UNITY_3_5
 } // namespace
 #endif

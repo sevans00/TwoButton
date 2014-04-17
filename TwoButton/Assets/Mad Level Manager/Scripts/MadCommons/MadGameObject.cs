@@ -43,7 +43,7 @@ public class MadGameObject : MonoBehaviour {
 #endif    
     }
     
-    public static void SafeDestroy(GameObject go) {
+    public static void SafeDestroy(Object go) {
         if (Application.isPlaying) {
             GameObject.Destroy(go);
         } else {

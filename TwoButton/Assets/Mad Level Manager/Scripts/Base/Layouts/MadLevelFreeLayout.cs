@@ -113,27 +113,58 @@ public class MadLevelFreeLayout : MadLevelAbstractLayout {
         var icons = MadTransform.FindChildren<MadLevelIcon>(draggable.transform);
         var activeIcons = from i in icons where MadGameObject.IsActive(i.gameObject) select i;
 
+        // keep track of unlock on complete settings
+        Dictionary<int, List<int>> unlockOnCompleteDict = new Dictionary<int, List<int>>();
+        List<MadLevelIcon> createdIcons = new List<MadLevelIcon>();
+
         foreach (var icon in activeIcons) {
             var position = icon.transform.position;
             var rotation = icon.transform.rotation;
             var localScale = icon.transform.localScale;
             var name = icon.name;
             var baseDepth = icon.guiDepth;
+            var levelIndex = icon.levelIndex;
+            var configuration = icon.configuration;
+
+            // build unlock on complete dict
+            List<int> toUnlockList = new List<int>();
+            foreach (var unlock in icon.unlockOnComplete) {
+                toUnlockList.Add(unlock.levelIndex);
+            }
+            unlockOnCompleteDict[icon.levelIndex] = toUnlockList;
+
 
             MadUndo.DestroyObjectImmediate(icon.gameObject);
 
-            var nIcon = MadTransform.CreateChild(draggable.transform, name, newIcon);
-            nIcon.transform.position = position;
-            nIcon.transform.rotation = rotation;
-            nIcon.transform.localScale = localScale;
-            nIcon.GetComponent<MadLevelIcon>().guiDepth = baseDepth;
+            var go = MadTransform.CreateChild(draggable.transform, name, newIcon);
+            go.transform.position = position;
+            go.transform.rotation = rotation;
+            go.transform.localScale = localScale;
+            var nIcon = go.GetComponent<MadLevelIcon>();
+            nIcon.guiDepth = baseDepth;
+            nIcon.levelIndex = levelIndex;
+            nIcon.configuration = configuration;
+            nIcon.hasLevelConfiguration = true;
 
-            var childSprites = MadTransform.FindChildren<MadSprite>(nIcon.transform);
+            createdIcons.Add(nIcon);
+            
+
+            var childSprites = MadTransform.FindChildren<MadSprite>(go.transform);
             foreach (var cs in childSprites) {
                 cs.guiDepth += baseDepth;
             }
 
-            MadUndo.RegisterCreatedObjectUndo(nIcon.gameObject, "Replaced Icons");
+            MadUndo.RegisterCreatedObjectUndo(go.gameObject, "Replaced Icons");
+        }
+
+        // apply unlock on complete list
+        foreach (var icon in createdIcons) {
+            List<int> unlockList = unlockOnCompleteDict[icon.levelIndex];
+            foreach (var unlockLevelIndex in unlockList) {
+                var query = from i in createdIcons where i.levelIndex == unlockLevelIndex select i;
+                var iconToUnlock = query.First();
+                icon.unlockOnComplete.Add(iconToUnlock);
+            }
         }
     }
 #endif
@@ -185,7 +216,9 @@ public class MadLevelFreeLayout : MadLevelAbstractLayout {
     private void LookAtLastCompletedLevel() {
         var lastCompleted =
             from l in MadLevel.activeConfiguration.levels
-            where l.type == MadLevel.Type.Level && MadLevelProfile.IsCompleted(l.name)
+            where l.groupId == configurationGroup
+                && l.type == MadLevel.Type.Level
+                && MadLevelProfile.IsCompleted(l.name)
             orderby l.order descending
             select l;
         var lastCompletedLevel = lastCompleted.FirstOrDefault();
@@ -205,7 +238,10 @@ public class MadLevelFreeLayout : MadLevelAbstractLayout {
     private void LookAtLastUnlockedLevel() {
         var firstUnlocked =
             from l in MadLevel.activeConfiguration.levels
-            where l.type == MadLevel.Type.Level && MadLevelProfile.IsLockedSet(l.name) && MadLevelProfile.IsLocked(l.name) == false
+            where l.groupId == configurationGroup
+                && l.type == MadLevel.Type.Level
+                && MadLevelProfile.IsLockedSet(l.name)
+                && MadLevelProfile.IsLocked(l.name) == false
             orderby l.order descending
             select l;
         var firstUnlockedLevel = firstUnlocked.FirstOrDefault();
@@ -249,7 +285,7 @@ public class MadLevelFreeLayout : MadLevelAbstractLayout {
     }
     
     void Build() {
-        int levelCount = configuration.LevelCount(MadLevel.Type.Level);
+        int levelCount = configuration.LevelCount(MadLevel.Type.Level, configurationGroup);
         Vector2 currentOffset = Vector2.zero;
         
         MadLevelIcon previousIcon = null;
@@ -292,6 +328,7 @@ public class MadLevelFreeLayout : MadLevelAbstractLayout {
             }
             
             // setup level properties
+            levelIcon.levelGroup = configurationGroup;
             levelIcon.levelIndex = levelIndex;
             levelIcon.configuration = configuration;
             levelIcon.hasLevelConfiguration = true;

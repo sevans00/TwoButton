@@ -90,11 +90,13 @@ public class MadLevelTesterOption : MonoBehaviour {
         yield return new WaitForSeconds(2.2f); // animation lasts 2 second
         
         if (completed) {
-            // if level is completed go to next level or to 'Level Select'
-            // depends of it this the last level
-            if (MadLevel.HasNext(MadLevel.Type.Level)) {
+            if (MadLevel.hasExtension && MadLevel.CanContinue()) { // check if this level has extension and can continue it
+                // then continue
+                MadLevel.Continue();
+            } else if (MadLevel.HasNext(MadLevel.Type.Level)) { // if not extension, check if there is next level of type level
+                // load it
                 MadLevel.LoadNext(MadLevel.Type.Level);
-            } else {
+            } else { // otherwise load level select screen
                 MadLevel.LoadLevelByName("Level Select");
             }
         } else {

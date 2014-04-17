@@ -20,6 +20,9 @@ public class MadLevelMenu : MonoBehaviour {
     private const string HomePage =
         "http://madlevelmanager.madpixelmachine.com/documentation.html";
 
+    private const string Themes =
+        "http://madlevelmanager.madpixelmachine.com/themes.html";
+
     // ===========================================================
     // Fields
     // ===========================================================
@@ -34,8 +37,13 @@ public class MadLevelMenu : MonoBehaviour {
     }
     
     [MenuItem ("Tools/Mad Level Manager/Create Font", false, 120)]
- static void CreateFont() {
+    static void CreateFont() {
         MadFontBuilder.CreateFont();
+    }
+    
+    [MenuItem("Tools/Mad Level Manager/Create Atlas", false, 121)]
+    static void CreateAtlas() {
+        MadAtlasBuilder.CreateAtlas();
     }
     
     [MenuItem ("Tools/Mad Level Manager/Create UI/Sprite", false, 140)]
@@ -141,13 +149,23 @@ public class MadLevelMenu : MonoBehaviour {
             ScriptableWizard.DisplayWizard<MadLevelFreeTool>("Create Free Layout", "Create");
         }
     }
+
+    [MenuItem("Tools/Mad Level Manager/Prepare for UnityScript and Boo", false, 899)]
+    static void MoveAssetsTool() {
+        MadLevelMoveAssetsTool.Execute();
+    }
     
     [MenuItem("Tools/Mad Level Manager/Profile Tool", false, 900)]
     static void ProfileTool() {
         EditorWindow.GetWindow<MadLevelProfileTool>(false, "Profile Tool", true);
     }
+
+    [MenuItem("Tools/Mad Level Manager/Extension Editor", false, 901)]
+    static void ExtensionEditor() {
+        MadLevelExtensionEditor.Show(MadLevel.activeConfiguration);
+    }
     
-    [MenuItem("Tools/Mad Level Manager/Select Active Configuration", false, 901)]
+    [MenuItem("Tools/Mad Level Manager/Select Active Configuration", false, 902)]
     static void SelectActiveConfiguration() {
         var active = MadLevelConfiguration.FindActive();
         if (active == null) {
@@ -157,10 +175,22 @@ public class MadLevelMenu : MonoBehaviour {
             Selection.activeObject = active;
         }
     }
-    
-    [MenuItem("Tools/Mad Level Manager/Wiki, Manual", false, 1000)]
+
+    [MenuItem("Tools/Mad Level Manager/Get Additional Themes", false, 999)]
+    static void OpenThemes() {
+        Application.OpenURL(Themes);
+    }
+
+    [MenuItem("Tools/Mad Level Manager/Manual", false, 1000)]
     static void OpenHomepage() {
         Application.OpenURL(HomePage);
+    }
+
+    [MenuItem("Tools/Mad Level Manager/About", false, 1001)]
+    static void OpenAbout() {
+        EditorUtility.DisplayDialog("Mad Level Manager",
+            "Copyright (c) Mad Pixel Machine\nVersion: 2.0.0-rc1\n\nhttp://madlevelmanager.madpixelmachine.com/",
+            "OK");
     }
     
     //

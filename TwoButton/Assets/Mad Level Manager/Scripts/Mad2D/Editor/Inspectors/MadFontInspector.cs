@@ -163,7 +163,7 @@ public class MadFontInspector : Editor {
         MadGUI.PropertyField(glyphs, "Glyphs");
         if (GUILayout.Button("Load", GUILayout.Width(50))) {
             string filePath = EditorUtility.OpenFilePanel(
-                "Select Glyps File", Path.GetDirectoryName(AssetDatabase.GetAssetPath(target)), "txt");
+                "Select Glyps File", System.IO.Path.GetDirectoryName(AssetDatabase.GetAssetPath(target)), "txt");
             
             if (!string.IsNullOrEmpty(filePath)) {
                 var text = System.IO.File.ReadAllText(filePath);

@@ -99,7 +99,6 @@ public class MadList<T> {
     // ===========================================================
 
 }
-
 #if !UNITY_3_5
 } // namespace
 #endif

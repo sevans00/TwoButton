@@ -109,8 +109,8 @@ public class MadRootNode : MadNode {
                 scale = 1f / manualHeight * 2;
                 break;
         }
-    
-        transform.localScale = new Vector3(scale, scale, scale);
+
+        MadTransform.SetLocalScale(transform, scale);
     }
     
     public Vector3 ScreenToLocal(Vector3 v) {

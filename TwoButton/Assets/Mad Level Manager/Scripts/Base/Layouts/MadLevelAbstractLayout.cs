@@ -63,6 +63,7 @@ public abstract class MadLevelAbstractLayout : MadNode {
     
     [HideInInspector]
     public MadLevelConfiguration configuration;
+    public int configurationGroup = 0;
     
     // ===========================================================
     // Events
@@ -113,7 +114,8 @@ public abstract class MadLevelAbstractLayout : MadNode {
     /// </summary>
     /// <returns>The first level icon.</returns>
     public MadLevelIcon GetFirstIcon() {
-        string firstLevelName = MadLevel.FindFirstLevelName(MadLevel.Type.Level);
+        string groupName = MadLevel.activeConfiguration.FindGroupById(configurationGroup).name;
+        string firstLevelName = MadLevel.FindFirstLevelName(MadLevel.Type.Level, groupName);
         return GetIcon(firstLevelName);
     }
     
@@ -122,7 +124,8 @@ public abstract class MadLevelAbstractLayout : MadNode {
     /// </summary>
     /// <returns>The last level icon.</returns>
     public MadLevelIcon GetLastIcon() {
-        string lastLevelName = MadLevel.FindLastLevelName(MadLevel.Type.Level);
+        string groupName = MadLevel.activeConfiguration.FindGroupById(configurationGroup).name;
+        string lastLevelName = MadLevel.FindLastLevelName(MadLevel.Type.Level, groupName);
         return GetIcon(lastLevelName);
     }
     
@@ -142,7 +145,7 @@ public abstract class MadLevelAbstractLayout : MadNode {
     public abstract MadLevelIcon FindClosestIcon(Vector3 position);
     
     public MadLevelIcon GetNextIcon(MadLevelIcon icon) {
-        var nextLevel = MadLevel.activeConfiguration.FindNextLevel(icon.level.name);
+        var nextLevel = configuration.FindNextLevel(icon.level.name);
         if (nextLevel == null) {
             return null;
         }
@@ -151,7 +154,7 @@ public abstract class MadLevelAbstractLayout : MadNode {
     }
     
     public MadLevelIcon GetPreviousIcon(MadLevelIcon icon) {
-        var nextLevel = MadLevel.activeConfiguration.FindPreviousLevel(icon.level.name);
+        var nextLevel = configuration.FindPreviousLevel(icon.level.name);
         if (nextLevel == null) {
             return null;
         }
@@ -169,24 +172,27 @@ public abstract class MadLevelAbstractLayout : MadNode {
     /// Looks at level.
     /// </summary>
     /// <param name="levelName">Level name.</param>
-    public void LookAtLevel(string levelName) {
+    public bool LookAtLevel(string levelName) {
         var level = MadLevel.activeConfiguration.FindLevelByName(levelName);
         
         if (level.type == MadLevel.Type.Other) {
             Debug.LogWarning("Level " + levelName + " is of wrong type. Won't look at it.");
+            return false;
         } else if (level.type == MadLevel.Type.Extra) {
             level = configuration.FindPreviousLevel(MadLevel.lastPlayedLevelName, MadLevel.Type.Level);
             if (level == null) {
-                Debug.LogError("Cannot find previous level icon.");
-                return; // cannot find previous level of type level
+                Debug.Log("Cannot find previous level icon.");
+                return false; ; // cannot find previous level of type level
             }
         }
         
         var icon = GetIcon(levelName);
         if (icon != null) {
             LookAtIcon(icon);
+            return true;
         } else {
-            Debug.LogError("Cannot find icon for level: " + levelName);
+            Debug.Log("Cannot find icon for level: " + levelName);
+            return false;
         }
     }
     
@@ -201,8 +207,7 @@ public abstract class MadLevelAbstractLayout : MadNode {
     
         string lastPlayedLevelName = MadLevel.lastPlayedLevelName;
         if (!string.IsNullOrEmpty(lastPlayedLevelName)) {
-            LookAtLevel(lastPlayedLevelName);
-            return true;
+            return LookAtLevel(lastPlayedLevelName);
         } else {
             return false;
         }

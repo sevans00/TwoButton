@@ -26,19 +26,34 @@ public class MadSprite : MadNode {
     // ===========================================================
     // Fields
     // ===========================================================
+
+    public MadPanel panel;
     
     public bool visible = true;
     public bool editorSelectable = true; // is selectable in the editor
     
     public PivotPoint pivotPoint = PivotPoint.Center;
+
+    // from bottom-left
+    public Vector2 customPivotPoint = new Vector2(0, 0);
     
     public Color tint = Color.white;
     
+    public InputType inputType = InputType.SingleTexture;
+    
+    // you can use raw texture
     public Texture2D texture;
     public Texture2D lastTexture; // for reseting purposes
     
+    // or texture from the atlas
+    public MadAtlas textureAtlas;
+    public string textureAtlasSpriteGUID;
+    public string lastTextureAtlasSpriteGUID;
+    
     public Vector2 textureOffset;
     public Vector2 textureRepeat = new Vector2(1, 1);
+
+    public bool hasPremultipliedAlpha = false;
     
     public int guiDepth;
     public EventFlags eventFlags = EventFlags.All;
@@ -57,17 +72,33 @@ public class MadSprite : MadNode {
     public float radialFillOffset = 0;
     public float radialFillLength = 1;
     
-    MadPanel parentPanel;
     bool actionsInitialized;
     
     string shaderName;
     SetupShader setupShaderFunction;
     int materialVariation;
-    
-    
+
     // ===========================================================
     // Properties
     // ===========================================================
+    
+    Texture2D currentTexture {
+        get {
+            switch (inputType) {
+                case InputType.SingleTexture:
+                    return texture;
+                case InputType.TextureAtlas:
+                    if (textureAtlas != null) {
+                        return textureAtlas.atlasTexture;
+                    } else {
+                        return null;
+                    }
+                default:
+                    Debug.LogError("Unknown input type: " + inputType);
+                    return null;
+            }
+        }
+    }
     
     // the size that this sprite has originally in pixels
     public Vector2 initialSize {
@@ -76,7 +107,7 @@ public class MadSprite : MadNode {
             // This causes the sprite to take initial size of texture when texture is set
             // for the first time.
             if (_initialSize == Vector2.zero) {
-                if (texture != null) {
+                if (currentTexture != null) {
                     ResizeToTexture();
                 } else {
                     Debug.LogError("Requesting size of sprite without texture.", this);
@@ -94,7 +125,7 @@ public class MadSprite : MadNode {
     
     public Vector2 size {
         set {
-            transform.localScale = new Vector3(value.x / initialSize.x, value.y / initialSize.y, 1);
+            MadTransform.SetLocalScale(transform, value.x / initialSize.x, value.y / initialSize.y, 1);
         }
 
         get {
@@ -112,18 +143,18 @@ public class MadSprite : MadNode {
     public bool hasFocus {
         set {
             if (!_hasFocus && value) {
-                if (parentPanel.focusedSprite != null && parentPanel.focusedSprite != this) {
+                if (panel.focusedSprite != null && panel.focusedSprite != this) {
                     // triggering focus lost in that way, to not assign to focusedSprite a null value
-                    parentPanel.focusedSprite._hasFocus = false;
-                    parentPanel.focusedSprite.onFocusLost(parentPanel.focusedSprite);
+                    panel.focusedSprite._hasFocus = false;
+                    panel.focusedSprite.onFocusLost(panel.focusedSprite);
                 }
                 
-                parentPanel.focusedSprite = this;
+                panel.focusedSprite = this;
                 _hasFocus = true;
                 onFocus(this);
             } else if (_hasFocus) {
                 if (!value) {
-                    parentPanel.focusedSprite = null;
+                    panel.focusedSprite = null;
                     onFocusLost(this);
                     _hasFocus = false;
                 }
@@ -255,8 +286,12 @@ public class MadSprite : MadNode {
     }
     
     protected virtual void OnEnable() {
+        if (panel == null) {
+            panel = MadPanel.FirstOrNull(transform);
+        }
+
         // enable is called on script reload
-        if (!MadNode.Instantiating) { // not possible to register sprite when instantiating
+        if (!MadTransform.instantiating) { // not possible to register sprite when instantiating
             RegisterSprite();
         }
         
@@ -285,23 +320,23 @@ public class MadSprite : MadNode {
     }
     
     void RegisterSprite() {
-        parentPanel = FindParent<MadPanel>();
-        
-        if (parentPanel != null) {
-            parentPanel.sprites.Add(this);
+        if (panel != null) {
+            panel.sprites.Add(this);
+        } else {
+            Debug.LogError("Panel not set or cannot find any panel on scene.");
         }
     }
     
     void UnregisterSprite() {
-        if (parentPanel != null) {
-            parentPanel.sprites.Remove(this);
+        if (panel != null) {
+            panel.sprites.Remove(this);
         }
     }
     
     protected void Update() {
         UpdateTexture();
     
-        if (parentPanel == null) {
+        if (panel == null) {
 //            Debug.LogError("Sprite must be placed under a panel!", gameObject);
         }
         
@@ -311,7 +346,7 @@ public class MadSprite : MadNode {
     }
     
     void UpdateTexture() {
-        if (texture != lastTexture) {
+        if (texture != lastTexture || textureAtlasSpriteGUID != lastTextureAtlasSpriteGUID) {
             // texture changed or set as new, reset
             liveLeft = liveBottom = 0;
             liveRight = liveTop = 1;
@@ -323,11 +358,14 @@ public class MadSprite : MadNode {
             }
             
             lastTexture = texture;
+            lastTextureAtlasSpriteGUID = textureAtlasSpriteGUID;
         }
     }
     
     bool NeedLiveBounds() {
-        return fillType != FillType.None && !hasLiveBounds && !triedToGetLiveBounds && texture != null;
+        return fillType != FillType.None && !hasLiveBounds && !triedToGetLiveBounds && currentTexture != null
+             // if atlas set but without a guid, then I cannot recalculate live bounds yet
+            && (inputType != InputType.TextureAtlas || !string.IsNullOrEmpty(textureAtlasSpriteGUID));
     }
 
     // ===========================================================
@@ -368,7 +406,7 @@ public class MadSprite : MadNode {
             return;
         }
         
-        if (texture == null) {
+        if (currentTexture == null) {
             // no texture, no size
             return;
         }
@@ -389,7 +427,7 @@ public class MadSprite : MadNode {
             new Vector3(bounds.width, bounds.height, 1f * (guiDepth + 1)));
             
         // Draw live gizmo
-        if (texture != null) {
+        if (currentTexture != null) {
             if (hasLiveBounds) {
                 Gizmos.color = selected ? Color.green : new Color(1, 1, 1, 0.4f);
                 bounds = GetLiveBounds();
@@ -400,46 +438,58 @@ public class MadSprite : MadNode {
 #endif
 
     public virtual bool CanDraw() {
-        bool underThePanel = UnderThePanel();
-        
-        if (!underThePanel) {
-            Debug.LogError("Sprite is not located under the Panel and it cannot be rendered.", this);
-        }
-        
         if (fillType != FillType.None && fillValue == 0) {
             return false;
         }
         
-        return texture != null && underThePanel;
+        if (inputType == InputType.TextureAtlas) {
+            if (textureAtlas == null || string.IsNullOrEmpty(textureAtlasSpriteGUID) || textureAtlas.GetItem(textureAtlasSpriteGUID) == null) {
+                return false;
+            }
+        }
+        
+        return currentTexture != null;
+    }
+    
+    public virtual Material GetMaterial() {
+        Material material;
+    
+        if (!string.IsNullOrEmpty(shaderName) && setupShaderFunction != null) {
+            if (materialVariation == 0) {
+                material = panel.materialStore.CreateUnique(currentTexture, shaderName, out materialVariation);
+            } else {
+                material = panel.materialStore.MaterialFor(currentTexture, shaderName, materialVariation);
+            }
+            
+            setupShaderFunction(material);
+        } else {
+            if (hasPremultipliedAlpha) {
+                material = panel.materialStore.MaterialFor(currentTexture, MadLevelManager.MadShaders.UnlitTintPre);
+            } else {
+                material = panel.materialStore.MaterialFor(currentTexture, MadLevelManager.MadShaders.UnlitTint);
+            }
+        }
+        
+        return material;
     }
     
     public virtual void DrawOn(ref MadList<Vector3> vertices, ref MadList<Color32> colors, ref MadList<Vector2> uv,
                ref MadList<int> triangles, out Material material) {
         
         UpdatePivotPoint();
-    
+
         if ((fillType == FillType.RadialCW || fillType == FillType.RadialCCW) && (fillValue != 1 || radialFillLength != 1)) {
             DrawOnQuad(ref vertices, ref colors, ref uv, ref triangles);
         } else {
             DrawOnRegular(ref vertices, ref colors, ref uv, ref triangles);
         }
         
-        if (!string.IsNullOrEmpty(shaderName) && setupShaderFunction != null) {
-            if (materialVariation == 0) {
-                material = parentPanel.materialStore.CreateUnique(texture, shaderName, out materialVariation);
-            } else {
-                material = parentPanel.materialStore.MaterialFor(texture, shaderName, materialVariation);
-            }
-            
-            setupShaderFunction(material);
-        } else {
-            material = parentPanel.materialStore.MaterialFor(texture, MadLevelManager.MadShaders.UnlitTint);
-        }
+        material = GetMaterial();
     }
     
     public void DrawOnRegular(ref MadList<Vector3> vertices, ref MadList<Color32> colors, ref MadList<Vector2> uv,
             ref MadList<int> triangles) {
-        var matrix = PanelToSelfMatrix();
+        var matrix = TransformMatrix();
         var bounds = GetBounds();
         
         float vLeft = 0;
@@ -512,10 +562,10 @@ public class MadSprite : MadNode {
         colors.Add(color32);
         colors.Add(color32);
         
-        uv.Add(new Vector2(uvLeft, uvBottom));
-        uv.Add(new Vector2(uvLeft, uvTop));
-        uv.Add(new Vector2(uvRight, uvTop));
-        uv.Add(new Vector2(uvRight, uvBottom));
+        uv.Add(FixUV(new Vector2(uvLeft, uvBottom)));
+        uv.Add(FixUV(new Vector2(uvLeft, uvTop)));
+        uv.Add(FixUV(new Vector2(uvRight, uvTop)));
+        uv.Add(FixUV(new Vector2(uvRight, uvBottom)));
         
         int offset = vertices.Count - 4;
         triangles.Add(0 + offset);
@@ -532,7 +582,7 @@ public class MadSprite : MadNode {
         
         bool invert = fillType == FillType.RadialCCW;
             
-        var matrix = PanelToSelfMatrix();
+        var matrix = TransformMatrix();
         
         var bounds = GetBounds();
  
@@ -644,7 +694,7 @@ public class MadSprite : MadNode {
             
             for (int j = 0; j < points.Length; ++j) {
                 vertices.Add(matrix.MultiplyPoint(PivotPointTranslate(points[j], bounds)));
-                uv.Add(uvs[j]);
+                uv.Add(FixUV(uvs[j]));
                 colors.Add(color32);
             }
             
@@ -932,50 +982,21 @@ public class MadSprite : MadNode {
         return liveBottom + (liveTop - liveBottom) * pos;
     }
     
-    // returns matrix combination from panel (excluding) to self (including)
-    protected Matrix4x4 PanelToSelfMatrix() {
-        GameObject[] objects = HierarchyFromPanel();
-        Matrix4x4 matrix = Matrix4x4.identity;
-        
-        foreach (var obj in objects) {
-            var localMatrix = Matrix4x4.TRS(
-                obj.transform.localPosition, obj.transform.localRotation, obj.transform.localScale);
-            matrix *= localMatrix;
+    // fixes uv normalized coordinates if sprite is using texture atlas
+    Vector2 FixUV(Vector2 uv) {
+        if (inputType == InputType.TextureAtlas) {
+            var item = textureAtlas.GetItem(textureAtlasSpriteGUID);
+            var region = item.region;   
+            return new Vector2(region.x + region.width * uv.x, region.y + region.height * uv.y);
+        } else {
+            return uv;
         }
-        
-        return matrix;
     }
     
-    // returns all game objects that constructs hierarchy from panel (excluding) to self (including)
-    // in this order
-    GameObject[] HierarchyFromPanel() {
-        List<GameObject> objects = new List<GameObject>();
-        GameObject current = gameObject;
-        
-        while (current != parentPanel.gameObject) {
-            objects.Add(current);
-            current = current.transform.parent.gameObject;
-        }
-        
-        objects.Reverse();
-        return objects.ToArray();
+    protected Matrix4x4 TransformMatrix() {
+        return panel.transform.worldToLocalMatrix * transform.localToWorldMatrix;
     }
     
-    bool UnderThePanel() {
-        GameObject current = gameObject;
-        
-        while (current != parentPanel.gameObject) {
-            var parent = current.transform.parent;
-            if (parent == null) {
-                return false;
-            }
-            
-            current = current.transform.parent.gameObject;
-        }
-        
-        return true;
-    }
-              
     protected void UpdatePivotPoint() {
         switch (pivotPoint) {
             case PivotPoint.BottomLeft:
@@ -1005,6 +1026,11 @@ public class MadSprite : MadNode {
             case PivotPoint.Center:
                 left = -0.5f; bottom = -0.5f;
                 break;
+            case PivotPoint.Custom:
+                left = -customPivotPoint.x;
+                bottom = -customPivotPoint.y;
+                break;
+
             default:
                 Debug.LogError("Unkwnown pivot point: " + pivotPoint);
                 break;
@@ -1020,9 +1046,23 @@ public class MadSprite : MadNode {
     
     // resizes sprite to match texture size
     public void ResizeToTexture() {
-        if (texture != null) {
-            initialSize = new Vector2(texture.width, texture.height);
+        switch (inputType) {
+            case InputType.SingleTexture:
+                if (texture != null) {
+                    initialSize = new Vector2(texture.width, texture.height);
+                }
+                break;
+            case InputType.TextureAtlas:
+                var info = textureAtlas.GetItem(textureAtlasSpriteGUID);
+                if (info != null) {
+                    initialSize = new Vector2(info.pixelsWidth, info.pixelsHeight);
+                }
+                break;
+            default:
+                Debug.LogError("Unknown input type: " + inputType);
+                break;
         }
+        
     }
     
     public void MinMaxDepthRecursively(out int min, out int max) {
@@ -1041,7 +1081,7 @@ public class MadSprite : MadNode {
         triedToGetLiveBounds = true;
         
 #if UNITY_EDITOR
-        var importer = TextureImporter.GetAtPath(AssetDatabase.GetAssetPath(texture)) as TextureImporter;
+        var importer = TextureImporter.GetAtPath(AssetDatabase.GetAssetPath(currentTexture)) as TextureImporter;
         if (!importer.isReadable) {
 #if MAD_DEBUG
             Debug.Log("Texture must be readable");
@@ -1050,15 +1090,31 @@ public class MadSprite : MadNode {
         }
 #endif        
     
-        Color32[] pixels = texture.GetPixels32();
+        int sx, sy, w, h;
+        int currW = currentTexture.width;
+    
+        if (inputType == InputType.TextureAtlas) {
+            var item = textureAtlas.GetItem(textureAtlasSpriteGUID);
+            var region = item.region;
+            sx = Mathf.RoundToInt(region.x * currentTexture.width);
+            sy = Mathf.RoundToInt(region.y * currentTexture.height);
+            w = Mathf.RoundToInt(region.width * currentTexture.width);
+            h = Mathf.RoundToInt(region.height * currentTexture.height);
+        } else {
+            sx = sy = 0;
+            w = currentTexture.width;
+            h = currentTexture.height;
+        }
+    
+        Color32[] pixels = currentTexture.GetPixels32();
         int left = -1, bottom = -1, right = -1, top = -1;
-        int w = texture.width;
-        int h = texture.height;
         
         int index = 0;
         for (int y = 0; y < h; ++y) {
             for (int x = 0; x < w; ++x) {
-                Color32 c = pixels[index++];
+                index = ((sy + y) * currW) + (sx + x);
+                
+                Color32 c = pixels[index];
                 if (IsOpaque(c)) {
                     if (left == -1 || x < left) {
                         left = x;
@@ -1161,6 +1217,11 @@ public class MadSprite : MadNode {
     // Inner and Anonymous Classes
     // ===========================================================
     
+    public enum InputType {
+        SingleTexture,
+        TextureAtlas,
+    }
+    
     public enum PivotPoint {
         BottomLeft,
         TopLeft,
@@ -1171,6 +1232,7 @@ public class MadSprite : MadNode {
         Right,
         Bottom,
         Center,
+        Custom,
     }
     
     public enum FillType {
