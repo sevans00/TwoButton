@@ -22,7 +22,8 @@ public class UICharacterSelectScreen : UIMenu {
 		//Kill the old character:
 		GameObject currentPlayer = GameObject.FindWithTag("Player");
 		if ( currentPlayer != null ) {
-			currentPlayer.SendMessage("Kill");
+			Destroy(currentPlayer.gameObject);
+			Game.instance.GameOver();
 		}
 
 

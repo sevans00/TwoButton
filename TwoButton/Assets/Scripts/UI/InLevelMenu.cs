@@ -7,6 +7,8 @@ public class InLevelMenu : MonoBehaviour {
 	public GameObject inLevelMenu;
 	public GameObject characterSelectScreen;
 
+	public GameObject endOfLevelMenu;
+
 	// Use this for initialization
 	void Start () {
 		Hide();
@@ -14,7 +16,7 @@ public class InLevelMenu : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if ( Input.GetKeyDown ( KeyCode.Escape ) && !MadLevel.currentGroupName.Equals(MadLevel.defaultGroupName) ) {
+		if ( Input.GetKeyDown ( KeyCode.Escape ) && !MadLevel.currentGroupName.Equals(MadLevel.defaultGroupName) && !endOfLevelMenu.activeSelf ) {
 			if ( inLevelMenu.activeSelf ) {
 				if ( characterSelectScreen.activeSelf ) {
 					characterSelectScreen.SetActive(false);

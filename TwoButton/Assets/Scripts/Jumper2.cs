@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using MadLevelManager;
 
 public class Jumper2 : MonoBehaviour {
 
@@ -270,6 +271,8 @@ public class Jumper2 : MonoBehaviour {
 		if ( Game.instance != null ) {
 			Game.instance.GameOver();
 		}
+		//Analytics:
+		GA.API.Design.NewEvent("Game:Level:"+MadLevel.currentLevelName+":Death", transform.position);
 	}
 
 }

@@ -40,7 +40,6 @@ public class ElevatorBlock : InteractiveTile {
 
 	public override void Reset ()
 	{
-		Debug.Log("Reset elevator!");
 		transform.position = startPosition;
 		currentDirection = startDirection;
 	}
