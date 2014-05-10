@@ -31,8 +31,6 @@ public class MadAnchor : MadNode {
     // anchoring to object position
     public GameObject anchorObject;
     public Camera anchorCamera;
-    public bool moveIn3D;
-    public bool faceCamera;
     
     MadRootNode _root;
     MadRootNode root {
@@ -45,6 +43,21 @@ public class MadAnchor : MadNode {
         }
     }
 
+    private MadPanel panel {
+        get {
+            if (_panel == null) {
+                _panel = MadTransform.FindParent<MadPanel>(transform);
+                if (_panel == null) {
+                    Debug.LogError("Anchor can be set only under the panel", this);
+                }
+            }
+
+            return _panel;
+        }
+    }
+
+    private MadPanel _panel;
+
     // ===========================================================
     // Methods for/from SuperClass/Interfaces
     // ===========================================================
@@ -52,6 +65,10 @@ public class MadAnchor : MadNode {
     // ===========================================================
     // Methods
     // ===========================================================
+
+    void Start() {
+        // do nothing
+    }
     
     public void Update() {
         switch (mode) {
@@ -133,23 +150,10 @@ public class MadAnchor : MadNode {
             }
             camera = Camera.main;
         }
-        
-        float z = transform.position.z;
-        
-        Camera guiCamera = MadTransform.FindParent<Camera>(transform);
-        
-        var pos = camera.WorldToScreenPoint(anchorObject.transform.position);
-        pos = guiCamera.ScreenToWorldPoint(pos);
-        
-        if (!moveIn3D) {
-            pos.z = z;
-        }
+
+        var pos = panel.WorldToPanel(camera, anchorObject.transform.position);
         
         transform.position = pos;
-        
-        if (faceCamera) {
-            transform.LookAt(anchorCamera.transform);
-        }
     }
 
     // ===========================================================

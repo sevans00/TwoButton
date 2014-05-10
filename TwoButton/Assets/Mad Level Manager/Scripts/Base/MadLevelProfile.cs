@@ -1117,7 +1117,7 @@ public class MadLevelProfile {
             
             if (type == Type.String) {
                 var strData = Convert.FromBase64String(strVal);
-                strVal = Encoding.UTF8.GetString(strData);
+                strVal = Encoding.UTF8.GetString(strData, 0, strData.Length);
             }
             
             return new PropertyValue(type, strVal);

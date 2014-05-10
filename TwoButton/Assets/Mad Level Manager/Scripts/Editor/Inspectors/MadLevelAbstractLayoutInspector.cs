@@ -24,6 +24,9 @@ public class MadLevelAbstractLayoutInspector : Editor {
     // ===========================================================
     
     protected SerializedProperty iconTemplate;
+
+    protected SerializedProperty lookAtLastLevel;
+    protected SerializedProperty lookAtLevel;
     
     protected SerializedProperty twoStepActivationType;
 
@@ -64,6 +67,9 @@ public class MadLevelAbstractLayoutInspector : Editor {
         s = target as MadLevelAbstractLayout;
     
         iconTemplate = serializedObject.FindProperty("iconTemplate");
+
+        lookAtLastLevel = serializedObject.FindProperty("lookAtLastLevel");
+        lookAtLevel = serializedObject.FindProperty("lookAtLevel");
         
         twoStepActivationType = serializedObject.FindProperty("twoStepActivationType");
         
@@ -89,6 +95,15 @@ public class MadLevelAbstractLayoutInspector : Editor {
         
         configuration = serializedObject.FindProperty("configuration");
         configurationGroup = serializedObject.FindProperty("configurationGroup");
+    }
+
+    protected void LookAtLastLevel() {
+        MadGUI.PropertyField(lookAtLastLevel, "Look At Previous Level", "When scene is loaded, it will automatically "
+                                 + "go to the previously played level (but only if previous scene is of type Level.");
+
+        GUILayout.Label("If above is disabled or cannot be determined, then...");
+
+        MadGUI.PropertyFieldEnumPopup(lookAtLevel, "Look At Level");
     }
 
     protected void TwoStepActivation() {

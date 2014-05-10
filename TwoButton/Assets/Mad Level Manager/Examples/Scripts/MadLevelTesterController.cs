@@ -6,6 +6,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 using MadLevelManager;
 
@@ -46,8 +47,33 @@ public class MadLevelTesterController : MonoBehaviour {
         }
         
         backToMenu.onMouseDown += backToMenu.onTap = (sprite) => {
-            MadLevel.LoadLevelByName("Level Select");
+            LoadLevelSelectScreen();
         };
+    }
+
+    // loads level select screen or tries to found one
+    public void LoadLevelSelectScreen() {
+        // load Level Select if exists
+        if (MadLevel.activeConfiguration.FindLevelByName("Level Select") != null) {
+            MadLevel.LoadLevelByName("Level Select");
+        } else {
+            // if not, load first level of type other in this group
+            string groupName = MadLevel.currentGroupName;
+            var g = MadLevel.activeConfiguration.FindGroupByName(groupName);
+
+            var query = from level
+                in MadLevel.activeConfiguration.levels
+                        where level.groupId == g.id && level.type == MadLevel.Type.Other
+                        orderby level.order
+                        select level;
+            var levelFound = query.FirstOrDefault();
+
+            if (levelFound != null) {
+                MadLevel.LoadLevelByName(levelFound.name);
+            } else {
+                Debug.LogError("Cannot found level to get back to :-(");
+            }
+        }
     }
 
     public void PlayFinishAnimation(MadSprite chosenSprite, bool completed) {

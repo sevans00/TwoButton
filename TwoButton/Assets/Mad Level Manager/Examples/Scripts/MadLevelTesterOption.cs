@@ -23,6 +23,8 @@ public class MadLevelTesterOption : MonoBehaviour {
     
     bool completed = false;
 
+    MadLevelTesterController controller;
+
     // ===========================================================
     // Methods for/from SuperClass/Interfaces
     // ===========================================================
@@ -32,6 +34,8 @@ public class MadLevelTesterOption : MonoBehaviour {
     // ===========================================================
 
     void Start() {
+        controller = GameObject.FindGameObjectWithTag("GameController").GetComponent<MadLevelTesterController>();
+
         var sprite = GetComponent<MadSprite>();
 
         // connect to sprite onMouseDown && onTap event
@@ -61,10 +65,7 @@ public class MadLevelTesterOption : MonoBehaviour {
             }
             
             // play animation
-            var controller = GameObject.FindGameObjectWithTag("GameController");
-            var script = controller.GetComponent<MadLevelTesterController>();
-            script.PlayFinishAnimation(sprite, completed);
-            
+            controller.PlayFinishAnimation(sprite, completed);
             StartCoroutine(WaitForAnimation());
         };
     }
@@ -93,15 +94,15 @@ public class MadLevelTesterOption : MonoBehaviour {
             if (MadLevel.hasExtension && MadLevel.CanContinue()) { // check if this level has extension and can continue it
                 // then continue
                 MadLevel.Continue();
-            } else if (MadLevel.HasNext(MadLevel.Type.Level)) { // if not extension, check if there is next level of type level
+            } else if (MadLevel.HasNextInGroup(MadLevel.Type.Level)) { // if not extension, check if there is next level of type level
                 // load it
-                MadLevel.LoadNext(MadLevel.Type.Level);
+                MadLevel.LoadNextInGroup(MadLevel.Type.Level);
             } else { // otherwise load level select screen
-                MadLevel.LoadLevelByName("Level Select");
+                controller.LoadLevelSelectScreen();
             }
         } else {
             // if not completed go back to the menu
-            MadLevel.LoadLevelByName("Level Select");
+            controller.LoadLevelSelectScreen();
         }
     }
 

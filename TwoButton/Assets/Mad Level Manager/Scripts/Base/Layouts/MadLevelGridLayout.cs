@@ -55,8 +55,6 @@ public class MadLevelGridLayout : MadLevelAbstractLayout {
     public bool pagesOffsetFromResolution = true;
     public float pagesOffsetManual = 1000;
     
-    public bool lookAtLastLevel = true;
-
     [HideInInspector] [NonSerialized] public bool dirty;
     [HideInInspector] [NonSerialized] public bool deepClean;
     private int hash; // for dirtness check
@@ -157,12 +155,9 @@ public class MadLevelGridLayout : MadLevelAbstractLayout {
     }
     
     protected override void Start() {
-        base.Start();
-        
         UpdateLayout(false);
-        if (lookAtLastLevel) {
-            LookAtLastPlayedLevel();
-        }
+
+        base.Start();
     }
     
     protected override void Update() {
@@ -239,7 +234,7 @@ public class MadLevelGridLayout : MadLevelAbstractLayout {
     }
     
     int PageIndexForLevel(string levelName) {
-        int index = configuration.FindLevelIndex(MadLevel.Type.Level, levelName);
+        int index = configuration.FindLevelIndex(MadLevel.Type.Level, configurationGroup, levelName);
         int levelsPerPage = gridWidth * gridHeight;
         int pageIndex = index / levelsPerPage;
         return pageIndex;

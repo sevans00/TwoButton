@@ -8,7 +8,7 @@ public class OneWayBlock : MonoBehaviour {
 	private float maxY;
 	public void Start () {
 		boxcollider = GetComponent<BoxCollider2D>();
-		maxY = transform.position.y + boxcollider.center.y + boxcollider.size.y/2;
+		maxY = transform.position.y + boxcollider.center.y + boxcollider.size.y/2 - 0.0f;
 	}
 
 	public void FixedUpdate () {
@@ -16,8 +16,8 @@ public class OneWayBlock : MonoBehaviour {
 		if ( player == null ) {
 			return;
 		}
-		//For now, just check vertical:  //Add-on check for if the position will be further down next step
-		if ( player.transform.position.y >= maxY + player.GetComponent<SpritePhysics>().velocity.y) { 
+		//For now, just check vertical:
+		if ( player.transform.position.y >= maxY ) { 
 			boxcollider.isTrigger = false;
 		} else {
 			boxcollider.isTrigger = true;

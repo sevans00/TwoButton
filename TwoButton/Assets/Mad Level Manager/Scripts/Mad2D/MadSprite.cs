@@ -28,6 +28,7 @@ public class MadSprite : MadNode {
     // ===========================================================
 
     public MadPanel panel;
+    private MadPanel cachedPanel;
     
     public bool visible = true;
     public bool editorSelectable = true; // is selectable in the editor
@@ -288,13 +289,14 @@ public class MadSprite : MadNode {
     protected virtual void OnEnable() {
         if (panel == null) {
             panel = MadPanel.FirstOrNull(transform);
+            cachedPanel = panel;
+        } else {
+            cachedPanel = null;
         }
 
-        // enable is called on script reload
-        if (!MadTransform.instantiating) { // not possible to register sprite when instantiating
+        if (!MadTransform.instantiating) {
             RegisterSprite();
         }
-        
         UpdateTexture();
     }
     
@@ -306,7 +308,7 @@ public class MadSprite : MadNode {
     
     void OnDisable() {
         // disable is called on script reload
-        UnregisterSprite();
+        UnregisterSprite(panel);
     }
     
     protected virtual void Start() {
@@ -316,7 +318,19 @@ public class MadSprite : MadNode {
     
     void OnDestroy() {
         // destroy can be called without disable
-        UnregisterSprite();
+        UnregisterSprite(panel);
+    }
+
+    void RegisterSpriteIfNeeded() {
+        if (panel != cachedPanel) {
+            if (cachedPanel != null) {
+                UnregisterSprite(cachedPanel);
+            }
+            cachedPanel = panel;
+            if (panel != null) {
+                RegisterSprite();
+            }
+        }
     }
     
     void RegisterSprite() {
@@ -327,13 +341,15 @@ public class MadSprite : MadNode {
         }
     }
     
-    void UnregisterSprite() {
+    void UnregisterSprite(MadPanel panel) {
         if (panel != null) {
             panel.sprites.Remove(this);
         }
     }
     
     protected void Update() {
+        RegisterSpriteIfNeeded();
+
         UpdateTexture();
     
         if (panel == null) {

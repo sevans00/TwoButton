@@ -27,11 +27,6 @@ public class MadLevelFreeLayout : MadLevelAbstractLayout {
     public Vector2 offset = new Vector2(16, -16);
     public Texture2D backgroundTexture;
     
-    // if true it will look at last played level
-    public bool lookAtLastLevel = true;
-    // if above cannot be found, will look at the defined level type
-    public LookLevelType lookAtLevel = LookLevelType.FirstLevel;
-
     public MadFreeDraggable draggable {
         get {
             if (_draggable == null) {
@@ -173,18 +168,6 @@ public class MadLevelFreeLayout : MadLevelAbstractLayout {
     protected override void OnEnable() {
         base.OnEnable();
 
-        if (Application.isPlaying) {
-            bool looked = false;
-            if (lookAtLastLevel) {
-                looked = LookAtLastPlayedLevel();
-            }
-
-            if (!looked) {
-                // need to look at other type of level
-                LookAtLevel();
-            }
-        }
-        
         configuration.callbackChanged = () => {
             if (this != null) {
                 Build();
@@ -193,63 +176,6 @@ public class MadLevelFreeLayout : MadLevelAbstractLayout {
         
         if (IsDirty()) {
             Build();
-        }
-    }
-
-    private void LookAtLevel() {
-        switch (lookAtLevel) {
-            case LookLevelType.FirstLevel:
-                LookAtFirstLevel();
-                break;
-            case LookLevelType.LastUnlocked:
-                LookAtLastUnlockedLevel();
-                break;
-            case LookLevelType.LastCompleted:
-                LookAtLastCompletedLevel();
-                break;
-            default:
-                Debug.LogError("Unknown level type: " + lookAtLevel);
-                break;
-        }
-    }
-
-    private void LookAtLastCompletedLevel() {
-        var lastCompleted =
-            from l in MadLevel.activeConfiguration.levels
-            where l.groupId == configurationGroup
-                && l.type == MadLevel.Type.Level
-                && MadLevelProfile.IsCompleted(l.name)
-            orderby l.order descending
-            select l;
-        var lastCompletedLevel = lastCompleted.FirstOrDefault();
-        if (lastCompletedLevel != null) {
-            var lastCompletedIcon = MadLevelLayout.current.GetIcon(lastCompletedLevel.name);
-            LookAtIcon(lastCompletedIcon);
-        } else {
-            LookAtFirstLevel();
-        }
-    }
-
-    private void LookAtFirstLevel() {
-        var firstIcon = MadLevelLayout.current.GetFirstIcon();
-        LookAtIcon(firstIcon);
-    }
-
-    private void LookAtLastUnlockedLevel() {
-        var firstUnlocked =
-            from l in MadLevel.activeConfiguration.levels
-            where l.groupId == configurationGroup
-                && l.type == MadLevel.Type.Level
-                && MadLevelProfile.IsLockedSet(l.name)
-                && MadLevelProfile.IsLocked(l.name) == false
-            orderby l.order descending
-            select l;
-        var firstUnlockedLevel = firstUnlocked.FirstOrDefault();
-        if (firstUnlockedLevel != null) {
-            var firstUnlockedIcon = MadLevelLayout.current.GetIcon(firstUnlockedLevel.name);
-            LookAtIcon(firstUnlockedIcon);
-        } else {
-            LookAtFirstLevel();
         }
     }
 
@@ -373,12 +299,6 @@ public class MadLevelFreeLayout : MadLevelAbstractLayout {
     // ===========================================================
     // Inner and Anonymous Classes
     // ===========================================================
-
-    public enum LookLevelType {
-        FirstLevel,
-        LastUnlocked,
-        LastCompleted,
-    }
 
 }
 

@@ -1,12 +1,8 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Game.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\GameAnalytics\Plugins\Framework\Scripts\GA_Request.cs">
     <Files>
-      <File FileName="Assets\Scripts\UI\EndOfLevelMenu.cs" Line="52" Column="7" />
-      <File FileName="Assets\Scripts\Game.cs" Line="36" Column="113" />
-      <File FileName="Assets\Scripts\JumperSMB.cs" Line="4" Column="29" />
-      <File FileName="Assets\Scripts\Jumper2.cs" Line="3" Column="23" />
-      <File FileName="Assets\Mad Level Manager\Scripts\Base\MadLevelConfiguration.cs" Line="272" Column="40" />
+      <File FileName="Assets\GameAnalytics\Plugins\Framework\Scripts\GA_Request.cs" Line="190" Column="5" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

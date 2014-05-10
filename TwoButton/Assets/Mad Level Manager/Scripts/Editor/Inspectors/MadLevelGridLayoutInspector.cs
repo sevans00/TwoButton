@@ -48,8 +48,6 @@ public class MadLevelGridLayoutInspector : MadLevelAbstractLayoutInspector {
     SerializedProperty pagesOffsetFromResolution;
     SerializedProperty pagesOffsetManual;
     
-    SerializedProperty lookAtLastLevel;
-    
     SerializedProperty hideManagerdObjects;
 
     MadLevelGridLayout script;        
@@ -95,8 +93,6 @@ public class MadLevelGridLayoutInspector : MadLevelAbstractLayoutInspector {
         
         pagesOffsetFromResolution = serializedObject.FindProperty("pagesOffsetFromResolution");
         pagesOffsetManual = serializedObject.FindProperty("pagesOffsetManual");
-        
-        lookAtLastLevel = serializedObject.FindProperty("lookAtLastLevel");
         
         configuration = serializedObject.FindProperty("configuration");
         hideManagerdObjects = serializedObject.FindProperty("hideManagedObjects");
@@ -208,9 +204,10 @@ public class MadLevelGridLayoutInspector : MadLevelAbstractLayoutInspector {
         GUILayout.Label("Mechanics", "HeaderLabel");
         
         MadGUI.Indent(() => {
-            MadGUI.PropertyField(lookAtLastLevel, "Look At Last Level", "When scene is loaded, it will automatically "
-                + "go to the page of previously played level (but only if previous scene is of type Level.");
+            LookAtLastLevel();
+            EditorGUILayout.Space();
             HandleMobileBack();
+            EditorGUILayout.Space();
             TwoStepActivation();
         });
         

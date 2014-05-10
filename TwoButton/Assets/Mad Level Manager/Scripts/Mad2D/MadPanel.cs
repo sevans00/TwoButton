@@ -63,7 +63,7 @@ public class MadPanel : MadNode {
         }
     }
 
-    Camera currentCamera {
+    public Camera currentCamera {
         get {
             if (_currentCamera == null || (_currentCamera.cullingMask & (1 << gameObject.layer)) == 0) {
                 _currentCamera = null;
@@ -112,15 +112,16 @@ public class MadPanel : MadNode {
     // Methods
     // ===========================================================
 
-    void Awake() {
-        panels.Add(this);
+    public Vector3 WorldToPanel(Camera worldCamera, Vector3 worldPos) {
+        var pos = worldCamera.WorldToScreenPoint(worldPos);
+        pos = currentCamera.ScreenToWorldPoint(pos);
+        pos.z = 0;
+        return pos;
     }
 
-    void OnDestroy() {
-        panels.Remove(this);
-    }
-    
     void OnEnable() {
+        panels.Add(this);
+
         materialStore = GetComponent<MadMaterialStore>();
         
         var meshRenderer = gameObject.GetComponent<MeshRenderer>();
@@ -133,6 +134,10 @@ public class MadPanel : MadNode {
             MadGameObject.SafeDestroy(meshFilter);
         }
 
+    }
+
+    void OnDisable() {
+        panels.Remove(this);
     }
 
     void Update() {
@@ -301,6 +306,10 @@ public class MadPanel : MadNode {
         } else {
             return null;
         }
+    }
+
+    public static MadPanel[] All() {
+        return panels.ToArray();
     }
 
     // ===========================================================

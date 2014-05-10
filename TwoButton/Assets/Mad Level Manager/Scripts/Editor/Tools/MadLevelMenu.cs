@@ -84,22 +84,29 @@ public class MadLevelMenu : MonoBehaviour {
     
     static Transform ActiveParentOrPanel() {
         Transform parentTransform = null;
-        
+
         var transforms = Selection.transforms;
         if (transforms.Length > 0) {
             var firstTransform = transforms[0];
-            if (MadTransform.FindParent<MadPanel>(firstTransform) != null) {
+            if (firstTransform.GetComponent<MadPanel>() != null || MadTransform.FindParent<MadPanel>(firstTransform) != null) {
                 parentTransform = firstTransform;
             }
         }
-        
+
         if (parentTransform == null) {
-            var panel = MadPanel.UniqueOrNull();
+            var selected = Selection.activeGameObject;
+            Transform selectedTransform = null;
+
+            if (selected != null) {
+                selectedTransform = selected.transform;
+            }
+
+            var panel = MadPanel.FirstOrNull(selectedTransform);
             if (panel != null) {
                 parentTransform = panel.transform;
             }
         }
-        
+
         return parentTransform;
     }
     
@@ -189,7 +196,7 @@ public class MadLevelMenu : MonoBehaviour {
     [MenuItem("Tools/Mad Level Manager/About", false, 1001)]
     static void OpenAbout() {
         EditorUtility.DisplayDialog("Mad Level Manager",
-            "Copyright (c) Mad Pixel Machine\nVersion: 2.0.0-rc1\n\nhttp://madlevelmanager.madpixelmachine.com/",
+            "Copyright (c) Mad Pixel Machine\nVersion: 2.0.1\n\nhttp://madlevelmanager.madpixelmachine.com/",
             "OK");
     }
     

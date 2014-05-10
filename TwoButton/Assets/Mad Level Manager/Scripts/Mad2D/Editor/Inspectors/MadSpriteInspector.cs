@@ -89,7 +89,7 @@ public class MadSpriteInspector : Editor {
         liveRight = serializedObject.FindProperty("liveRight");
         liveTop = serializedObject.FindProperty("liveTop");
 
-        gridTexture = Resources.Load("MadLevelManager/Textures/grid", typeof(Texture2D)) as Texture2D;
+        gridTexture = Resources.Load("Mad2D/Textures/grid", typeof(Texture2D)) as Texture2D;
         whiteTexture = Resources.Load("Textures/white", typeof(Texture2D)) as Texture2D;
 
         

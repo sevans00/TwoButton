@@ -293,7 +293,12 @@ public class SpritePhysics : MonoBehaviour {
 	//Register a hit
 	private void registerHit ( RaycastHit2D hit, HitDirection direction ) {
 		if ( hit.collider != null ) { //Hey, a collision happened!
-			hit.collider.BroadcastMessage("OnSpritePhysicsCollision", collider2D, SendMessageOptions.DontRequireReceiver);
+			if ( hit.collider.GetComponent<CrumbleBlock>() != null ) {
+				//Debug.Log("Collider!");
+				hit.collider.GetComponent<CrumbleBlock>().OnSpritePhysicsCollision(collider2D);
+			} else {
+				//hit.collider.BroadcastMessage("OnSpritePhysicsCollision", collider2D, SendMessageOptions.DontRequireReceiver);
+			}
 		}
 		if ( hit.collider.gameObject.layer == 8 ) { //Kill layer
 			BroadcastMessage("Kill", SendMessageOptions.DontRequireReceiver); //Kill!

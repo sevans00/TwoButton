@@ -127,7 +127,7 @@ public class MadRootNode : MadNode {
         y = y * 2 - 1;
         
         float ratio = screenWidth / (float) screenHeight;
-        var pos = new Vector3(x * ratio, y, transform.position.z);
+        var pos = transform.position + new Vector3(x * ratio, y, transform.position.z);
         return pos;
     }
 

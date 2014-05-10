@@ -195,10 +195,10 @@ public class MadLevel  {
     // ===========================================================
     
     /// <summary>
-    /// Reloads current level.
+    /// Reloads current level. If this level has an extension, it will load first scene of its extension.
     /// </summary>
     public static void ReloadCurrent() {
-        Application.LoadLevel(Application.loadedLevel);
+        MadLevel.LoadLevelByName(currentLevelName);
     }
     
     /// <summary>

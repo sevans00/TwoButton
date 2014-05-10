@@ -31,7 +31,7 @@ public class MadBigMeshRenderer : MonoBehaviour {
     MadList<Vector2> uv = new MadList<Vector2>();
     MadList<MadList<int>> triangleList = new MadList<MadList<int>>();
 
-    private MadDrawCall drawCall;
+    public MadDrawCall drawCall;
 
     // ===========================================================
     // Methods for/from SuperClass/Interfaces
@@ -63,6 +63,10 @@ public class MadBigMeshRenderer : MonoBehaviour {
 
     void Update() {
         MadTransform.SetLocalScale(drawCall.transform, transform.lossyScale);
+
+        drawCall.transform.position = transform.position;
+        drawCall.transform.rotation = transform.rotation;
+
         drawCall.gameObject.layer = gameObject.layer;
     }
 

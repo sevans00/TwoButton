@@ -89,6 +89,12 @@ public class MadLevelLoadingScreen : MonoBehaviour {
     #region Unity Methods
 
     private void Start() {
+#if !(UNITY_3_5 || UNITY_4_0 || UNITY_4_0_1)
+        if (!Application.HasProLicense()) {
+            asyncLoading = false;
+        }
+#endif
+
         if (!MadLevel.hasExtension) {
             InitTestMode();
         }

@@ -48,16 +48,12 @@ public class MadAnchorInspector : Editor {
         var position = so.FindProperty("position");
         var anchorObject = so.FindProperty("anchorObject");
         var anchorCamera = so.FindProperty("anchorCamera");
-        var moveIn3D = so.FindProperty("moveIn3D");
-        var faceCamera = so.FindProperty("faceCamera");
         
         MadGUI.PropertyField(mode, "Mode");
         switch ((MadAnchor.Mode) mode.enumValueIndex) {
             case MadAnchor.Mode.ObjectAnchor:
                 MadGUI.PropertyField(anchorObject, "Anchor Object");
                 MadGUI.PropertyField(anchorCamera, "Anchor Camera");
-                MadGUI.PropertyField(moveIn3D, "Move In 3D");
-                MadGUI.PropertyField(faceCamera, "Face Camera", "Bar graphics will always face anchor camera.");
                 break;
                 
             case MadAnchor.Mode.ScreenAnchor:

@@ -252,19 +252,26 @@ public class MadLevelConfiguration : ScriptableObject {
     public int FindLevelIndex(MadLevel.Type type, string levelName) {
         return FindLevelIndex(type, -1, levelName);
     }
-    
+
     public int FindLevelIndex(MadLevel.Type type, int groupId, string levelName) {
-        var query = from l in levels where l.type == type orderby l.order ascending select l;
-        
+        List<Level> list;
+        if (groupId == -1) {
+            var query = from l in levels where l.type == type orderby l.order ascending select l;
+            list = query.ToList();
+        } else {
+            var query = from l in levels where l.type == type && l.groupId == groupId orderby l.order ascending select l;
+            list = query.ToList();
+        }
+
         int index = 0;
-        foreach (var level in query) {
+        foreach (var level in list) {
             if (level.name == levelName) {
                 return index;
             }
-            
+
             index++;
         }
-        
+
         return -1;
     }
     

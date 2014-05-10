@@ -1,19 +1,23 @@
 require 'rubygems'
 require 'chunky_png'
+require 'pre_alpha_check.rb'
 
 include ChunkyPNG
 
 input = ARGV[0]
 output = ARGV[1]
 
-def if_premultiplied(image)
-	(0..(image.height - 1)).each do |y|
-		(0..(image.width - 1)).each do |x|
-		end
-	end
+if output.nil?
+	puts "Usage: #{$0} input_file output_file"
+	exit 1
 end
 
 image = Image.from_file(input)
+
+if is_premultiplied(image)
+	puts "Image already premultiplied!"
+	exit 1
+end
 
 (0..(image.height - 1)).each do |y|
 	(0..(image.width - 1)).each do |x|
