@@ -255,7 +255,7 @@ public class Jumper2 : MonoBehaviour {
 
 
 	//Kill this jumper
-	void Kill () {
+	protected virtual void Kill () {
 		Debug.Log("Kill recieved!");
 		if ( isDead ) {
 			return;

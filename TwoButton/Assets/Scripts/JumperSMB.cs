@@ -41,6 +41,7 @@ public class JumperSMB : Jumper2 {
 //		airTurnMultiplier = 2.0f;
 //		turnMultiplier    = 2.2f;
 		base.Start ();
+		GA.API.Design.NewEvent("Start:"+"JumperSMB", transform.position);
 	}
 	
 
@@ -316,6 +317,8 @@ public class JumperSMB : Jumper2 {
 		spritePhysics.DoFixedUpdate();
 		//Animate the sprite:
 		GetComponent<CharacterAnimator>().DoFixedUpdate();
+		//Breadcrumb analytics:
+		GA.API.Design.NewEvent("BreadCrumb:"+"JumperSMB", transform.position);
 	}
 
 
@@ -381,6 +384,11 @@ public class JumperSMB : Jumper2 {
 				jump2(JUMP_SPEED * 0.7f);
 			}
 		}
+	}
+
+	protected override void Kill () {
+		GA.API.Design.NewEvent("OnDestroy:"+"JumperSMB", transform.position);
+		base.Kill();
 	}
 
 }

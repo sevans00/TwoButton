@@ -1,8 +1,11 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\GameAnalytics\Plugins\Framework\Scripts\GA_Request.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Jumper2.cs">
     <Files>
-      <File FileName="Assets\GameAnalytics\Plugins\Framework\Scripts\GA_Request.cs" Line="190" Column="5" />
+      <File FileName="Assets\Scripts\Game.cs" Line="34" Column="28" />
+      <File FileName="Assets\GameAnalytics\Plugins\Components\GA_Tracker.cs" Line="113" Column="4" />
+      <File FileName="Assets\Scripts\JumperSMB.cs" Line="391" Column="15" />
+      <File FileName="Assets\Scripts\Jumper2.cs" Line="258" Column="19" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
