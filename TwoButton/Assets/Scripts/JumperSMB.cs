@@ -45,9 +45,6 @@ public class JumperSMB : Jumper2 {
 	}
 	
 
-	delegate void WalljumpDelegate ();
-	WalljumpDelegate walljumpDelegate;
-
 	// Update is called once per frame
 	override protected void FixedUpdate () {
 
