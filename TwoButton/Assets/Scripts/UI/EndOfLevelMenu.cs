@@ -62,11 +62,11 @@ public class EndOfLevelMenu : MonoBehaviour {
 		Hide ();
 		GameObject currentPlayer = GameObject.FindWithTag("Player");
 		if ( currentPlayer != null ) {
-			currentPlayer.transform.position = Game.instance.SpawnPoint.position;
-			currentPlayer.GetComponent<SpritePhysics>().velocity = Vector2.zero; //Reset character
+			Destroy(currentPlayer);
 		}
 		Game.instance.unpause();
 		Game.instance.ResetLevel();
+		Game.instance.spawnPlayer();
 	}
 
 	public void BackToLevelSelect () {

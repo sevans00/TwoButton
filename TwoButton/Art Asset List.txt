@@ -1,0 +1,38 @@
+
+Art asset list:
+
+PNG 128x128
+
+
+Logo:
+
+UI:
+-Checkmark (meaning yes)
+-X (meaning no)
+-Frame
+-Button
+-World/Level Select buttons
+-Left/Right arrows
+-End of Level Summary screen - Angry birds style
+	-Next (arrow pointing right)
+	-Menu (menu)
+	-Retry (Circular arrow)
+	-Clock (It's a clock)
+
+TILES:
+-Stretched spikes
+-One-way tiles
+-Elevator
+-Crumble block - (5 frames)
+
+BACKGROUNDS:
+-A background
+
+CHARACTER:
+-Idle pose (1 frame)
+-Three idle animations (~5 frames each - from Idle to Idle)
+-Run animation (5 frames)
+-Wall-slide (1 frame)
+-Victory Animation (5 frames)
+-Blood splotch and particle gibs
+

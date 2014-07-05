@@ -120,20 +120,15 @@ public class JumperSMB : Jumper2 {
 		}
 		inputRight = rightnew;
 		inputLeft = leftnew;
-
+		//A very hacky way to get the characteranimator to use right and left (for walking into walls)
+		Game.instance.right = inputRight;
+		Game.instance.left = inputLeft;
 
 
 		//Reset jumpcount if on ground
 		if ( onGround ) {
 			jumpCount = 0;
 		}
-
-
-
-
-
-
-
 
 
 
@@ -315,7 +310,7 @@ public class JumperSMB : Jumper2 {
 		//Animate the sprite:
 		GetComponent<CharacterAnimator>().DoFixedUpdate();
 		//Breadcrumb analytics:
-		GA.API.Design.NewEvent("BreadCrumb:"+"JumperSMB", transform.position);
+		//GA.API.Design.NewEvent("BreadCrumb:"+"JumperSMB", transform.position);
 	}
 
 

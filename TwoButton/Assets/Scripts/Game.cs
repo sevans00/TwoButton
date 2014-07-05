@@ -182,7 +182,6 @@ public class Game : MonoBehaviour {
 
 	public void EndLevel () {
 		gameOver = true;
-		pause();
 		Debug.Log("Level Complete!");
 		//float timeElapsed = Time.time - spawnTime;
 		//string formattedTime = string.Empty+(Mathf.Ceil(timeElapsed*100)/100);
@@ -195,9 +194,28 @@ public class Game : MonoBehaviour {
 			}
 		}
 		MadLevelProfile.SetCompleted(MadLevel.currentLevelName, true);
-		endOfLevelMenu.Show();
 		//Analytics:
 		GA.API.Design.NewEvent("Game:Level:"+MadLevel.currentLevelName+":Complete", timeElapsed);
+
+		//Celebrate!
+		GameObject jumper = GameObject.FindGameObjectWithTag("Player");
+		jumper.GetComponent<CharacterAnimator>().spriteAnimator.Play(jumper.GetComponent<CharacterAnimator>().victory_animationName);
+		//Pause player:
+		jumper.GetComponent<JumperSMB>().enabled = false; //This will disable physics and death as well
+		jumper.transform.position -= Vector3.forward;
+
+		_celebrationZoom = Camera.main.orthographicSize;
+		Camera.main.orthographicSize = 3f;
+		//End celebration!
+		Invoke("EndCelebration", 2f);
+		//EndCelebration();
+
+		//pause();
+	}
+	private float _celebrationZoom;
+	public void EndCelebration () {
+		Camera.main.orthographicSize = _celebrationZoom;
+		endOfLevelMenu.Show();
 	}
 	//Not used - endOfLevelMenu is doing this now
 	public void NextLevel () {
@@ -208,15 +226,6 @@ public class Game : MonoBehaviour {
 		} else {
 			MadLevel.LoadLevelByName(MadLevel.currentGroupName);
 		}
-		/*
-		int level = Application.loadedLevel + 1;
-		if ( level >= Application.levelCount ) {
-			level = 0;
-		}
-		Debug.Log("Do Level! "+level);
-		unpause();
-		Application.LoadLevel(level);
-		*/
 	}
 
 	private float timeScale = 1;

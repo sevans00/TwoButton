@@ -26,6 +26,7 @@ public class StarBlock : InteractiveTile {
 	}
 
 	override public void Reset() {
+		got = false;
 		//Tint me if i've been gotten
 		if ( MadLevelProfile.GetLevelBoolean(MadLevel.currentLevelName, "star_"+starId) ) {
 			sprite.color = Color.cyan;
