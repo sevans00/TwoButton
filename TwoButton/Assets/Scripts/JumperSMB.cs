@@ -45,8 +45,9 @@ public class JumperSMB : Jumper2 {
 	}
 	
 
-	// Update is called once per frame
-	override protected void FixedUpdate () {
+	// Update is called once per frame //FixedUpdate
+	protected override void FixedUpdate ()
+	{
 
 		//SET INPUT FLAGS:
 		//Keys:
@@ -311,6 +312,27 @@ public class JumperSMB : Jumper2 {
 		GetComponent<CharacterAnimator>().DoFixedUpdate();
 		//Breadcrumb analytics:
 		//GA.API.Design.NewEvent("BreadCrumb:"+"JumperSMB", transform.position);
+
+		//LOCK POSITION TO CAMERA BOUNDARIES:
+		//Lock to camera boundaries:
+		CameraFollow cameraFollow = Camera.main.GetComponent<CameraFollow>();
+		Vector3 boundedPosition = transform.position;
+		if ( cameraFollow.boundaryPoints == 1 ) {
+			if ( transform.position.x < cameraFollow.boundaryPoint1.x + 0.64f ) {
+				boundedPosition.x = cameraFollow.boundaryPoint1.x + 0.64f;
+				transform.position = boundedPosition;
+			}
+		}
+		if ( cameraFollow.boundaryPoints == 2 ) {
+			if ( transform.position.x < cameraFollow.boundaryPoint1.x + 0.64f ) {
+				boundedPosition.x = cameraFollow.boundaryPoint1.x + 0.64f;
+				transform.position = boundedPosition;
+			}
+			if ( transform.position.x > cameraFollow.boundaryPoint2.x - 0.64f) {
+				boundedPosition.x = cameraFollow.boundaryPoint2.x - 0.64f;
+				transform.position = boundedPosition;
+			}
+		}
 	}
 
 

@@ -106,7 +106,34 @@ public class SpritePhysics : MonoBehaviour {
 		int layer = 9; //Player layer (we want to ignore this)
 		int layermask = 1 << layer;
 		layermask = ~(layermask);
-		
+
+
+		//-------------- timing --------------------------
+		//Hittest timing (to see if I can speed things up:
+		/*
+		RaycastHit2D testhit;
+		float startTime;
+		float elapsedTime = 0f;
+
+		startTime = Time.realtimeSinceStartup;
+		for ( int kk = 0; kk < 200; kk++ ) {
+			testhit = Physics2D.Raycast( bottomLeft, -Vector2.up, bottomPadding+(2f*Time.deltaTime), layermask );
+		}
+		elapsedTime = Time.realtimeSinceStartup - startTime;
+		Debug.Log("Stopwatch time1: "+elapsedTime);
+
+		startTime = Time.realtimeSinceStartup;
+		int spriteID;
+		tk2dTileMap tilemap = GameObject.FindObjectOfType<tk2dTileMap>();
+		for ( int kk = 0; kk < 200; kk++ ) {
+			spriteID = tilemap.GetTileIdAtPosition(transform.position, 0);
+		}
+		elapsedTime = Time.realtimeSinceStartup - startTime;
+		Debug.Log("Stopwatch time2: "+elapsedTime);
+		*/
+		//-------------- timing --------------------------
+
+
 		//-------------- VERTICAL HITTESTS ------------
 		RaycastHit2D rayhitDownLeft;
 		RaycastHit2D rayhitDownRight;

@@ -1,4 +1,4 @@
-﻿using MadLevelManager;
+using MadLevelManager;
 using UnityEngine;
 using System.Collections;
 
@@ -180,7 +180,7 @@ public class Game : MonoBehaviour {
 		MadLevelProfile.Reset();
 	}
 
-	public void EndLevel () {
+	public void EndLevel (GameObject finishBlock = null) {
 		gameOver = true;
 		Debug.Log("Level Complete!");
 		//float timeElapsed = Time.time - spawnTime;
@@ -197,24 +197,51 @@ public class Game : MonoBehaviour {
 		//Analytics:
 		GA.API.Design.NewEvent("Game:Level:"+MadLevel.currentLevelName+":Complete", timeElapsed);
 
-		//Celebrate!
-		GameObject jumper = GameObject.FindGameObjectWithTag("Player");
-		jumper.GetComponent<CharacterAnimator>().spriteAnimator.Play(jumper.GetComponent<CharacterAnimator>().victory_animationName);
-		//Pause player:
-		jumper.GetComponent<JumperSMB>().enabled = false; //This will disable physics and death as well
-		jumper.transform.position -= Vector3.forward;
+		_finishBlock = finishBlock;
 
-		_celebrationZoom = Camera.main.orthographicSize;
-		Camera.main.orthographicSize = 3f;
-		//End celebration!
-		Invoke("EndCelebration", 2f);
-		//EndCelebration();
-
-		//pause();
+		StartCoroutine("_endLevelAnimCoroutine");
 	}
+	private GameObject _finishBlock;
+	private IEnumerator _endLevelAnimCoroutine () {
+		//Pause player:
+		GameObject jumper = GameObject.FindGameObjectWithTag("Player");
+		jumper.GetComponent<JumperSMB>().enabled = false; //This will disable physics and death as well
+		jumper.transform.position = new Vector3(jumper.transform.position.x, _finishBlock.transform.position.y-0.64f, jumper.transform.position.z);
+
+		jumper.GetComponent<CharacterAnimator>().spriteAnimator.Play(jumper.GetComponent<CharacterAnimator>().idle_animationName);
+		//Face the flag:
+		tk2dSprite sprite = jumper.GetComponent<tk2dSprite>();
+		if ( jumper.transform.position.x < _finishBlock.transform.position.x ) {
+			sprite.scale = new Vector3( 1, sprite.scale.y, sprite.scale.z );
+		}
+		if ( jumper.transform.position.x > _finishBlock.transform.position.x ) {
+			sprite.scale = new Vector3( -1, sprite.scale.y, sprite.scale.z );
+		}
+		//Play flag:
+		_finishBlock.GetComponent<FinishBlock>().PlayFlag();
+
+		yield return new WaitForSeconds(1f);
+
+		//Celebrate!
+		jumper.transform.position -= Vector3.forward;
+		jumper.GetComponent<CharacterAnimator>().spriteAnimator.Play(jumper.GetComponent<CharacterAnimator>().victory_animationName);
+
+		//_celebrationZoom = Camera.main.orthographicSize;
+		//Camera.main.orthographicSize = 3f;
+		//End celebration!
+		//Invoke("EndCelebration", 2f);
+		//EndCelebration();
+		
+		//pause();
+
+		yield return new WaitForSeconds(1.2f);
+
+		EndCelebration();
+	}
+
 	private float _celebrationZoom;
 	public void EndCelebration () {
-		Camera.main.orthographicSize = _celebrationZoom;
+		//Camera.main.orthographicSize = _celebrationZoom;
 		endOfLevelMenu.Show();
 	}
 	//Not used - endOfLevelMenu is doing this now

@@ -66,7 +66,7 @@ public class EndOfLevelMenu : MonoBehaviour {
 		}
 		Game.instance.unpause();
 		Game.instance.ResetLevel();
-		Game.instance.spawnPlayer();
+		Game.instance.spawnPlayer();	
 	}
 
 	public void BackToLevelSelect () {
