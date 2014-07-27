@@ -18,12 +18,8 @@ public class InLevelMenu : MonoBehaviour {
 	void Update () {
 		if ( Input.GetKeyDown ( KeyCode.Escape ) && !MadLevel.currentGroupName.Equals(MadLevel.defaultGroupName) && !endOfLevelMenu.activeSelf ) {
 			if ( inLevelMenu.activeSelf ) {
-				if ( characterSelectScreen.activeSelf ) {
-					characterSelectScreen.SetActive(false);
-				} else {
-					inLevelMenu.SetActive(false);
-					Game.instance.unpause();
-				}
+				inLevelMenu.SetActive(false);
+				Game.instance.unpause();
 			} else {
 				Show();
 			}
@@ -48,6 +44,13 @@ public class InLevelMenu : MonoBehaviour {
 		Hide ();
 	}
 	public void Restart() {
+		CameraPathAnimator pathAnimator = GameObject.FindObjectOfType<CameraPathAnimator>();
+		if ( pathAnimator != null ) {
+			//Debug.LogWarning("Restart camera path");
+			pathAnimator.Seek(0);
+			pathAnimator.Play();
+			return;
+		}
 		Game.instance.RestartLevel();
 		Hide ();
 	}

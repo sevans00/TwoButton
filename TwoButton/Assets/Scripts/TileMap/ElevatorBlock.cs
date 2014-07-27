@@ -16,8 +16,6 @@ public class ElevatorBlock : InteractiveTile {
 	private const int TILE_LEFT = 14;
 	private const int TILE_RIGHT = 12;
 
-	private GameObject[] adjacentElevatorBlocks;
-
 	public void Start () {
 		startPosition = transform.position;
 		startDirection = Vector3.right; //

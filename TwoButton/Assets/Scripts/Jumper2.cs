@@ -261,7 +261,7 @@ public class Jumper2 : MonoBehaviour {
 			return;
 		}
 		isDead = true;
-		Debug.Log("Gameover1");
+		//Debug.Log("Gameover1");
 		//Gibs!
 		if ( gibsPrefab != null ) {
 			Instantiate(gibsPrefab, transform.position, Quaternion.identity);

@@ -3,10 +3,10 @@ using System.Collections;
 
 public class FinishBlock : InteractiveTile {
 
-	tk2dSpriteAnimator animator;
+	public tk2dSpriteAnimator animator;
 
 	void Start () {
-		animator = GetComponent<tk2dSpriteAnimator>();
+
 	}
 
 	void OnSpriteTriggerEnter () {

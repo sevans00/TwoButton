@@ -41,6 +41,12 @@ public class Game : MonoBehaviour {
 			elapsedTimeTextMesh.gameObject.SetActive(true);
 		}
 
+		//Is there a DisableGame object?  If so, we'll want to nto set some things up:
+		if ( GameObject.FindObjectOfType<DisableGame>() != null ) {
+			elapsedTimeTextMesh.gameObject.SetActive(false);
+			return;
+		}
+
 		//No spawn point, don't do anything else:
 		if ( GameObject.FindObjectOfType<SpawnPoint>() == null ) {
 			Debug.LogWarning("Warning - Game could not find spawn point");
@@ -161,7 +167,7 @@ public class Game : MonoBehaviour {
 
 	//Spawn player:
 	public void spawnPlayer (){
-		GameObject jumper = Instantiate(JumperPrefab, SpawnPoint.position, Quaternion.identity) as GameObject;
+		GameObject jumper = Instantiate(JumperPrefab, SpawnPoint.position - Vector3.up*0.64f, Quaternion.identity) as GameObject;
 		Camera.main.GetComponent<CameraFollow>().target = jumper.transform;
 		spawnTime = Time.time;
 		gameOver = false;
@@ -220,7 +226,7 @@ public class Game : MonoBehaviour {
 		//Play flag:
 		_finishBlock.GetComponent<FinishBlock>().PlayFlag();
 
-		yield return new WaitForSeconds(1f);
+		yield return new WaitForSeconds(0.625f);
 
 		//Celebrate!
 		jumper.transform.position -= Vector3.forward;
