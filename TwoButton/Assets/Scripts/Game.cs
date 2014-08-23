@@ -7,7 +7,11 @@ public class Game : MonoBehaviour {
 	public static Game instance;
 
 	public GameObject JumperPrefab;
+	public GameObject jumper;
+	public JumperSMB jumperScript;
 	public Transform SpawnPoint;
+
+	public InteractiveTile [] interactiveTiles;
 
 	public float leftTime = 0;
 	public bool left = false;
@@ -21,7 +25,11 @@ public class Game : MonoBehaviour {
 	public tk2dTextMesh elapsedTimeTextMesh;
 	public EndOfLevelMenu endOfLevelMenu;
 
+	public bool paused = false;
+
 	public bool gameOver = false;
+
+	public bool isGameLevel = false;
 
 	private InteractiveTile [] tiles;
 	// Use this for initialization
@@ -37,19 +45,23 @@ public class Game : MonoBehaviour {
 		MadLevelConfiguration.Level levelName = MadLevel.activeConfiguration.FindFirstForScene(Application.loadedLevelName);
 		if ( levelName != null && MadLevel.currentGroupName == MadLevel.defaultGroupName ) {
 			elapsedTimeTextMesh.gameObject.SetActive(false);
+			isGameLevel = false;
 		} else {
 			elapsedTimeTextMesh.gameObject.SetActive(true);
+			isGameLevel = true;
 		}
 
 		//Is there a DisableGame object?  If so, we'll want to nto set some things up:
 		if ( GameObject.FindObjectOfType<DisableGame>() != null ) {
 			elapsedTimeTextMesh.gameObject.SetActive(false);
+			isGameLevel = false;
 			return;
 		}
 
 		//No spawn point, don't do anything else:
 		if ( GameObject.FindObjectOfType<SpawnPoint>() == null ) {
 			Debug.LogWarning("Warning - Game could not find spawn point");
+			isGameLevel = false; //Can't have a game without a spawn point
 			return;
 		}
 		SpawnPoint = GameObject.FindObjectOfType<SpawnPoint>().transform;
@@ -59,15 +71,43 @@ public class Game : MonoBehaviour {
 
 		//Spawn player:
 		if ( SpawnPoint != null ) {
-			spawnPlayer();	
+			spawnPlayer();
+			Debug.LogWarning("Previewcamera:"+PreviewCamera.instance);
+			if ( PreviewCamera.instance != null ) { //PreviewCamera
+				pause();
+			}
 		} else {
 			Debug.LogWarning("Warning - Game could not find spawn point");
 		}
-
+		
+		//Setup references for FixedUpdates:
+		interactiveTiles = FindObjectsOfType<InteractiveTile>();
 	}
-	
+
+	//Fixed Update is called every physics frame: It handles all other fixedupdates of other objects
+	public void FixedUpdate () {
+		if ( !isGameLevel || paused || gameOver ) { //If this isn't a game level, we don't care
+			return;
+		}
+		//Jumper input and collisions:
+		jumperScript.DoInputAndCollisions();
+		//Interactive objects:
+		foreach ( InteractiveTile interactiveTile in interactiveTiles ) {
+			interactiveTile.DoFixedUpdate();
+		}
+		//Jumper elevator update:
+		jumperScript.DoElevatorCheck();
+		//Jumper regular update:
+		jumperScript.DoFixedUpdate();
+	}
+
+
 	// Update is called once per frame
 	void Update () {
+		if ( paused ) {
+			return;
+		}
+
 		if ( Input.GetKey(KeyCode.W) ) {
 			jump = true;
 		} else {
@@ -121,7 +161,7 @@ public class Game : MonoBehaviour {
 	}
 
 	public void updateElapsedTime () {
-		if ( !gameOver ) {
+		if ( !gameOver && !paused ) {
 			timeElapsed = Time.time - spawnTime;
 			timeElapsed = (Mathf.Ceil(timeElapsed*100)/100);
 			elapsedTimeTextMesh.text = string.Format("{0:0.00}", timeElapsed);
@@ -153,7 +193,7 @@ public class Game : MonoBehaviour {
 	}
 	IEnumerator doGameOver() {
 		gameOver = true;
-		yield return new WaitForSeconds(0.8f);
+		yield return new WaitForSeconds(0.4f);//May not be needed
 		ResetLevel();
 		spawnPlayer();
 	}
@@ -167,7 +207,8 @@ public class Game : MonoBehaviour {
 
 	//Spawn player:
 	public void spawnPlayer (){
-		GameObject jumper = Instantiate(JumperPrefab, SpawnPoint.position - Vector3.up*0.64f, Quaternion.identity) as GameObject;
+		jumper = Instantiate(JumperPrefab, SpawnPoint.position - Vector3.up*0.64f, Quaternion.identity) as GameObject;
+		jumperScript = jumper.GetComponent<JumperSMB>();
 		Camera.main.GetComponent<CameraFollow>().target = jumper.transform;
 		spawnTime = Time.time;
 		gameOver = false;
@@ -188,7 +229,7 @@ public class Game : MonoBehaviour {
 
 	public void EndLevel (GameObject finishBlock = null) {
 		gameOver = true;
-		Debug.Log("Level Complete!");
+		//Debug.Log("Level Complete!");
 		//float timeElapsed = Time.time - spawnTime;
 		//string formattedTime = string.Empty+(Mathf.Ceil(timeElapsed*100)/100);
 		//MadLevelProfile.SetLevelString(MadLevel.currentLevelName, "time", formattedTime);
@@ -210,7 +251,7 @@ public class Game : MonoBehaviour {
 	private GameObject _finishBlock;
 	private IEnumerator _endLevelAnimCoroutine () {
 		//Pause player:
-		GameObject jumper = GameObject.FindGameObjectWithTag("Player");
+		//jumper = GameObject.FindGameObjectWithTag("Player");
 		jumper.GetComponent<JumperSMB>().enabled = false; //This will disable physics and death as well
 		jumper.transform.position = new Vector3(jumper.transform.position.x, _finishBlock.transform.position.y-0.64f, jumper.transform.position.z);
 
@@ -263,13 +304,15 @@ public class Game : MonoBehaviour {
 
 	private float timeScale = 1;
 	public void pause() {
-		if ( timeScale != 0 ) {
-			timeScale = Time.timeScale;
-		}
-		Time.timeScale = 0;
+		paused = true;
+//		if ( timeScale == 0 ) {
+//			timeScale = Time.timeScale;
+//		}
+//		Time.timeScale = 0;
 	}
 	public void unpause() {
-		Time.timeScale = timeScale;
+		paused = false;
+//		Time.timeScale = timeScale;
 	}
 
 

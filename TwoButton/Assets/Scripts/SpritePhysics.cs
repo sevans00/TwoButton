@@ -17,6 +17,7 @@ public class SpritePhysics : MonoBehaviour {
 	public bool hitLeft = false;
 	public bool hitRight = false;
 	public bool hitElevator = false;
+	public ElevatorBlock elevatorHit;
 
 	public int hitTopLayer = -1;
 	public int hitBottomLayer = -1;
@@ -52,9 +53,11 @@ public class SpritePhysics : MonoBehaviour {
 		return new Vector2[] { bottomLeft, bottomRight, topLeft, topRight };
 	}
 
-	// Fixed Update is called once per physics step:
-	//Call this function to perform sprite physics during the Fixed Update of a sprite - will perform movement and set flags
-	public void DoFixedUpdate () {
+
+
+
+	//Perform checks: (Done before interactive tiles are updated)
+	public void DoDetectCollisions () {
 		//Reset flags:
 		hitTop = false;
 		hitBottom = false;
@@ -68,15 +71,29 @@ public class SpritePhysics : MonoBehaviour {
 		hitRightLayer = -1;
 		//Update gravity:
 		if ( !onGround ) {
-			velocity += gravity; //TODO: should this be only if not on ground?
+			velocity += gravity;
 		}
 		//Clip max velocity:
 		clipVelocityToMax();
 		//Do Collision Detection:
 		detectCollisions();
+	}
+
+	// Fixed Update is called once per physics step: - Called last
+	//Call this function to perform sprite physics during the Fixed Update of a sprite - will perform movement and set flags
+	public void DoFixedUpdate () {
 		//Update position:
 		updatePosition();
 	}
+	
+	//Perform Elevator check:
+	public void DoElevatorCheck () {
+		//Check for elevators:
+		if ( hitElevator ) {
+			this.transform.position += elevatorHit.currentDirection * elevatorHit.speed * Time.deltaTime;
+		}
+	}
+
 
 
 	//Detects current and future collisions and clips velocity if velocity will cause overlap
@@ -327,7 +344,7 @@ public class SpritePhysics : MonoBehaviour {
 				//hit.collider.BroadcastMessage("OnSpritePhysicsCollision", collider2D, SendMessageOptions.DontRequireReceiver);
 			}
 		}
-		if ( hit.collider.gameObject.layer == 8 ) { //Kill layer
+		if ( hit.collider.gameObject.layer == 8 ) { //Kill layer, ala Discworld
 			BroadcastMessage("Kill", SendMessageOptions.DontRequireReceiver); //Kill!
 			return;
 		}
@@ -348,12 +365,15 @@ public class SpritePhysics : MonoBehaviour {
 			break;
 		}
 		if ( hit.collider.gameObject.layer == LayerMask.NameToLayer("Elevator") && !hitElevator) {
-			//Debug.Log("Hit elevator!");
+			Debug.LogWarning("Hit elevator!");
 			hitElevator = true;
-			ElevatorBlock elevator = hit.collider.gameObject.GetComponent<ElevatorBlock>();
-			this.transform.position += elevator.currentDirection * elevator.speed * Time.deltaTime;
-			if ( elevator.currentDirection.Equals ( Vector3.down ) && direction == HitDirection.Bottom ) {
+			elevatorHit = hit.collider.gameObject.GetComponent<ElevatorBlock>();
+			if ( elevatorHit.currentDirection.Equals ( Vector3.down ) && direction == HitDirection.Bottom ) {
 				onGround = true;
+			}
+			if ( elevatorHit.currentDirection.Equals ( Vector3.down ) && direction == HitDirection.Top ) {
+				//Set vertical velocity to the elevator's:
+				velocity.y = elevatorHit.currentDirection.y * elevatorHit.speed;
 			}
 		}
 	}

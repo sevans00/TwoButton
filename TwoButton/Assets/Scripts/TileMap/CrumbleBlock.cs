@@ -10,6 +10,16 @@ public class CrumbleBlock : InteractiveTile {
 		animator.Stop();
 	}
 
+	//Pause code:
+	public void Update () {
+		if ( Game.instance.paused && triggered && animator.IsPlaying( animator.CurrentClip ) ) {
+			animator.Pause();
+		}
+		if ( !Game.instance.paused && triggered && animator.Paused ) {
+			animator.Resume();
+		}
+	}
+
 	public bool triggered = false;
 	public void OnSpritePhysicsCollision ( Collider2D other ) {
 		if ( triggered ) {

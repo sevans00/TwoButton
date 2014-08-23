@@ -42,7 +42,7 @@ public class ElevatorBlock : InteractiveTile {
 		currentDirection = startDirection;
 	}
 
-	public void FixedUpdate () {
+	override public void DoFixedUpdate () {
 		//Check for turns:
 		ChangeDirectionCheck();
 		//Update position:

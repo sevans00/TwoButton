@@ -47,13 +47,22 @@ public class Jumper2 : MonoBehaviour {
 	protected bool isDead = false;
 	
 	// Use this for initialization
+	virtual protected void Awake () {
+		sprite = GetComponent<tk2dSprite>();
+		spritePhysics = GetComponent<SpritePhysics>();
+	}
+
 	virtual protected void Start () {
 		sprite = GetComponent<tk2dSprite>();
 		spritePhysics = GetComponent<SpritePhysics>();
 	}
-	
-	// Update is called once per frame
+
 	virtual protected void FixedUpdate () {
+
+	}
+
+	// Update is called once per frame
+	virtual public void DoFixedUpdate () {
 		//Controls:
 		flag_jump = false;
 		flag_left = false;
@@ -256,7 +265,6 @@ public class Jumper2 : MonoBehaviour {
 
 	//Kill this jumper
 	protected virtual void Kill () {
-		Debug.Log("Kill recieved!");
 		if ( isDead ) {
 			return;
 		}
@@ -264,13 +272,12 @@ public class Jumper2 : MonoBehaviour {
 		//Debug.Log("Gameover1");
 		//Gibs!
 		if ( gibsPrefab != null ) {
-			Instantiate(gibsPrefab, transform.position, Quaternion.identity);
+			Instantiate(gibsPrefab, transform.position+Vector3.back, Quaternion.identity);
 		}
 		Destroy(gameObject);
-		Debug.Log("Gameover2");
-		if ( Game.instance != null ) {
-			Game.instance.GameOver();
-		}
+//		if ( Game.instance != null ) {
+//			Game.instance.GameOver();
+//		}
 		//Analytics:
 		GA.API.Design.NewEvent("Game:Level:"+MadLevel.currentLevelName+":Death", transform.position);
 	}

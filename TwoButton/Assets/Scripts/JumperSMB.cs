@@ -1,7 +1,65 @@
-﻿using UnityEngine;
+﻿using MadLevelManager;
+using UnityEngine;
 using System.Collections;
 
-public class JumperSMB : Jumper2 {
+public class JumperSMB : MonoBehaviour {
+
+
+	
+	public GameObject gibsPrefab;
+
+	//Getter for onGround:
+	public bool onGround {
+		get{
+			if ( spritePhysics != null) {
+				return spritePhysics.onGround;
+			}
+			return false; }
+		set{
+			spritePhysics.onGround = value;
+		}
+	}
+	
+	public tk2dSprite sprite;
+	public SpritePhysics spritePhysics;
+	
+	public float JUMP_SPEED = 25.0f;
+	
+	public float walkAccelleration = 0.9f;
+	public float airAccelleration = 2.0f; //
+	public float turnMultiplier = 1.2f;
+	public float airTurnMultiplier = 1.2f;
+	public float MAX_SPEED = 20.0f;
+	
+	public float WALL_SLIDE_SPEED = 5f;
+	
+	protected bool flag_left = false;
+	protected bool flag_right = false;
+	protected bool flag_jump = false;
+	
+	//For wall-jumping
+	protected float last_jump_time = 0f;
+	
+	//Double-jumping:
+	public int MaxJumps = 1;
+	protected int jumpCount = 0;
+	
+	//Avoid triggering death too many times:
+	protected bool isDead = false;
+	
+	//Wall slide:
+	protected float lastWallSlideTime = 0f;
+
+
+
+
+
+
+
+
+
+
+
 
 	private bool onGroundLastFrame = false;
 	private float lastLandingTime = 0f;
@@ -34,20 +92,25 @@ public class JumperSMB : Jumper2 {
 	private float total_walljump_stickyfriction_time = 0.15f; //The little "mini-animation" of character preparing to launch
 	private float max_walljump_betweenbutton_time = 0.0f; //MaxTime between alternate button presses (make it easier to walljump)
 
-	protected override void Start ()
+	protected void Awake ()
 	{
 //		walkAccelleration = 1.0f;
 //		airAccelleration  = 2.0f;
 //		airTurnMultiplier = 2.0f;
 //		turnMultiplier    = 2.2f;
-		base.Start ();
 		GA.API.Design.NewEvent("Start:"+"JumperSMB", transform.position);
+		sprite = GetComponent<tk2dSprite>();
+		spritePhysics = GetComponent<SpritePhysics>();
 	}
 	
 
+
 	// Update is called once per frame //FixedUpdate
-	protected override void FixedUpdate ()
+	public void DoInputAndCollisions ()
 	{
+		if ( isDead || Game.instance.gameOver ) {
+			return;
+		}
 
 		//SET INPUT FLAGS:
 		//Keys:
@@ -158,20 +221,8 @@ public class JumperSMB : Jumper2 {
 			onGround = false;
 			jump();
 		}
-		if ( controllableHeightJumps ) {
-			//Ground Jump Height Control:
-			if ( !onGround && !leftJump && leftJumpLastFrame && spritePhysics.velocity.y > 0 ) {
-				spritePhysics.velocity.y = -spritePhysics.gravity.y;
-			}
-			if ( !onGround && !rightJump && rightJumpLastFrame && spritePhysics.velocity.y > 0 ) {
-				spritePhysics.velocity.y = -spritePhysics.gravity.y;
-			}
-		}
 		leftJumpLastFrame = leftJump;
 		rightJumpLastFrame = rightJump;
-
-
-
 
 		//Wall slide:
 		bool wallSlide_right = false;
@@ -289,13 +340,6 @@ public class JumperSMB : Jumper2 {
 		}
 
 
-
-
-
-
-
-
-
 		onGroundLastFrame = onGround;
 
 		//Clamp x speed:
@@ -306,6 +350,16 @@ public class JumperSMB : Jumper2 {
 			}
 			spritePhysics.velocity = new Vector2(sign*MAX_SPEED, spritePhysics.velocity.y);
 		}
+		DoDetectCollisions();
+	}
+	
+	
+	public void DoDetectCollisions () {
+		spritePhysics.DoDetectCollisions();
+	}
+
+	//ACTUAL FIXED UPDATE HERE:
+	public void DoFixedUpdate() {
 		//Call Sprite physics to do the actual movement and set flags for next update:
 		spritePhysics.DoFixedUpdate();
 		//Animate the sprite:
@@ -334,7 +388,10 @@ public class JumperSMB : Jumper2 {
 			}
 		}
 	}
-
+	
+	public void DoElevatorCheck () {
+		spritePhysics.DoElevatorCheck();
+	}
 
 	//WALL JUMPING:
 	public void doRightWalljump () {
@@ -348,11 +405,23 @@ public class JumperSMB : Jumper2 {
 
 
 
+	virtual public void jump() {
+		jumpCount++;
+		spritePhysics.velocity = new Vector2(spritePhysics.velocity.x, JUMP_SPEED );
+		last_jump_time = Time.time;
+	}
 
 
 	public void jump2( float speed ) {
 		jumpCount++;
 		spritePhysics.velocity = new Vector2(spritePhysics.velocity.x, speed );
+		last_jump_time = Time.time;
+	}
+	
+	public void jumpDirection( Vector2 direction ) {
+		//		jumpCount = 1; //Uncomment to make walljumps reset double jump
+		direction.Normalize();
+		spritePhysics.velocity = new Vector2(spritePhysics.velocity.x + JUMP_SPEED*direction.x, JUMP_SPEED*direction.y );
 		last_jump_time = Time.time;
 	}
 	public void jumpDirection( Vector2 direction, float speed ) {
@@ -364,7 +433,7 @@ public class JumperSMB : Jumper2 {
 
 
 	//Wall slide:
-	override public void doWallSlide() {
+	public void doWallSlide() {
 		//Set wallslide time:
 		if ( !onGround && spritePhysics.hitLeft ) { //Game.instance.left && 
 			sprite.scale = new Vector3( 1, sprite.scale.y, sprite.scale.z ); //Face away from wall
@@ -400,9 +469,68 @@ public class JumperSMB : Jumper2 {
 		}
 	}
 
-	protected override void Kill () {
-		GA.API.Design.NewEvent("OnDestroy:"+"JumperSMB", transform.position);
-		base.Kill();
+
+
+
+
+
+	
+	public void moveLeft() {
+		move (-Vector2.right);
+	}
+	public void moveRight() {
+		move ( Vector2.right);
+	}
+	protected void move( Vector2 direction ) {
+		float sign = signOf(direction.x);
+		float currentSign = signOf(spritePhysics.velocity.x);
+		float v = walkAccelleration;
+		if ( !onGround ) {
+			v = airAccelleration;
+		}
+		if ( currentSign != 0 && currentSign != sign ) {
+			if ( spritePhysics.hitBottomLayer != LayerMask.NameToLayer("Ice") ) { //Turning is harder on ice
+				if ( onGround ) {
+					v *= turnMultiplier;
+				} else { 
+					v *= airTurnMultiplier;
+				}
+			}
+		}
+		spritePhysics.velocity += direction * v;
+	}
+	protected float signOf ( float number ) {
+		if ( number == 0 ) {
+			return 0;
+		}
+		if ( number < 0 ) {
+			return -1;
+		}
+		return 1;
+	}
+
+
+	public void OnWalkedOffEdge() {
+		jumpCount++; //Walking off the edge counts as a jump
+	}
+
+
+	protected void Kill () {
+		if ( isDead ) {
+			return;
+		}
+		isDead = true;
+		//Debug.Log("Gameover1");
+		//Gibs!
+		if ( gibsPrefab != null ) {
+			Instantiate(gibsPrefab, transform.position+Vector3.back, Quaternion.identity);
+		}
+		Destroy(gameObject);
+		//		if ( Game.instance != null ) {
+		//			Game.instance.GameOver();
+		//		}
+		//Analytics:
+		GA.API.Design.NewEvent("Game:Level:"+MadLevel.currentLevelName+":Death", transform.position);
 	}
 
 }

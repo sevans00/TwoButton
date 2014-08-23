@@ -7,17 +7,10 @@ public class CameraFollow : MonoBehaviour {
 	public Transform target;
 
 	//Backgrounds:
-	public GameObject parallaxBG = null;
-	public float parallaxDelta = 0.1f;
-	public Vector2 deltaMovement;
-	public Vector2 previousPosition;
-	public bool _prevPosAssigned = false;
-	public GameObject parallaxBG_near;
-	public float parallaxDelta_near = 0.3f;
-	public GameObject parallaxBG_med;
-	public float parallaxDelta_med = 0.2f;
-	public GameObject parallaxBG_far;
-	public float parallaxDelta_far = 0.1f;
+	public ParallaxBGSection parallaxBGSection;
+	public bool _prevPosAssigned;
+	public Vector3 previousPosition;
+	public Vector3 deltaMovement;
 
 	//Boundary
 	public int boundaryPoints = 0;
@@ -61,25 +54,7 @@ public class CameraFollow : MonoBehaviour {
 
 		//Reset parallax bg:
 		_prevPosAssigned = false;
-		parallaxBG.transform.localPosition = new Vector3 (0,0,20);
-
-		//Choose parallax background:
-		//TODO: This
-		tk2dSprite bgSprite = parallaxBG.GetComponent<tk2dSprite>();
-		switch ( MadLevel.currentGroupName ) {
-		case "(default)":
-			bgSprite.SetSprite("BG_Forest");
-			break;
-		case "World1":
-			bgSprite.SetSprite("BG_Forest");
-			break;
-		case "World2":
-			bgSprite.SetSprite("BG_Mountains");
-			break;
-		case "World3":
-			bgSprite.SetSprite("BG_LavaMountain");
-			break;
-		}
+		parallaxBGSection.reset();
 	}
 	
 	// Update is called once per frame
@@ -91,7 +66,7 @@ public class CameraFollow : MonoBehaviour {
 			}
 
 			//Update delta:
-			//deltaMovement = (Vector2)this.transform.position - (Vector2)target.position;
+			deltaMovement = (Vector2)this.transform.position - (Vector2)target.position;
 
 			//Update position:
 			//this.transform.position = target.position + Vector3.back*10;
@@ -137,19 +112,8 @@ public class CameraFollow : MonoBehaviour {
 			//Parallax thingy:
 			//Update delta:
 			deltaMovement = (Vector2)previousPosition - (Vector2)transform.position;
-			if ( parallaxBG != null ) {
-				parallaxBG.transform.position += (Vector3)deltaMovement*parallaxDelta;
-				//TODO: Switch to texture offsets
-				//k2dSprite parallaxBG_far_tk2dSprite = parallaxBG_far.GetComponent<tk2dSprite>();
-				//parallaxBG_far.renderer.material.GetTexture("_MainTex").wrapMode = TextureWrapMode.Repeat;
-				//parallaxBG_far.renderer.material.SetTextureScale( "_MainTex", Vector2.one);
-				parallaxBG_far.renderer.material.SetTextureOffset( "_MainTex", parallaxDelta_far * deltaMovement + parallaxBG_far.renderer.material.GetTextureOffset("_MainTex") );
-
-				//parallaxBG.transform.position += (Vector3)deltaMovement*parallaxDelta;
-
-//				parallaxBG_med.renderer.material.SetTextureOffset( "_MainTex", deltaMovement * parallaxDelta_med);
-//				parallaxBG_near.renderer.material.SetTextureOffset( "_MainTex", deltaMovement * parallaxDelta_near);
-
+			if ( parallaxBGSection != null ) {
+				parallaxBGSection.setPosition(deltaMovement);
 			}
 		}
 		previousPosition = (Vector2)transform.position;
