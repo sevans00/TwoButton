@@ -17,9 +17,9 @@ public class EndOfLevelMenu : MonoBehaviour {
 	public tk2dTextMesh timeText;
 	public tk2dTextMesh bestTimeText;
 	public tk2dTextMesh bestTimeNewText;
-	public GameObject star1;
-	public GameObject star2;
-	public GameObject star3;
+	public tk2dSprite star1;
+	public tk2dSprite star2;
+	public tk2dSprite star3;
 
 	
 	//Populate the fields
@@ -41,9 +41,17 @@ public class EndOfLevelMenu : MonoBehaviour {
 		timeText.Commit();
 		bestTimeText.text = prevFormattedTime;
 		bestTimeText.Commit();
-		star1.SetActive( MadLevelProfile.GetLevelBoolean(MadLevel.currentLevelName, "star_1", false) );
-		star2.SetActive( MadLevelProfile.GetLevelBoolean(MadLevel.currentLevelName, "star_2", false) );
-		star3.SetActive( MadLevelProfile.GetLevelBoolean(MadLevel.currentLevelName, "star_3", false) );
+
+		SetStars();
+	}
+
+	public void SetStars () {
+		star1.color = Game.instance.starCount.star1.color;
+		star1.SetSprite(Game.instance.starCount.star1.spriteId);
+		star2.color = Game.instance.starCount.star2.color;
+		star2.SetSprite(Game.instance.starCount.star2.spriteId);
+		star3.color = Game.instance.starCount.star3.color;
+		star3.SetSprite(Game.instance.starCount.star3.spriteId);
 	}
 
 

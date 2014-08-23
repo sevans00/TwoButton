@@ -24,6 +24,7 @@ public class Game : MonoBehaviour {
 	public float timeElapsed;
 	public tk2dTextMesh elapsedTimeTextMesh;
 	public EndOfLevelMenu endOfLevelMenu;
+	public StarCount starCount;
 
 	public bool paused = false;
 
@@ -45,9 +46,12 @@ public class Game : MonoBehaviour {
 		MadLevelConfiguration.Level levelName = MadLevel.activeConfiguration.FindFirstForScene(Application.loadedLevelName);
 		if ( levelName != null && MadLevel.currentGroupName == MadLevel.defaultGroupName ) {
 			elapsedTimeTextMesh.gameObject.SetActive(false);
+			starCount.gameObject.SetActive(false);
 			isGameLevel = false;
 		} else {
 			elapsedTimeTextMesh.gameObject.SetActive(true);
+			starCount.gameObject.SetActive(true);
+			starCount.Reset();
 			isGameLevel = true;
 		}
 
