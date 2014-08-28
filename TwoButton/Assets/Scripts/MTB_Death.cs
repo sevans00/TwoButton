@@ -24,7 +24,7 @@ public class MTB_Death : MonoBehaviour {
 		}
 		//yield return new WaitForFixedUpdate();
 		//speed = gravity;
-		Vector3 bottomOfFrame = new Vector3(transform.position.x, Camera.main.ViewportToWorldPoint(Vector3.zero).y, transform.position.z);
+		Vector3 bottomOfFrame = new Vector3(transform.position.x, Camera.main.ViewportToWorldPoint(Vector3.zero).y-0.64f, transform.position.z);
 		while ( transform.position.y > bottomOfFrame.y ) {
 			transform.position = Vector3.MoveTowards(transform.position, bottomOfFrame, Time.deltaTime * Mathf.Abs(speed));
 			speed += gravity;

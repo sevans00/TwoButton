@@ -22,6 +22,7 @@ public class Game : MonoBehaviour {
 	
 	public float spawnTime = 0f;
 	public float timeElapsed;
+	public float displayTime;
 	public tk2dTextMesh elapsedTimeTextMesh;
 	public EndOfLevelMenu endOfLevelMenu;
 	public StarCount starCount;
@@ -29,8 +30,13 @@ public class Game : MonoBehaviour {
 	public bool paused = false;
 
 	public bool gameOver = false;
+	public bool endLevel = false;
 
 	public bool isGameLevel = false;
+
+	public Camera mainCamera;
+
+	public PreviewCamera previewCamera;
 
 	private InteractiveTile [] tiles;
 	// Use this for initialization
@@ -41,6 +47,9 @@ public class Game : MonoBehaviour {
 	}
 
 	void OnLevelWasLoaded () {
+		//Disable preview camera:
+		previewCamera.camera.enabled = false;
+
 		//Debug.Log("Level loaded!");
 		//Debug to check if the level is even present - we don't care, we just don't want the if statement complaining
 		MadLevelConfiguration.Level levelName = MadLevel.activeConfiguration.FindFirstForScene(Application.loadedLevelName);
@@ -55,7 +64,7 @@ public class Game : MonoBehaviour {
 			isGameLevel = true;
 		}
 
-		//Is there a DisableGame object?  If so, we'll want to nto set some things up:
+		//Is there a DisableGame object?  If so, we'll want to not set some things up:
 		if ( GameObject.FindObjectOfType<DisableGame>() != null ) {
 			elapsedTimeTextMesh.gameObject.SetActive(false);
 			isGameLevel = false;
@@ -69,9 +78,10 @@ public class Game : MonoBehaviour {
 			return;
 		}
 		SpawnPoint = GameObject.FindObjectOfType<SpawnPoint>().transform;
-		//Caching things:
+		//Caching interactive tiles:
 		tiles = GameObject.FindObjectsOfType<InteractiveTile>();
-
+		previewCamera.camera.enabled = true;
+		previewCamera.DoLevelWasLoaded();
 
 		//Spawn player:
 		if ( SpawnPoint != null ) {
@@ -166,9 +176,9 @@ public class Game : MonoBehaviour {
 
 	public void updateElapsedTime () {
 		if ( !gameOver && !paused ) {
-			timeElapsed = Time.time - spawnTime;
-			timeElapsed = (Mathf.Ceil(timeElapsed*100)/100);
-			elapsedTimeTextMesh.text = string.Format("{0:0.00}", timeElapsed);
+			timeElapsed += Time.deltaTime;
+			displayTime = (Mathf.Ceil(timeElapsed*100)/100);
+			elapsedTimeTextMesh.text = string.Format("{0:0.00}", displayTime);
 			elapsedTimeTextMesh.Commit();
 		}
 	}
@@ -203,25 +213,25 @@ public class Game : MonoBehaviour {
 	}
 	//Reset level:
 	public void RestartLevel() {
-		GameObject currentPlayer = GameObject.FindWithTag("Player");
-		if ( currentPlayer != null ) {
-			currentPlayer.SendMessage("Kill");
-		}
+		DestroyImmediate(jumper);
+		ResetLevel();
+		spawnPlayer();
 	}
 
 	//Spawn player:
 	public void spawnPlayer (){
 		jumper = Instantiate(JumperPrefab, SpawnPoint.position - Vector3.up*0.64f, Quaternion.identity) as GameObject;
 		jumperScript = jumper.GetComponent<JumperSMB>();
-		Camera.main.GetComponent<CameraFollow>().target = jumper.transform;
-		spawnTime = Time.time;
+		CameraFollow.instance.target = jumper.transform;
+		timeElapsed = 0f;
 		gameOver = false;
 	}
 
 	//Reset the level by resetting all objects inside it
 	public void ResetLevel () {
-		spawnTime = Time.time;
+		timeElapsed = 0f;
 		gameOver = false;
+		endLevel = false;
 		foreach ( InteractiveTile tile in tiles ) {
 			tile.Reset();
 		}
@@ -233,20 +243,18 @@ public class Game : MonoBehaviour {
 
 	public void EndLevel (GameObject finishBlock = null) {
 		gameOver = true;
+		endLevel = true;
 		//Debug.Log("Level Complete!");
-		//float timeElapsed = Time.time - spawnTime;
-		//string formattedTime = string.Empty+(Mathf.Ceil(timeElapsed*100)/100);
-		//MadLevelProfile.SetLevelString(MadLevel.currentLevelName, "time", formattedTime);
 		//Set stars:
 		StarBlock[] starBlocks = GameObject.FindObjectsOfType<StarBlock>();
 		foreach ( StarBlock starBlock in starBlocks ) {
-			if ( starBlock.got ) {
+			if (starBlock.got ) {
 				MadLevelProfile.SetLevelBoolean(MadLevel.currentLevelName, "star_"+starBlock.starId, true);
 			}
 		}
 		MadLevelProfile.SetCompleted(MadLevel.currentLevelName, true);
 		//Analytics:
-		GA.API.Design.NewEvent("Game:Level:"+MadLevel.currentLevelName+":Complete", timeElapsed);
+		GA.API.Design.NewEvent("Game:Level:"+MadLevel.currentLevelName+":Complete", displayTime);
 
 		_finishBlock = finishBlock;
 
@@ -309,6 +317,7 @@ public class Game : MonoBehaviour {
 	private float timeScale = 1;
 	public void pause() {
 		paused = true;
+		//CameraPathAnimator pathAnimator = GameObject.FindObjectOfType<CameraPathAnimator>();
 //		if ( timeScale == 0 ) {
 //			timeScale = Time.timeScale;
 //		}

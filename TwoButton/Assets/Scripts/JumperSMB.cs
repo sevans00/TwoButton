@@ -92,6 +92,8 @@ public class JumperSMB : MonoBehaviour {
 	private float total_walljump_stickyfriction_time = 0.15f; //The little "mini-animation" of character preparing to launch
 	private float max_walljump_betweenbutton_time = 0.0f; //MaxTime between alternate button presses (make it easier to walljump)
 
+	CameraFollow cameraFollow;
+
 	protected void Awake ()
 	{
 //		walkAccelleration = 1.0f;
@@ -102,7 +104,12 @@ public class JumperSMB : MonoBehaviour {
 		sprite = GetComponent<tk2dSprite>();
 		spritePhysics = GetComponent<SpritePhysics>();
 	}
-	
+
+	public void Start () {
+		//FollowCam:
+		cameraFollow = CameraFollow.instance;
+	}
+
 
 
 	// Update is called once per frame //FixedUpdate
@@ -364,27 +371,28 @@ public class JumperSMB : MonoBehaviour {
 		spritePhysics.DoFixedUpdate();
 		//Animate the sprite:
 		GetComponent<CharacterAnimator>().DoFixedUpdate();
-		//Breadcrumb analytics:
+		//Breadcrumb analytics: (lagged the game)
 		//GA.API.Design.NewEvent("BreadCrumb:"+"JumperSMB", transform.position);
 
 		//LOCK POSITION TO CAMERA BOUNDARIES:
-		//Lock to camera boundaries:
-		CameraFollow cameraFollow = Camera.main.GetComponent<CameraFollow>();
-		Vector3 boundedPosition = transform.position;
-		if ( cameraFollow.boundaryPoints == 1 ) {
-			if ( transform.position.x < cameraFollow.boundaryPoint1.x + 0.64f ) {
-				boundedPosition.x = cameraFollow.boundaryPoint1.x + 0.64f;
-				transform.position = boundedPosition;
+		if ( cameraFollow != null ) {
+			//Lock to camera boundaries:
+			Vector3 boundedPosition = transform.position;
+			if ( cameraFollow.boundaryPoints == 1 ) {
+				if ( transform.position.x < cameraFollow.boundaryPoint1.x + 0.64f ) {
+					boundedPosition.x = cameraFollow.boundaryPoint1.x + 0.64f;
+					transform.position = boundedPosition;
+				}
 			}
-		}
-		if ( cameraFollow.boundaryPoints == 2 ) {
-			if ( transform.position.x < cameraFollow.boundaryPoint1.x + 0.64f ) {
-				boundedPosition.x = cameraFollow.boundaryPoint1.x + 0.64f;
-				transform.position = boundedPosition;
-			}
-			if ( transform.position.x > cameraFollow.boundaryPoint2.x - 0.64f) {
-				boundedPosition.x = cameraFollow.boundaryPoint2.x - 0.64f;
-				transform.position = boundedPosition;
+			if ( cameraFollow.boundaryPoints == 2 ) {
+				if ( transform.position.x < cameraFollow.boundaryPoint1.x + 0.64f ) {
+					boundedPosition.x = cameraFollow.boundaryPoint1.x + 0.64f;
+					transform.position = boundedPosition;
+				}
+				if ( transform.position.x > cameraFollow.boundaryPoint2.x - 0.64f) {
+					boundedPosition.x = cameraFollow.boundaryPoint2.x - 0.64f;
+					transform.position = boundedPosition;
+				}
 			}
 		}
 	}

@@ -9,7 +9,22 @@ using MadLevelManager;
 // - Back to level select screen
 public class EndOfLevelMenu : MonoBehaviour {
 
+	public Vector3 deployedPosition;
+	public Vector3 hiddenPositionRestart;
+	public Vector3 hiddenPositionBack;
+	public Vector3 hiddenPositionNext;
+	private float animateTime = 0.4f;
+
 	public void Start () {
+		deployedPosition = transform.position;
+		hiddenPositionRestart = deployedPosition + Vector3.down * 1.78f;
+		hiddenPositionBack = deployedPosition + Vector3.up * 2f;
+		hiddenPositionNext = deployedPosition + Vector3.left * 4f;
+		gameObject.transform.position = hiddenPositionRestart;
+		gameObject.SetActive(false);
+	}
+
+	public void OnLevelLoaded () {
 		Hide ();
 	}
 
@@ -55,31 +70,48 @@ public class EndOfLevelMenu : MonoBehaviour {
 	}
 
 
+
+
+	//
 	//Button callbacks:
+	//
+
+	//Next level
 	public void NextLevel () {
-		Hide ();
+		Game.instance.pause();
+		iTween.MoveTo( gameObject, iTween.Hash(
+			"name", "endlevel_hide",
+			"position", hiddenPositionRestart,
+			"time", animateTime,
+			"oncomplete", "onNextHideComplete",
+			"easetype", iTween.EaseType.easeOutQuad ) );
+	}
+	public void onNextHideComplete () {
+		Hide();
 		if ( MadLevel.HasNextInGroup(MadLevel.Type.Level) ) {
 			MadLevel.LoadNextInGroup(MadLevel.Type.Level);
 		} else {
-			MadLevel.LoadLevelByName(MadLevel.currentGroupName);
+			MadLevel.LoadLevelByName(MadLevel.currentGroupName); //TODO: Determine if this is what we want
 		}
 		Game.instance.unpause();
 	}
-
+	//Retry
 	public void RetryLevel () {
-		Hide ();
-		GameObject currentPlayer = GameObject.FindWithTag("Player");
-		if ( currentPlayer != null ) {
-			Destroy(currentPlayer);
-		}
-		Game.instance.unpause();
-		Game.instance.ResetLevel();
-		Game.instance.spawnPlayer();	
+		iTween.MoveTo( gameObject, iTween.Hash(
+			"name", "endlevel_hide",
+			"position", hiddenPositionRestart,
+			"time", animateTime,
+			"oncomplete", "onRetryHideComplete",
+			"easetype", iTween.EaseType.easeOutQuad ) );
 	}
-
-	public void BackToLevelSelect () {
-		Hide ();
+	public void onRetryHideComplete () {
+		Hide();
+		Game.instance.RestartLevel();
 		Game.instance.unpause();
+	}
+	//Back to level select
+	public void BackToLevelSelect () {
+		Hide ( hiddenPositionBack );
 		MadLevel.LoadLevelByName(MadLevel.currentGroupName);
 	}
 
@@ -88,13 +120,36 @@ public class EndOfLevelMenu : MonoBehaviour {
 
 
 
+
+
+
+
 	public void Hide() {
+		iTween.StopByName("endlevel_hide");
+		gameObject.transform.position = hiddenPositionRestart;
 		gameObject.SetActive(false);
 	}
+	public void Hide( Vector3 animateTarget ) {
+		iTween.MoveTo( gameObject, iTween.Hash(
+			"name", "endlevel_hide",
+			"position", animateTarget,
+			"time", animateTime,
+			"oncomplete", "onHideComplete",
+			"easetype", iTween.EaseType.easeOutQuad ) );
+	}
+	public void onHideComplete () {
+		Game.instance.unpause();
+		Hide();
+	}
 	public void Show() {
-		//TODO: Populate the fields
+		gameObject.transform.position = hiddenPositionRestart;
 		populateFields();
 		gameObject.SetActive(true);
+		iTween.MoveTo( gameObject, iTween.Hash(
+			"name", "endlevel_show",
+			"position", deployedPosition,
+			"time", animateTime,
+			"easetype", iTween.EaseType.easeOutQuad ) );
 	}
 
 }

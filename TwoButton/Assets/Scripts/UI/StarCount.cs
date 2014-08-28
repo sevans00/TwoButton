@@ -16,24 +16,11 @@ public class StarCount : MonoBehaviour {
 	public void Reset () {
 		//Find Stars:
 		StarBlock [] starBlocks = GameObject.FindObjectsOfType<StarBlock>();
-		/*for ( int ii = 0; ii < starBlocks.Length; ii++ ) {
-			if ( starBlocks[ii].starId == 0 ) {
-
-			}
-			if ( starBlocks[ii].starId == 1 ) {
-				starBlock2 = starBlocks[ii];
-			}
-			if ( starBlocks[ii].starId == 2 ) {
-				starBlock3 = starBlocks[ii];
-			}
-		}*/
-		starBlock1 = starBlocks[0];
-		starBlock2 = starBlocks[1];
-		starBlock3 = starBlocks[2];
-
-		Debug.LogWarning("1:"+starBlock1.starId+","+starBlock1.got);
-		Debug.LogWarning("2:"+starBlock2.starId+","+starBlock2.got);
-		Debug.LogWarning("3:"+starBlock3.starId+","+starBlock3.got);
+		if ( starBlocks.Length >= 3 ) {
+			starBlock1 = starBlocks[0];
+			starBlock2 = starBlocks[1];
+			starBlock3 = starBlocks[2];
+		}
 	}
 	
 	// Update is called once per frame

@@ -4,6 +4,8 @@ using MadLevelManager;
 
 public class CameraFollow : MonoBehaviour {
 
+	public static CameraFollow instance;
+
 	public Transform target;
 
 	//Backgrounds:
@@ -16,6 +18,11 @@ public class CameraFollow : MonoBehaviour {
 	public int boundaryPoints = 0;
 	public Vector2 boundaryPoint1;
 	public Vector2 boundaryPoint2;
+
+	//Pre Initialization
+	void Awake () {
+		CameraFollow.instance = this;
+	}
 
 	// Use this for initialization
 	void Start () {
@@ -76,7 +83,7 @@ public class CameraFollow : MonoBehaviour {
 			} else if ( boundaryPoints == 1 ) {
 				//By default, position 1 is lower left:
 				this.transform.position = target.position + Vector3.back*10;
-				Vector3 cameraZP = Camera.main.ViewportToWorldPoint(Vector3.zero);
+				Vector3 cameraZP = camera.ViewportToWorldPoint(Vector3.zero);
 				Vector3 boundaryDiff = Vector3.zero;
 				if ( cameraZP.x < boundaryPoint1.x ) {
 					boundaryDiff.x = boundaryPoint1.x - cameraZP.x;
@@ -88,7 +95,7 @@ public class CameraFollow : MonoBehaviour {
 			} else {
 				//Boundary 1 - bottom left
 				this.transform.position = target.position + Vector3.back*10;
-				Vector3 cameraZP = Camera.main.ViewportToWorldPoint(Vector3.zero);
+				Vector3 cameraZP = camera.ViewportToWorldPoint(Vector3.zero);
 				Vector3 boundaryDiff = Vector3.zero;
 				if ( cameraZP.x < boundaryPoint1.x ) {
 					boundaryDiff.x = boundaryPoint1.x - cameraZP.x;
@@ -97,7 +104,7 @@ public class CameraFollow : MonoBehaviour {
 					boundaryDiff.y = boundaryPoint1.y - cameraZP.y;
 				}
 				//Boundary 2 - upper right
-				Vector3 cameraOP = Camera.main.ViewportToWorldPoint(Vector3.one);
+				Vector3 cameraOP = camera.ViewportToWorldPoint(Vector3.one);
 				if ( cameraOP.x > boundaryPoint2.x ) {
 					boundaryDiff.x = boundaryPoint2.x - cameraOP.x;
 				}

@@ -6,46 +6,140 @@ public class PreviewCamera : MonoBehaviour {
 
 	public static PreviewCamera instance;
 
+	public Vector3 startPosition;
+	public float startOrthographicSize;
+	public Camera camera;
+	public Camera mainCamera;
+
+	public bool showingLevelInitially = true;
+
+	public float zoomTime = 0.8f;
+
 	public void Awake () {
-		Debug.LogWarning("Preview camera awake");
 		PreviewCamera.instance = this;
+		//startPosition = transform.position;
+		//startOrthographicSize = camera.orthographicSize;
+	}
+
+	//Reset based on the level:
+	public void DoLevelWasLoaded() {
+		Vector2 bottomLeft = Vector2.one;
+		Vector2 topRight = Vector2.one;
+		//Are there camera edges?
+		CameraBoundaryBlock [] boundaryBlocks = GameObject.FindObjectsOfType<CameraBoundaryBlock>();
+		if ( boundaryBlocks.Length == 2 ) {
+			//We've got a boundary:
+			if ( boundaryBlocks[0].transform.position.x < boundaryBlocks[1].transform.position.x ) {
+				bottomLeft = (Vector2)boundaryBlocks[0].transform.position;
+				topRight = (Vector2)boundaryBlocks[1].transform.position;
+			} else {
+				bottomLeft = (Vector2)boundaryBlocks[1].transform.position;
+				topRight = (Vector2)boundaryBlocks[0].transform.position;
+			}
+		} else {
+			//We've got to do this manually:
+			tk2dTileMap tilemap = GameObject.FindObjectOfType<tk2dTileMap>();
+			int xMin = tilemap.width-1, xMax = 0, yMin = tilemap.height-1, yMax = 0;
+			for ( int ii = 0; ii < tilemap.width; ii++ ) {
+				for ( int jj = 0; jj < tilemap.height; jj++ ) {
+					if ( tilemap.GetTile(ii, jj, 0) != -1 ) {
+						if ( ii < xMin ) { xMin = ii; }
+						if ( ii > xMax ) { xMax = ii; }
+						if ( jj < yMin ) { yMin = jj; }
+						if ( jj > yMax ) { yMax = jj; }
+					}
+				}
+			}
+			bottomLeft = tilemap.GetTilePosition(xMin, yMin);
+			topRight = tilemap.GetTilePosition(xMax, yMax);
+		}
+		//Adjust:
+		bottomLeft += Vector2.one * 0.64f;
+		topRight += Vector2.one * 0.64f;
+		//Midpoint:
+		Vector3 midpoint = (Vector3)Vector2.Lerp(bottomLeft, topRight, 0.5f);
+		midpoint.z = -10f;
+		transform.position = midpoint;
+		//Orthographic size:
+		float orthosize = (topRight.y - bottomLeft.y)/2;
+		Vector2 dimensions = new Vector2((topRight.x - bottomLeft.x),(topRight.y - bottomLeft.y));
+		Vector2 cameraDimensions = new Vector2 ( camera.aspect*dimensions.y, dimensions.y );
+		Vector2 cameraDimensionsWidth = new Vector2 ( dimensions.x, dimensions.x/camera.aspect );
+		Debug.LogWarning("Dimensions:"+cameraDimensions);
+		Debug.LogWarning("Dimensions:"+cameraDimensionsWidth);
+		if ( cameraDimensions.y > cameraDimensionsWidth.y ) {
+			orthosize = cameraDimensions.y / 2;
+		} else {
+			orthosize = cameraDimensionsWidth.y / 2;
+		}
+		camera.orthographicSize = orthosize;
+
+		//Set starting variables:
+		startPosition = transform.position;
+		startOrthographicSize = camera.orthographicSize;
+
+		showingLevelInitially = true;
 	}
 
 	public void Update () {
+		if ( !showingLevelInitially ) {
+			return;
+		}
 		//Game.instance.pause();
 		if ( ( Input.touches.Length > 0 && Input.GetTouch(0).phase == TouchPhase.Began ) 
 		    || (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D) ) ) {
-//			gameObject.SetActive(false);
-			Game.instance.unpause();
-			//TODO: Zoom in
-			valueToExample();
+			showingLevelInitially = false;
+			zoomIn();
 		}
 	}
 
-	private void valueToExample()
-	{
-		Debug.LogWarning("Value to example");
-		float fromValue = 0f;
-		float toValue = 10f;
+	//Zoom in:
+	public void zoomIn() {
+		iTween.MoveTo( gameObject, iTween.Hash(
+			"position", mainCamera.transform.position,
+			"time", zoomTime,
+			"easetype", iTween.EaseType.easeOutQuad ) );
 		iTween.ValueTo( gameObject, iTween.Hash(
-						"from", fromValue, 
-		               	"to", toValue, 
-		               	"onupdatetarget", gameObject, 
-		               	"onupdate", "updateFromValue", 
-		               	"time", 1f, 
-						"easetype", iTween.EaseType.easeOutExpo ) );
-		Debug.LogWarning("Value to example done");
+			"from", startOrthographicSize, 
+			"to", mainCamera.orthographicSize, 
+			"onupdatetarget", gameObject, 
+			"onupdate", "doCameraZoom", 
+			"oncomplete", "zoomInComplete", 
+			"time", zoomTime,
+			"easetype", iTween.EaseType.easeOutQuad ) );
 	}
+	public void zoomInComplete() {
+		camera.enabled = false;
+		mainCamera.enabled = true;
+		Game.instance.unpause();
+	}
+
+	//Zoom out:
+	public void zoomOut() {
+		iTween.MoveTo( gameObject, startPosition, zoomTime );
+		iTween.ValueTo( gameObject, iTween.Hash(
+			"from", mainCamera.orthographicSize, 
+			"to", startOrthographicSize, 
+			"onupdatetarget", gameObject, 
+			"onupdate", "doCameraZoom", 
+			"oncomplete", "zoomOutComplete", 
+			"time", zoomTime, 
+			"easetype", iTween.EaseType.easeOutQuad ) );
+	}
+	public void zoomOutComplete() {
+
+
+	}
+
+
 	
-	public void updateFromValue( float newValue )
-	{
-		float value = 0f;
-		Debug.LogWarning( "My Value that is tweening: " + newValue );
-	}
+	
 
-	public void tweenComplete (  ) {
-		Debug.LogWarning("itween Complete!");
-	}
 
+
+	//Do the orthographic zoom:
+	public void doCameraZoom ( float newOrthoSize ) {
+		camera.orthographicSize = newOrthoSize;
+	}
 
 }

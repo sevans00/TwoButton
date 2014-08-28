@@ -9,17 +9,23 @@ public class InLevelMenu : MonoBehaviour {
 
 	public GameObject endOfLevelMenu;
 
+	public Vector3 deployedPosition;
+	public Vector3 hiddenPosition;
+	private float animateTime = 0.4f;
+
 	// Use this for initialization
 	void Start () {
-		Hide();
+		deployedPosition = inLevelMenu.transform.position;
+		hiddenPosition = deployedPosition + Vector3.down * 0.46f;
+		inLevelMenu.transform.position = hiddenPosition;
+		inLevelMenu.SetActive(false);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if ( Input.GetKeyDown ( KeyCode.Escape ) && !MadLevel.currentGroupName.Equals(MadLevel.defaultGroupName) && !endOfLevelMenu.activeSelf ) {
+		if ( Input.GetKeyDown ( KeyCode.Escape ) && !MadLevel.currentGroupName.Equals(MadLevel.defaultGroupName) && !Game.instance.endLevel ) {
 			if ( inLevelMenu.activeSelf ) {
-				inLevelMenu.SetActive(false);
-				Game.instance.unpause();
+				Hide();
 			} else {
 				Show();
 			}
@@ -27,22 +33,47 @@ public class InLevelMenu : MonoBehaviour {
 	}
 
 	public void Show () {
+		iTween.StopByName("inlevel_hide");
 		inLevelMenu.SetActive(true);
-		characterSelectScreen.SetActive(false);
 		Game.instance.pause();
+		iTween.MoveTo( inLevelMenu, iTween.Hash(
+			"name", "inlevel_show",
+			"position", deployedPosition,
+			"time", animateTime,
+			"easetype", iTween.EaseType.easeOutQuad ) );
 	}
 
 	public void Hide () {
+		iTween.StopByName("inlevel_show");
+		iTween.MoveTo( inLevelMenu, iTween.Hash(
+			"name", "inlevel_hide",
+			"position", hiddenPosition,
+			"time", animateTime,
+			"oncompletetarget", gameObject,
+			"oncomplete", "onHideComplete",
+			"easetype", iTween.EaseType.easeOutQuad ) );
+	}
+	public void onHideComplete () {
 		inLevelMenu.SetActive(false);
-		characterSelectScreen.SetActive(false);
 		if ( Game.instance != null ) {
 			Game.instance.unpause();
 		}
 	}
 
+
+
+
+
+
+
+
+
+
+	//Resume button
 	public void Resume() {
 		Hide ();
 	}
+	//Restart
 	public void Restart() {
 		CameraPathAnimator pathAnimator = GameObject.FindObjectOfType<CameraPathAnimator>();
 		if ( pathAnimator != null ) {
