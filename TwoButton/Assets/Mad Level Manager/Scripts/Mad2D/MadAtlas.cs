@@ -93,10 +93,10 @@ public class MadAtlas : MonoBehaviour {
     private void Refresh() {
         if (map.Count != items.Count) {
             map.Clear();
-        }
-        
-        foreach (var item in items) {
-            map[item.textureGUID] = item;
+
+            foreach (var item in items) {
+                map[item.textureGUID] = item;
+            }
         }
     }
 

@@ -32,6 +32,8 @@ public class MadLevelProperty : MadNode {
     
     public bool textFromProperty;
     public string textPropertyName;
+
+    private bool onFirstUpdate = true;
     
     public SpecialType specialType {
         get {
@@ -127,28 +129,34 @@ public class MadLevelProperty : MadNode {
     // ===========================================================
     
     void OnEnable() {
-
+        onFirstUpdate = true;
     }
     
     void Start() {
-        if (Application.isPlaying && icon.level != null && persistent) {
-            if (propertySet) {
-                propertyEnabled = GetLevelBoolean();
-            } else {
-                // save the property if unset
-                SetLevelBoolean(propertyEnabled);
-            }
-        }
-
-        if (textFromProperty && sprite is MadText) {
-            var text = sprite as MadText;
-            var level = icon.level;
-            var str = MadLevelProfile.GetLevelAny(level.name, textPropertyName);
-            text.text = str;
-        }
     }
 
     void Update() {
+        if (onFirstUpdate) {
+            // looking at the property state at first update makes it usable during runtime
+
+            if (Application.isPlaying && icon.level != null && persistent) {
+                if (propertySet) {
+                    propertyEnabled = GetLevelBoolean();
+                } else {
+                    // save the property if unset
+                    SetLevelBoolean(propertyEnabled);
+                }
+            }
+
+            if (textFromProperty && sprite is MadText) {
+                var text = sprite as MadText;
+                var level = icon.level;
+                var str = MadLevelProfile.GetLevelAny(level.name, textPropertyName);
+                text.text = str;
+            }
+
+            onFirstUpdate = false;
+        }
         // cannot do the update every frame because of huge performance loss
 //        if (propertySet) {
 //            propertyEnabled = GetLevelBoolean();

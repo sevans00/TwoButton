@@ -114,6 +114,22 @@ public class MadLevelExtension {
     }
 
     #endregion
+
+    internal bool IsValid() {
+        foreach (var s in scenesBefore) {
+            if (!s.IsValid()) {
+                return false;
+            }
+        }
+
+        foreach (var s in scenesAfter) {
+            if (!s.IsValid()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }
 
 //#if !UNITY_3_5

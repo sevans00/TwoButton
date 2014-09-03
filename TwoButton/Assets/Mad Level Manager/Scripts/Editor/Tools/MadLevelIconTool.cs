@@ -23,7 +23,7 @@ public class MadLevelIconTool : ScriptableWizard {
     // ===========================================================
     
     public MadPanel panel;
-    public new string name = "iconTemplate";
+    public new string name = "icon template";
     public Texture2D texture;
 
     // ===========================================================

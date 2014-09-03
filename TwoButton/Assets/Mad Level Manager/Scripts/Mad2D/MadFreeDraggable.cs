@@ -56,6 +56,32 @@ public class MadFreeDraggable : MadDraggable {
     public bool scaling = false;
     #endregion
 
+    #region Properties
+
+    public override Vector2 progress {
+        get {
+            var rootNode = MadTransform.FindParent<MadRootNode>(transform);
+
+            var areaBottomLeft = new Vector2(dragBounds.min.x, dragBounds.min.y);
+            var areaTopRight = new Vector2(dragBounds.max.x, dragBounds.max.y);
+
+            var screenBottomLeft = transform.InverseTransformPoint(rootNode.ScreenGlobal(0, 0));
+            var screenTopRight = transform.InverseTransformPoint(rootNode.ScreenGlobal(1, 1));
+
+            float screenW = screenTopRight.x - screenBottomLeft.x;
+            float screenH = screenTopRight.y - screenBottomLeft.y;
+
+            float areaW = areaTopRight.x - areaBottomLeft.x;
+            float areaH = areaTopRight.y - areaBottomLeft.y;
+
+            return new Vector2(
+                (screenBottomLeft.x - areaBottomLeft.x) / (areaW - screenW), 
+                (screenBottomLeft.y - areaBottomLeft.y) / (areaH - screenH));
+        }
+    }
+
+    #endregion
+
     // ===========================================================
     // Methods for/from SuperClass/Interfaces
     // ===========================================================
@@ -144,8 +170,6 @@ public class MadFreeDraggable : MadDraggable {
         transform.localScale = scale;
     }
 
-//    float lastDragTime;
-    
     protected override void Update() {
         if (!Application.isPlaying) {
             return;

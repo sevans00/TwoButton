@@ -9,6 +9,10 @@ using System.Collections.Generic;
 
 using MadLevelManager;
 
+#if !UNITY_3_5
+namespace MadLevelManager {
+#endif
+
 [ExecuteInEditMode]
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public class MadDrawCall : MonoBehaviour {
@@ -114,3 +118,7 @@ public class MadDrawCall : MonoBehaviour {
     // ===========================================================
 
 }
+
+#if !UNITY_3_5
+} // namespace
+#endif

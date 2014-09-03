@@ -37,10 +37,17 @@ public class MadLevelIcon : MadSprite {
     public MadLevelProperty completedProperty;
     public MadLevelProperty lockedProperty;
     public MadText levelNumber;
+
+    public bool canFocusIfLocked = true;
     
     // list of level icons to unlock on completion of this one
     public List<MadLevelIcon> unlockOnComplete = new List<MadLevelIcon>();
-    
+
+    public List<GameObject> showWhenLevelLocked = new List<GameObject>();
+    public List<GameObject> showWhenLevelUnlocked = new List<GameObject>();
+    public List<GameObject> showWhenLevelNotCompleted = new List<GameObject>();
+    public List<GameObject> showWhenLevelCompleted = new List<GameObject>();
+
     [HideInInspector]
     public int version = 0;
     
@@ -48,11 +55,26 @@ public class MadLevelIcon : MadSprite {
     // Properties
     // ===========================================================
 
+    public bool isTemplate {
+        get {
+            if (!_isTemplateCached) {
+                _isTemplate = MadTransform.FindParent<MadLevelAbstractLayout>(transform) == null;
+                _isTemplateCached = true;
+            }
+
+            return _isTemplate;
+        }
+    }
+    private bool _isTemplate;
+    private bool _isTemplateCached;
+
     public MadLevelConfiguration configuration {
         get {
             if (_configuration == null) {
                 var layout = MadTransform.FindParent<MadLevelAbstractLayout>(transform);
-                _configuration = layout.configuration;
+                if (layout != null) {
+                    _configuration = layout.configuration;
+                }
             }
 
             return _configuration;
@@ -88,36 +110,52 @@ public class MadLevelIcon : MadSprite {
     }
     
     public bool completed {
+        get {
+            return MadLevelProfile.IsCompleted(level.name);
+        }
+
         set {
             if (completedProperty != null) {
-                completedProperty.propertyEnabled = value;
-            } else if (value) {
-                // normally unlock on complete will be invoked by property change
+                completedProperty.propertyEnabled = value; // deprecated
+            }
+
+            if (value) {
                 UnlockOnComplete();
             }
+
+            MadLevelProfile.SetCompleted(level.name, value);
+
+            ChangeState(showWhenLevelCompleted, value);
+            ChangeState(showWhenLevelNotCompleted, !value);
         }
     }
     
     public bool locked {
         get {
             if (lockedProperty != null) {
-                return lockedProperty.propertyEnabled;
-            } else {
-                Debug.LogWarning("Locked property not set", this);
-                return false;
+                return lockedProperty.propertyEnabled; // deprecated
             }
+
+            return MadLevelProfile.IsLocked(level.name);
         }
         
         set {
-            if (lockedProperty != null) {
-                lockedProperty.propertyEnabled = value;
+            if (!MadGameObject.IsActive(gameObject)) {
+                return;
             }
-            
-            if (!value) {
-                if (levelNumber != null) {
-                    var property = levelNumber.GetComponent<MadLevelProperty>();
-                    property.propertyEnabled = true;
-                }
+
+            if (lockedProperty != null) {
+                lockedProperty.propertyEnabled = value; // deprecated
+            }
+
+            MadLevelProfile.SetLocked(level.name, value);
+
+            ChangeState(showWhenLevelLocked, value);
+            ChangeState(showWhenLevelUnlocked, !value);
+
+            if (!value && !isTemplate && !canFocusIfLocked) {
+                var sprite = GetComponent<MadSprite>();
+                sprite.eventFlags = sprite.eventFlags | MadSprite.EventFlags.Focus;
             }
         }
     }
@@ -168,6 +206,10 @@ public class MadLevelIcon : MadSprite {
         base.Start();
 
         if (Application.isPlaying) {
+            if (isTemplate) {
+                MadGameObject.SetActive(gameObject, false);
+            }
+
             // completed property object is optional
             // if it's not present, check the completed property manually
             if (completedProperty == null) {
@@ -178,6 +220,21 @@ public class MadLevelIcon : MadSprite {
 
             onMouseUp += (sprite) => Activate();
             onTap += (sprite) => Activate();
+
+            if (!isTemplate) {
+                if (!canFocusIfLocked && locked) {
+                    var sprite = GetComponent<MadSprite>();
+                    sprite.eventFlags = sprite.eventFlags & ~MadSprite.EventFlags.Focus;
+                }
+            }
+        }
+
+        // init child objects visibility
+        if (level != null) {
+            ChangeState(showWhenLevelLocked, locked);
+            ChangeState(showWhenLevelUnlocked, !locked);
+            ChangeState(showWhenLevelCompleted, completed);
+            ChangeState(showWhenLevelNotCompleted, !completed);
         }
     }
     
@@ -260,6 +317,30 @@ public class MadLevelIcon : MadSprite {
         if (unlockOnComplete != null) {
             foreach (var icon in unlockOnComplete) {
                 icon.locked = false;
+            }
+        }
+    }
+
+    private void Enable(List<GameObject> objects) {
+        ChangeState(objects, true);
+    }
+
+    private void Disable(List<GameObject> objects) {
+        ChangeState(objects, true);
+    }
+
+    private void ChangeState(List<GameObject> objects, bool state) {
+        for (int i = 0; i < objects.Count; ++i) {
+            var obj = objects[i];
+            if (obj == null) {
+                continue;
+            }
+
+            obj.active = state;
+
+            var sprite = obj.GetComponent<MadSprite>();
+            if (sprite != null) {
+                sprite.visible = state;
             }
         }
     }

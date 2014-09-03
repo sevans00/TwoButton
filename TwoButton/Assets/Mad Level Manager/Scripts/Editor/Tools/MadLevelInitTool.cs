@@ -18,10 +18,10 @@ public class MadLevelInitTool : MadInitTool {
     // ===========================================================
     // Constants
     // ===========================================================
-    
-    const string IconPrefab = "Assets/Mad Level Manager/Examples/Prefabs/icon2Prefab.prefab";
-    const string SlideLeftPrefab = "Assets/Mad Level Manager/Examples/Prefabs/slideLeft2Prefab.prefab";
-    const string SlideRightPrefab = "Assets/Mad Level Manager/Examples/Prefabs/slideRight2Prefab.prefab";
+
+    const string IconPrefabGUID = "d26447d96e726434490779b5a3fcab28";
+    const string SlideLeftPrefabGUID = "bf4251ffacf0daa46bd260901b6b77ee";
+    const string SlideRightPrefabGUID = "640571df6b5f5244ea807ef008ac9985";
 
     // ===========================================================
     // Fields
@@ -89,34 +89,46 @@ public class MadLevelInitTool : MadInitTool {
         var panel = MadTransform.FindChild<MadPanel>(root.transform);
         var templates = MadTransform.CreateChild(panel.transform, "Templates");
 
-        GameObject iconPrefab = (GameObject) AssetDatabase.LoadAssetAtPath(IconPrefab, typeof(GameObject));
-        GameObject slideLeftPrefab = (GameObject) AssetDatabase.LoadAssetAtPath(SlideLeftPrefab, typeof(GameObject));
-        GameObject slideRightPrefab = (GameObject) AssetDatabase.LoadAssetAtPath(SlideRightPrefab, typeof(GameObject));
+        GameObject iconPrefab = MadAssets.TryLoadGameObject(IconPrefabGUID);
+        GameObject slideLeftPrefab = MadAssets.TryLoadGameObject(SlideLeftPrefabGUID);
+        GameObject slideRightPrefab = MadAssets.TryLoadGameObject(SlideRightPrefabGUID);
 
         if (MadGameObject.AnyNull(iconPrefab, slideLeftPrefab, slideRightPrefab)) {
-            Debug.LogWarning("I cannot find all needed prefabs to create example templates. Have you moved Mad Level "
-            + "Manager directory to other than default place?");
+            Debug.LogWarning("I cannot find all needed prefabs to create example templates. Have you removed Mad Level "
+            + "Manager example prefabs?");
         }
 
         if (iconPrefab != null) {
-            var obj = MadTransform.CreateChild(templates.transform, "icon", iconPrefab);
+            var obj = PrefabUtility.InstantiatePrefab(iconPrefab) as GameObject;
+            obj.transform.parent = templates.transform;
+            obj.name = "icon";
+
             obj.transform.localScale = Vector3.one;
+            obj.transform.localPosition = new Vector2(-400, 150);
             icon = obj.GetComponent<MadLevelIcon>();
         } else {
             icon = null;
         }
 
         if (slideLeftPrefab != null) {
-            var slide = MadTransform.CreateChild(templates.transform, "slide left", slideLeftPrefab);
+            var slide = PrefabUtility.InstantiatePrefab(slideLeftPrefab) as GameObject;
+            slide.transform.parent = templates.transform;
+            slide.name = "slide left";
+
             slide.transform.localScale = Vector3.one;
+            slide.transform.localPosition = new Vector2(-400, 0);
             slideLeftSprite = slide.GetComponent<MadSprite>();
         } else {
             slideLeftSprite = null;
         }
 
         if (slideRightPrefab != null) {
-            var slide = MadTransform.CreateChild(templates.transform, "slide right", slideRightPrefab);
+            var slide = PrefabUtility.InstantiatePrefab(slideRightPrefab) as GameObject;
+            slide.transform.parent = templates.transform;
+            slide.name = "slide right";
+
             slide.transform.localScale = Vector3.one;
+            slide.transform.localPosition = new Vector2(-400, -150);
             slideRightSprite = slide.GetComponent<MadSprite>();
         } else {
             slideRightSprite = null;

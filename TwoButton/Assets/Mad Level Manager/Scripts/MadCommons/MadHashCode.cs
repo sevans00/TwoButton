@@ -68,23 +68,63 @@ public class MadHashCode {
     // ===========================================================
 
     public static int Add(int currentHash, bool a) {
-        return currentHash * SecondPrime + a.GetHashCode();
+        return (currentHash * SecondPrime) ^ a.GetHashCode();
     }
 
     public static int Add(int currentHash, int a) {
-        return currentHash * SecondPrime + a.GetHashCode();
+        return (currentHash * SecondPrime) ^ a.GetHashCode();
     }
 
     public static int Add(int currentHash, float a) {
-        return currentHash * SecondPrime + a.GetHashCode();
+        return (currentHash * SecondPrime) ^ a.GetHashCode();
     }
 
     public static int Add(int currentHash, double a) {
-        return currentHash * SecondPrime + a.GetHashCode();
+        return (currentHash * SecondPrime) ^ a.GetHashCode();
+    }
+
+    // these methods offers special treatment for Unity Vectors
+    // that's because hash code of Unity vectors is computed in simplified way which causes
+    // a, b, c to have equal hash code as -a, -b, c or -a, b, -c or a, -b, -c
+    // this happens because hash code is a number and multyplying twice negative numbers will give a positive (basics of math)
+    //
+    // my solution is making additional hashing effort basing on the sign
+
+    public static int Add(int currentHash, Vector2 v) {
+        currentHash = Add(currentHash, Mathf.Abs(v.x));
+        currentHash = Add(currentHash, Mathf.Abs(v.y));
+        currentHash = Add(currentHash, v.x > 0 ? 0 : 1);
+        currentHash = Add(currentHash, v.y > 0 ? 0 : 1);
+
+        return currentHash;
+    }
+
+    public static int Add(int currentHash, Vector3 v) {
+        currentHash = Add(currentHash, Mathf.Abs(v.x));
+        currentHash = Add(currentHash, Mathf.Abs(v.y));
+        currentHash = Add(currentHash, Mathf.Abs(v.z));
+        currentHash = Add(currentHash, v.x > 0 ? 0 : 1);
+        currentHash = Add(currentHash, v.y > 0 ? 0 : 1);
+        currentHash = Add(currentHash, v.z > 0 ? 0 : 1);
+
+        return currentHash;
+    }
+
+    public static int Add(int currentHash, Vector4 v) {
+        currentHash = Add(currentHash, Mathf.Abs(v.w));
+        currentHash = Add(currentHash, Mathf.Abs(v.x));
+        currentHash = Add(currentHash, Mathf.Abs(v.y));
+        currentHash = Add(currentHash, Mathf.Abs(v.z));
+        currentHash = Add(currentHash, v.w > 0 ? 0 : 1);
+        currentHash = Add(currentHash, v.x > 0 ? 0 : 1);
+        currentHash = Add(currentHash, v.y > 0 ? 0 : 1);
+        currentHash = Add(currentHash, v.z > 0 ? 0 : 1);
+
+        return currentHash;
     }
 
     public static int Add(int currentHash, object obj) {
-        return currentHash * SecondPrime + (obj != null ? obj.GetHashCode() : 0);
+        return (currentHash * SecondPrime) ^ (obj != null ? obj.GetHashCode() : 0);
     }
 
     public static int AddArray(int currentHash, object[] arr) {

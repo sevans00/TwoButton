@@ -48,11 +48,12 @@ public class Game : MonoBehaviour {
 
 	void OnLevelWasLoaded () {
 		//Disable preview camera:
-		previewCamera.camera.enabled = false;
+		//previewCamera.camera.enabled = false;
 
 		//Debug.Log("Level loaded!");
 		//Debug to check if the level is even present - we don't care, we just don't want the if statement complaining
-		MadLevelConfiguration.Level levelName = MadLevel.activeConfiguration.FindFirstForScene(Application.loadedLevelName);
+		bool hasMany;
+		MadLevelConfiguration.Level levelName = MadLevel.activeConfiguration.FindFirstForScene(Application.loadedLevelName, out hasMany);
 		if ( levelName != null && MadLevel.currentGroupName == MadLevel.defaultGroupName ) {
 			elapsedTimeTextMesh.gameObject.SetActive(false);
 			starCount.gameObject.SetActive(false);
@@ -67,7 +68,11 @@ public class Game : MonoBehaviour {
 		//Is there a DisableGame object?  If so, we'll want to not set some things up:
 		if ( GameObject.FindObjectOfType<DisableGame>() != null ) {
 			elapsedTimeTextMesh.gameObject.SetActive(false);
+			starCount.gameObject.SetActive(false);
 			isGameLevel = false;
+			//Hack to disable cameras on comiclevel
+			previewCamera.camera.enabled = false;
+			previewCamera.mainCamera.enabled = false;
 			return;
 		}
 
@@ -86,14 +91,10 @@ public class Game : MonoBehaviour {
 		//Spawn player:
 		if ( SpawnPoint != null ) {
 			spawnPlayer();
-			Debug.LogWarning("Previewcamera:"+PreviewCamera.instance);
-			if ( PreviewCamera.instance != null ) { //PreviewCamera
-				pause();
-			}
 		} else {
 			Debug.LogWarning("Warning - Game could not find spawn point");
 		}
-		
+		pause();
 		//Setup references for FixedUpdates:
 		interactiveTiles = FindObjectsOfType<InteractiveTile>();
 	}
@@ -103,6 +104,7 @@ public class Game : MonoBehaviour {
 		if ( !isGameLevel || paused || gameOver ) { //If this isn't a game level, we don't care
 			return;
 		}
+		updateElapsedTime(); //Test
 		//Jumper input and collisions:
 		jumperScript.DoInputAndCollisions();
 		//Interactive objects:
@@ -117,62 +119,12 @@ public class Game : MonoBehaviour {
 
 
 	// Update is called once per frame
-	void Update () {
+	/*void Update () {
 		if ( paused ) {
 			return;
 		}
-
-		if ( Input.GetKey(KeyCode.W) ) {
-			jump = true;
-		} else {
-			jump = false;
-		}
-
-		bool rightnew = false;
-		bool leftnew = false;
-		if ( Input.touchCount > 0 ) {
-			//Multitouch:
-			foreach ( Touch touch in Input.touches ) {
-
-				//Jumping check:
-				if ( touch.position.y < Screen.height - Screen.height / 3 ) {
-					//Regular moving code
-					if ( touch.position.x > Screen.width / 2 ) {
-						rightnew = true;
-					}
-					//Regular moving code
-					if ( touch.position.x < Screen.width / 2 ) {
-						leftnew = true;
-					}
-				}
-				//Jumping:
-				if ( touch.position.y > Screen.height - Screen.height / 3 ) {
-					jump = true;
-				}
-			}
-		}
-		
-		//Keyboard for debugging:
-		if ( Input.GetKey(KeyCode.A) ) {
-			leftnew = true;
-		}
-		if ( Input.GetKey(KeyCode.D) ) {
-			rightnew = true;
-		}
-
-
-		//Actually set left and right:
-		if ( !right && rightnew ) {
-			RightDown();
-		}
-		right = rightnew;
-		if ( !left && leftnew ) {
-			LeftDown();
-		}
-		left = leftnew;
-
-		updateElapsedTime();
-	}
+		updateElapsedTime(); //Test
+	}*/
 
 	public void updateElapsedTime () {
 		if ( !gameOver && !paused ) {
@@ -224,7 +176,10 @@ public class Game : MonoBehaviour {
 		jumperScript = jumper.GetComponent<JumperSMB>();
 		CameraFollow.instance.target = jumper.transform;
 		timeElapsed = 0f;
+		elapsedTimeTextMesh.text = string.Format("{0:0.00}", 0f);//Reset the counter
+		elapsedTimeTextMesh.Commit();
 		gameOver = false;
+		endLevel = false;
 	}
 
 	//Reset the level by resetting all objects inside it
@@ -305,8 +260,8 @@ public class Game : MonoBehaviour {
 	}
 	//Not used - endOfLevelMenu is doing this now
 	public void NextLevel () {
-		Debug.Log("Next Level!");
-		unpause();
+		//Debug.Log("Next Level!");
+		//unpause();
 		if ( MadLevel.HasNextInGroup(MadLevel.Type.Level) ) {
 			MadLevel.LoadNextInGroup(MadLevel.Type.Level);
 		} else {

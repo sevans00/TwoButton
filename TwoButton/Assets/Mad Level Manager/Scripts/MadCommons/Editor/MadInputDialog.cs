@@ -10,7 +10,9 @@ using System.Collections.Generic;
 
 using MadLevelManager;
 
-//namespace MadLevelManager {
+#if !UNITY_3_5
+namespace MadLevelManager {
+#endif
 
 public class MadInputDialog : EditorWindow {
 
@@ -135,4 +137,6 @@ public class MadInputDialog : EditorWindow {
     #endregion
 }
 
-//}
+#if !UNITY_3_5
+} // namespace
+#endif

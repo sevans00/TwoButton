@@ -6,11 +6,12 @@ public class MainMenu : UIMenu {
 
 	public GameObject quitGameDialog;
 	public GameObject rootMenu;
-	public GameObject optionsMenu;
+	public tk2dUIItem playButton;
 
 	// Use this for initialization
 	void Start () {
 		HideQuitGame();
+
 	}
 	
 	// Update is called once per frame
@@ -18,8 +19,6 @@ public class MainMenu : UIMenu {
 		if ( Input.GetKeyDown ( KeyCode.Escape ) ) {
 			if ( quitGameDialog.activeSelf ) {
 				HideQuitGame();
-				optionsMenu.SetActive(false);
-				rootMenu.SetActive(true);
 			} else {
 				ShowQuitGame();
 			}
@@ -29,10 +28,12 @@ public class MainMenu : UIMenu {
 
 	public void ShowQuitGame() {
 		quitGameDialog.SetActive(true);
+		rootMenu.SetActive(false);
 	}
 	
 	public void HideQuitGame() {
 		quitGameDialog.SetActive(false);
+		rootMenu.SetActive(true);
 	}
 
 	public void QuitGame() {

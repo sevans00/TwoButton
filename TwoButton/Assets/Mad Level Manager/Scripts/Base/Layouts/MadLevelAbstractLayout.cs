@@ -42,6 +42,12 @@ public abstract class MadLevelAbstractLayout : MadNode {
     public TwoStepActivationType twoStepActivationType = TwoStepActivationType.Disabled;
     private MadLevelIcon activeIcon;
 
+    public LoadLevel loadLevel = LoadLevel.Immediately;
+    public float loadLevelLoadLevelDelay = 1.5f;
+    public GameObject loadLevelMessageReceiver;
+    public string loadLevelMessageName;
+    public bool loadLevelMessageIncludeChildren;
+
     // make a sound option
     public bool onIconActivatePlayAudio;
     public AudioClip onIconActivatePlayAudioClip;
@@ -57,10 +63,12 @@ public abstract class MadLevelAbstractLayout : MadNode {
     public bool onIconActivateMessage;
     public GameObject onIconActivateMessageReceiver;
     public string onIconActivateMessageMethodName = "OnIconActivate";
+    public bool onIconActivateMessageIncludeChildren;
     
     public bool onIconDeactivateMessage;
     public GameObject onIconDeactivateMessageReceiver;
     public string onIconDeactivateMessageMethodName = "OnIconDeactivate";
+    public bool onIconDeactivateMessageIncludeChildren;
     
     // mobile "back" button behaviour
     public bool handleMobileBackButton = true;
@@ -134,6 +142,48 @@ public abstract class MadLevelAbstractLayout : MadNode {
         string lastLevelName = MadLevel.FindLastLevelName(MadLevel.Type.Level, groupName);
         return GetIcon(lastLevelName);
     }
+
+    /// <summary>
+    /// Gets the last completed level icon in current group or null if cannot be found.
+    /// </summary>
+    /// <returns></returns>
+    public MadLevelIcon GetLastCompletedIcon() {
+        var lastCompleted =
+            from l in MadLevel.activeConfiguration.levels
+            where l.groupId == configurationGroup
+                && l.type == MadLevel.Type.Level
+                && MadLevelProfile.IsCompleted(l.name)
+            orderby l.order descending
+            select l;
+        var lastCompletedLevel = lastCompleted.FirstOrDefault();
+        if (lastCompletedLevel != null) {
+            return MadLevelLayout.current.GetIcon(lastCompletedLevel.name);
+        } else {
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// Gets last unlocked icon or null if cannot be found.
+    /// </summary>
+    /// <returns></returns>
+    public MadLevelIcon GetLastUnlockedIcon() {
+        var lastUnlocked =
+            from l in MadLevel.activeConfiguration.levels
+            where l.groupId == configurationGroup
+                && l.type == MadLevel.Type.Level
+                && MadLevelProfile.IsLockedSet(l.name)
+                && MadLevelProfile.IsLocked(l.name) == false
+            orderby l.order descending
+            select l;
+        var lastUnlockedLevel = lastUnlocked.FirstOrDefault();
+        if (lastUnlockedLevel != null) {
+            var lastUnlockedIcon = MadLevelLayout.current.GetIcon(lastUnlockedLevel.name);
+            return lastUnlockedIcon;
+        } else {
+            return null;
+        }
+    }
     
     /// <summary>
     /// Gets the currently active icon or <code>null</code> if no icon is active.
@@ -166,6 +216,17 @@ public abstract class MadLevelAbstractLayout : MadNode {
         }
         
         return GetIcon(nextLevel.name);
+    }
+
+    /// <summary>
+    /// Gets all active icons available in the layout.
+    /// </summary>
+    /// <returns></returns>
+    public MadLevelIcon[] GetAllIcons() {
+        // find under the page
+        var icons = MadTransform.FindChildren<MadLevelIcon>(
+            transform, (ic) => MadGameObject.IsActive(ic.gameObject), 3);
+        return icons.ToArray();
     }
     
     /// <summary>
@@ -245,7 +306,11 @@ public abstract class MadLevelAbstractLayout : MadNode {
         
         onIconActivate += (icon, levelName) => {
             if (onIconActivateMessage && onIconActivateMessageReceiver != null) {
-                onIconActivateMessageReceiver.SendMessage(onIconActivateMessageMethodName, icon);
+                if (onIconActivateMessageIncludeChildren) {
+                    onIconActivateMessageReceiver.BroadcastMessage(onIconActivateMessageMethodName, icon);
+                } else {
+                    onIconActivateMessageReceiver.SendMessage(onIconActivateMessageMethodName, icon);
+                }
             }
             
             if (onIconActivatePlayAudio && onIconActivatePlayAudioClip != null && cachedAudioListener != null) {
@@ -258,7 +323,11 @@ public abstract class MadLevelAbstractLayout : MadNode {
         
         onIconDeactivate += (icon, levelName) => {
             if (onIconDeactivateMessage && onIconDeactivateMessageReceiver != null) {
-                onIconDeactivateMessageReceiver.SendMessage(onIconDeactivateMessageMethodName, icon);
+                if (onIconDeactivateMessageIncludeChildren) {
+                    onIconDeactivateMessageReceiver.BroadcastMessage(onIconDeactivateMessageMethodName, icon);
+                } else {
+                    onIconDeactivateMessageReceiver.SendMessage(onIconDeactivateMessageMethodName, icon);
+                }
             }
             
             if (onIconDeactivatePlayAudio && onIconDeactivatePlayAudioClip != null && cachedAudioListener != null) {
@@ -269,43 +338,6 @@ public abstract class MadLevelAbstractLayout : MadNode {
             }
         };
             
-#if UNITY_EDITOR
-        EditorApplication.playmodeStateChanged = () => {
-            if (configuration != null
-                && EditorApplication.isPlayingOrWillChangePlaymode
-                && !EditorApplication.isPlaying) {
-                
-                if (!configuration.IsValid()) {
-                    if (!EditorUtility.DisplayDialog(
-                        "Invalid Configuration",
-                        "Your level configuration has errors. Do you want to continue anyway?",
-                        "Yes", "No")) {
-                            EditorApplication.isPlaying = false;
-                            Selection.activeObject = configuration;
-                            return;
-                        }
-                }
-                
-                if (configuration != MadLevel.activeConfiguration
-                    || !configuration.CheckBuildSynchronized()
-                    || !configuration.active) {
-                    if (EditorUtility.DisplayDialog(
-                        "Not Synchronized",
-                        "Build configuration of choice is not activate/synchronized with this level select layout "
-                        + "(errors will occur). Do it now?",
-                        "Yes", "No")) {
-                            var active = MadLevelConfiguration.GetActive();
-                            if (active != null) {
-                                active.active = false; // workaround
-                            }
-                            configuration.active = true;
-                            configuration.SynchronizeBuild();
-                    }
-                }    
-            }
-        };
-#endif
-        
     }
     
     protected virtual void Start() {
@@ -347,16 +379,8 @@ public abstract class MadLevelAbstractLayout : MadNode {
     }
 
     private void LookAtLastCompletedLevel() {
-        var lastCompleted =
-            from l in MadLevel.activeConfiguration.levels
-            where l.groupId == configurationGroup
-                && l.type == MadLevel.Type.Level
-                && MadLevelProfile.IsCompleted(l.name)
-            orderby l.order descending
-            select l;
-        var lastCompletedLevel = lastCompleted.FirstOrDefault();
-        if (lastCompletedLevel != null) {
-            var lastCompletedIcon = MadLevelLayout.current.GetIcon(lastCompletedLevel.name);
+        var lastCompletedIcon = GetLastCompletedIcon();
+        if (lastCompletedIcon != null) {
             LookAtIcon(lastCompletedIcon);
         } else {
             LookAtFirstLevel();
@@ -369,18 +393,9 @@ public abstract class MadLevelAbstractLayout : MadNode {
     }
 
     private void LookAtLastUnlockedLevel() {
-        var firstUnlocked =
-            from l in MadLevel.activeConfiguration.levels
-            where l.groupId == configurationGroup
-                && l.type == MadLevel.Type.Level
-                && MadLevelProfile.IsLockedSet(l.name)
-                && MadLevelProfile.IsLocked(l.name) == false
-            orderby l.order descending
-            select l;
-        var firstUnlockedLevel = firstUnlocked.FirstOrDefault();
-        if (firstUnlockedLevel != null) {
-            var firstUnlockedIcon = MadLevelLayout.current.GetIcon(firstUnlockedLevel.name);
-            LookAtIcon(firstUnlockedIcon);
+        var lastUnlockedIcon = GetLastUnlockedIcon();
+        if (lastUnlockedIcon != null) {
+            LookAtIcon(lastUnlockedIcon);
         } else {
             LookAtFirstLevel();
         }
@@ -396,7 +411,7 @@ public abstract class MadLevelAbstractLayout : MadNode {
         switch (twoStepActivationType) {
             case TwoStepActivationType.Disabled:
                 if (!icon.locked) {
-                    icon.LoadLevel();
+                    StartCoroutine(Activate2nd(icon));
                 }
                 break;
                 
@@ -408,10 +423,10 @@ public abstract class MadLevelAbstractLayout : MadNode {
                             onIconActivate(icon, icon.level.name);
                         }
                     } else if (!icon.locked) {
-                        icon.LoadLevel();
+                        StartCoroutine(Activate2nd(icon));
                     }
                 } else if (!icon.locked) {
-                    icon.LoadLevel();
+                    StartCoroutine(Activate2nd(icon));
                 }
                 break;
                 
@@ -422,7 +437,7 @@ public abstract class MadLevelAbstractLayout : MadNode {
                         onIconActivate(icon, icon.level.name);
                     }
                 } else if (!icon.locked) {
-                    icon.LoadLevel();
+                    StartCoroutine(Activate2nd(icon));
                 }
                 break;
                 
@@ -440,6 +455,59 @@ public abstract class MadLevelAbstractLayout : MadNode {
             onIconDeactivate(icon, icon.level.name);
         }
     }
+
+    // second tier of icon activation. Will go through loadLevel condition
+    private IEnumerator Activate2nd(MadLevelIcon icon) {
+        switch (loadLevel) {
+            case LoadLevel.Immediately:
+                icon.LoadLevel();
+                break;
+
+            case LoadLevel.WithDelay:
+                yield return new WaitForSeconds(loadLevelLoadLevelDelay);
+                icon.LoadLevel();
+                break;
+
+            case LoadLevel.SendMessage:
+                if (loadLevelMessageReceiver == null) {
+                    Debug.LogError("No send message receiver", this);
+                    break;
+                }
+
+                if (string.IsNullOrEmpty(loadLevelMessageName)) {
+                    Debug.LogError("No sent message name", this);
+                    break;
+                }
+
+                if (loadLevelMessageIncludeChildren) {
+                    loadLevelMessageReceiver.BroadcastMessage(loadLevelMessageName, icon);
+                } else {
+                    loadLevelMessageReceiver.SendMessage(loadLevelMessageName, icon);
+                }
+                break;
+
+            default:
+                Debug.LogError("Unknown LoadLevel option: " + loadLevel);
+                break;
+        }
+    }
+
+    protected MadLevelIcon CreateIcon(Transform parent, string name, MadLevelIcon template) {
+        GameObject go = null;
+        
+#if UNITY_EDITOR
+        go = PrefabUtility.InstantiatePrefab(template.gameObject) as GameObject;
+#endif
+        if (go != null) {
+            go.name = name;
+            go.transform.parent = parent;
+            
+        } else {
+            go = MadTransform.CreateChild(parent, name, template.gameObject);
+        }
+
+        return go.GetComponent<MadLevelIcon>();
+    }
     
     // ===========================================================
     // Static Methods
@@ -453,6 +521,12 @@ public abstract class MadLevelAbstractLayout : MadNode {
         Disabled,
         OnlyOnMobiles,
         Always,
+    }
+
+    public enum LoadLevel {
+        Immediately,
+        WithDelay,
+        SendMessage,
     }
     
     public enum OnMobileBack {

@@ -64,6 +64,8 @@ public class MadInitTool : EditorWindow {
     }
     
     public static MadRootNode Init(string rootObjectName, int layer) {
+        CheckEmptyScene();
+
         var go = new GameObject();
         go.name = rootObjectName;
         var root = go.AddComponent<MadRootNode>();
@@ -99,6 +101,38 @@ public class MadInitTool : EditorWindow {
         panel.gameObject.layer = layer;
         
         return root;
+    }
+
+    // if a scene has only one Main Camera object, then init tool proposes to remove it
+    private static void CheckEmptyScene() {
+        if (SceneHasOnlyMainCamera()) {
+            bool remove = EditorUtility.DisplayDialog(
+                "Remove Main Camera?",
+                "Your scene seems to have only the Main Camera object. If you're not planning to use it, it's recommended to remove it.",
+                "Remove", "Leave");
+            if (remove) {
+                var mainCamera = GameObject.Find("/Main Camera");
+                MadGameObject.SafeDestroy(mainCamera);
+            }
+        }
+    }
+
+    private static bool SceneHasOnlyMainCamera() {
+        bool hasOtherObjects = false;
+        bool hasMainCamera = false;
+
+        var allObjects = GameObject.FindObjectsOfType(typeof(GameObject)) as GameObject[];
+        foreach (var obj in allObjects) {
+            if (MadGameObject.IsActive(obj)) {
+                if (obj.name == "Main Camera") {
+                    hasMainCamera = true;
+                } else {
+                    hasOtherObjects = true;
+                }
+            }
+        }
+
+        return hasMainCamera && !hasOtherObjects;
     }
     
     // ===========================================================

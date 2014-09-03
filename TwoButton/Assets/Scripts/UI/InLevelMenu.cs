@@ -36,6 +36,14 @@ public class InLevelMenu : MonoBehaviour {
 		iTween.StopByName("inlevel_hide");
 		inLevelMenu.SetActive(true);
 		Game.instance.pause();
+		if ( Game.instance.isGameLevel ) {
+			PreviewCamera.instance.zoomOut();
+		} else {
+			CameraPathAnimator pathAnimator = GameObject.FindObjectOfType<CameraPathAnimator>();
+			if ( pathAnimator != null ) {
+				pathAnimator.Pause();
+			}
+		}
 		iTween.MoveTo( inLevelMenu, iTween.Hash(
 			"name", "inlevel_show",
 			"position", deployedPosition,
@@ -45,6 +53,9 @@ public class InLevelMenu : MonoBehaviour {
 
 	public void Hide () {
 		iTween.StopByName("inlevel_show");
+		if ( Game.instance.isGameLevel ) {
+			PreviewCamera.instance.zoomIn();
+		}
 		iTween.MoveTo( inLevelMenu, iTween.Hash(
 			"name", "inlevel_hide",
 			"position", hiddenPosition,
@@ -55,8 +66,13 @@ public class InLevelMenu : MonoBehaviour {
 	}
 	public void onHideComplete () {
 		inLevelMenu.SetActive(false);
+		CameraPathAnimator pathAnimator = GameObject.FindObjectOfType<CameraPathAnimator>();
+		if ( pathAnimator != null ) {
+			pathAnimator.Play();
+			return;
+		}
 		if ( Game.instance != null ) {
-			Game.instance.unpause();
+			//Game.instance.unpause();
 		}
 	}
 
@@ -79,7 +95,8 @@ public class InLevelMenu : MonoBehaviour {
 		if ( pathAnimator != null ) {
 			//Debug.LogWarning("Restart camera path");
 			pathAnimator.Seek(0);
-			pathAnimator.Play();
+			//pathAnimator.Play();
+			Hide ();
 			return;
 		}
 		Game.instance.RestartLevel();

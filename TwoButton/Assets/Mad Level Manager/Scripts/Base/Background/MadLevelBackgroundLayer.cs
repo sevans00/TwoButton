@@ -214,9 +214,9 @@ public class MadLevelBackgroundLayer : MonoBehaviour {
         var locPos = parent.UserPosition;
         float dx = -locPos.x * followSpeed;
         float dy = -locPos.y * followSpeed;
-        
-        dx /= Screen.width / rx;
-        dy /= Screen.height / ry;
+
+        dx /= root.screenWidth;
+        dy /= root.screenHeight;
         
         float offsetX = 0;
         float offsetY = 0;

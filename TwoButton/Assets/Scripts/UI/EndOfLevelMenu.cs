@@ -147,9 +147,12 @@ public class EndOfLevelMenu : MonoBehaviour {
 		gameObject.SetActive(true);
 		iTween.MoveTo( gameObject, iTween.Hash(
 			"name", "endlevel_show",
+			//"oncomplete", "onShowComplete",
 			"position", deployedPosition,
 			"time", animateTime,
 			"easetype", iTween.EaseType.easeOutQuad ) );
 	}
+	public void onShowComplete () {
 
+	}
 }

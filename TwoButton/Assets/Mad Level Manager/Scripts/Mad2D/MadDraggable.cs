@@ -7,6 +7,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using MadLevelManager;
+using System;
 
 #if !UNITY_3_5
 namespace MadLevelManager {
@@ -45,11 +46,15 @@ public class MadDraggable : MadNode {
     protected Vector2 estaminatedPos;
     
     Touch? singleTouch = null;
+
+#pragma warning disable 0414
+    bool singleTouchEnded = false; // set to true if ended in this frame
+#pragma warning restore 0414
     protected List<Touch> multiTouches = new List<Touch>();
     
     // amount of time from the last touch/click
-    protected float lastTouchTime { get; private set; }
-    protected Vector2 lastTouchCameraPos { get; private set; }
+    protected float lastTouchTime { get; set; }
+    protected Vector2 lastTouchCameraPos { get; set; }
     
     // deprecated
     [SerializeField] DragMode dragMode = DragMode.DragStop;
@@ -79,6 +84,9 @@ public class MadDraggable : MadNode {
             transform.localPosition = -value;
         }
     }
+
+    // gets the position progress (0.0 - 1.0)
+    public virtual Vector2 progress { get { throw new NotImplementedException(); } }
 
     // ===========================================================
     // Methods for/from SuperClass/Interfaces
@@ -153,13 +161,17 @@ public class MadDraggable : MadNode {
     /// Decides on current touch phase and classification (single or multiple touches)
     /// </summary>
     void UpdateTouchClassification() {
+        singleTouchEnded = false;
+
         foreach (Touch touch in Input.touches) {
             switch (touch.phase) {
                 case TouchPhase.Began:
                     if (singleTouch == null && multiTouches.Count == 0) {
                         singleTouch = touch;
                     } else {
-                        multiTouches.Add(singleTouch.Value);
+                        if (singleTouch != null) {
+                            multiTouches.Add(singleTouch.Value);
+                        }
                         multiTouches.Add(touch);
                         
                         singleTouch = null;
@@ -173,6 +185,7 @@ public class MadDraggable : MadNode {
                     } else {
                         multiTouches.Clear();
                     }
+                    singleTouchEnded = true;
                     break;
                 default:
                     if (singleTouch != null && singleTouch.Value.fingerId == touch.fingerId) {
@@ -220,6 +233,18 @@ public class MadDraggable : MadNode {
         return Input.GetMouseButtonDown(0);
 #endif
     }
+
+    protected bool IsTouchingJustEnded() {
+#if UNITY_ANDROID || UNITY_IPHONE || UNITY_WP8 || UNITY_BLACKBERRY
+        if (!Application.isEditor) {
+            return singleTouchEnded;
+        } else {
+            return Input.GetMouseButtonUp(0);
+        }
+#else
+        return Input.GetMouseButtonUp(0);
+#endif
+    }
     
     protected Vector2 TouchPosition() {
         MadDebug.Assert(IsTouchingSingle(), "Not touching anything");
@@ -249,6 +274,8 @@ public class MadDraggable : MadNode {
     protected void Clear() {
         lastDeltas.Clear();
         dragDistance = 0;
+        interiaForce = Vector3.zero;
+        estaminatedPos = cameraPos;
     }
     
     void ComputeInteriaForce() {

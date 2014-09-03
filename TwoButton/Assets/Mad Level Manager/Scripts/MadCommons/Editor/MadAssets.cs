@@ -86,6 +86,25 @@ public class MadAssets : MonoBehaviour {
     public static bool Exists(string path) {
         return File.Exists(path);
     }
+
+    public static T TryLoadComponent<T>(string guid) where T : Component {
+        var go = TryLoadGameObject(guid);
+        if (go == null) {
+            return null;
+        }
+
+        return go.GetComponent<T>();
+    }
+
+    public static GameObject TryLoadGameObject(string guid) {
+        string assetPath = AssetDatabase.GUIDToAssetPath(guid);
+        if (string.IsNullOrEmpty(assetPath)) {
+            return null;
+        }
+
+        var go = AssetDatabase.LoadAssetAtPath(assetPath, typeof(GameObject)) as GameObject;
+        return go;
+    }
     
     // ===========================================================
     // Inner and Anonymous Classes

@@ -74,7 +74,7 @@ public class MadiTween : MonoBehaviour{
  private float delayStarted; //probably not neccesary that this be protected but it shuts Unity's compiler up about this being "never used"
  private bool kinematic, isLocal, loop, reverse, wasPaused, physics;
  private Hashtable tweenArguments;
- private Space space;
+ private UnityEngine.Space space;
  public delegate float EasingFunction(float start, float end, float Value);
  private delegate void ApplyTween();
  private EasingFunction ease;
@@ -197,7 +197,7 @@ public class MadiTween : MonoBehaviour{
      public static EaseType easeType = MadiTween.EaseType.easeOutExpo;
      public static float lookSpeed = 3f;
      public static bool isLocal = false;
-     public static Space space = Space.Self;
+     public static UnityEngine.Space space = UnityEngine.Space.Self;
      public static bool orientToPath = false;
      public static Color color = Color.white;
      //update defaults:
@@ -1689,7 +1689,7 @@ public class MadiTween : MonoBehaviour{
  /// A <see cref="System.String"/>. Restricts rotation to the supplied axis only.
  /// </param>
  /// <param name="space">
- /// A <see cref="Space"/> or <see cref="System.String"/> for applying the transformation in either the world coordinate or local cordinate system. Defaults to local space.
+ /// A <see cref="UnityEngine.Space"/> or <see cref="System.String"/> for applying the transformation in either the world coordinate or local cordinate system. Defaults to local space.
  /// </param>
  /// <param name="time">
  /// A <see cref="System.Single"/> or <see cref="System.Double"/> for the time in seconds the animation will take to complete.
@@ -1787,7 +1787,7 @@ public class MadiTween : MonoBehaviour{
  /// A <see cref="System.String"/>. Restricts rotation to the supplied axis only.
  /// </param>
  /// <param name="space">
- /// A <see cref="Space"/> or <see cref="System.String"/> for applying the transformation in either the world coordinate or local cordinate system. Defaults to local space.
+ /// A <see cref="UnityEngine.Space"/> or <see cref="System.String"/> for applying the transformation in either the world coordinate or local cordinate system. Defaults to local space.
  /// </param>
  /// <param name="time">
  /// A <see cref="System.Single"/> or <see cref="System.Double"/> for the time in seconds the animation will take to complete.
@@ -2477,7 +2477,7 @@ public class MadiTween : MonoBehaviour{
  /// A <see cref="System.Single"/> or <see cref="System.Double"/> for the individual setting of the z axis.
  /// </param>
  /// <param name="space">
- /// A <see cref="Space"/> or <see cref="System.String"/> for applying the transformation in either the world coordinate or local cordinate system. Defaults to local space.
+ /// A <see cref="UnityEngine.Space"/> or <see cref="System.String"/> for applying the transformation in either the world coordinate or local cordinate system. Defaults to local space.
  /// </param>
  /// <param name="time">
  /// A <see cref="System.Single"/> or <see cref="System.Double"/> for the time in seconds the animation will take to complete.
@@ -2563,7 +2563,7 @@ public class MadiTween : MonoBehaviour{
  /// A <see cref="System.Single"/> or <see cref="System.Double"/> for the individual setting of the z axis.
  /// </param>
  /// <param name="space">
- /// A <see cref="Space"/> or <see cref="System.String"/> for applying the transformation in either the world coordinate or local cordinate system. Defaults to local space.
+ /// A <see cref="UnityEngine.Space"/> or <see cref="System.String"/> for applying the transformation in either the world coordinate or local cordinate system. Defaults to local space.
  /// </param>
  /// <param name="islocal">
  /// A <see cref="System.Boolean"/> for whether to animate in world space or relative to the parent. False by default.
@@ -2818,7 +2818,7 @@ public class MadiTween : MonoBehaviour{
  /// A <see cref="System.Single"/> or <see cref="System.Double"/> for the individual setting of the z magnitude.
  /// </param>
  /// <param name="space">
- /// A <see cref="Space"/> for applying the transformation in either the world coordinate or local cordinate system. Defaults to local space.
+ /// A <see cref="UnityEngine.Space"/> for applying the transformation in either the world coordinate or local cordinate system. Defaults to local space.
  /// </param> 
  /// <param name="time">
  /// A <see cref="System.Single"/> or <see cref="System.Double"/> for the time in seconds the animation will take to complete.
@@ -2898,7 +2898,7 @@ public class MadiTween : MonoBehaviour{
  /// A <see cref="System.Single"/> or <see cref="System.Double"/> for the individual setting of the z magnitude.
  /// </param>
  /// <param name="space">
- /// A <see cref="Space"/> for applying the transformation in either the world coordinate or local cordinate system. Defaults to local space.
+ /// A <see cref="UnityEngine.Space"/> for applying the transformation in either the world coordinate or local cordinate system. Defaults to local space.
  /// </param> 
  /// <param name="looktarget">
  /// A <see cref="Vector3"/> or A <see cref="Transform"/> for a target the GameObject will look at.
@@ -2985,7 +2985,7 @@ public class MadiTween : MonoBehaviour{
  /// A <see cref="System.Single"/> or <see cref="System.Double"/> for the individual setting of the z magnitude.
  /// </param>
  /// <param name="space">
- /// A <see cref="Space"/> for applying the transformation in either the world coordinate or local cordinate system. Defaults to local space.
+ /// A <see cref="UnityEngine.Space"/> for applying the transformation in either the world coordinate or local cordinate system. Defaults to local space.
  /// </param> 
  /// <param name="time">
  /// A <see cref="System.Single"/> or <see cref="System.Double"/> for the time in seconds the animation will take to complete.
@@ -6887,11 +6887,11 @@ public class MadiTween : MonoBehaviour{
              
      if(tweenArguments.Contains("space")){
          //allows space to be set as either an enum(C# friendly) or a string(JS friendly), string case usage doesn't matter to further increase usability:
-         if(tweenArguments["space"].GetType() == typeof(Space)){
-             space=(Space)tweenArguments["space"];
+         if(tweenArguments["space"].GetType() == typeof(UnityEngine.Space)){
+             space=(UnityEngine.Space)tweenArguments["space"];
          }else{
              try {
-                 space=(Space)Enum.Parse(typeof(Space),(string)tweenArguments["space"],true);    
+                 space=(UnityEngine.Space)Enum.Parse(typeof(UnityEngine.Space),(string)tweenArguments["space"],true);    
              } catch {
                  Debug.LogWarning("iTween: Unsupported space supplied! Default will be used.");
                  space = Defaults.space;

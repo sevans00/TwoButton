@@ -34,6 +34,11 @@ public class MadLevelExtensionEditor : EditorWindow {
                 return null;
             }
         }
+
+        set {
+            int index = configuration.extensions.IndexOf(value);
+            selectedExtensionIndex = index;
+        }
     }
 
     #endregion
@@ -95,7 +100,11 @@ public class MadLevelExtensionEditor : EditorWindow {
         if (MadGUI.Button("Create New Extension", Color.green)) {
             var builder = new MadInputDialog.Builder("Create New Extension", "Enter a new extension name.", (result) => {
                 if (!string.IsNullOrEmpty(result)) {
-                    CreateNewExtension(result);
+                    var extension = CreateNewExtension(result);
+                    if (extension != null) {
+                        currentExtension = extension;
+                    }
+
                 }
             });
             builder.BuildAndShow();
@@ -103,10 +112,10 @@ public class MadLevelExtensionEditor : EditorWindow {
         EditorGUILayout.EndHorizontal();
     }
 
-    private void CreateNewExtension(string name) {
+    private MadLevelExtension CreateNewExtension(string name) {
         if (ExtensionExists(name)) {
             EditorUtility.DisplayDialog("Extension exists!", "Extension with name '" + name + "' already exists!", "OK");
-            return;
+            return null;
         }
 
         MadUndo.RecordObject2(configuration, "Create New Extension");
@@ -116,6 +125,8 @@ public class MadLevelExtensionEditor : EditorWindow {
         EditorUtility.SetDirty(configuration);
 
         Repaint();
+
+        return extension;
     }
 
     private void RemoveExtension(int index) {
@@ -159,7 +170,7 @@ public class MadLevelExtensionEditor : EditorWindow {
 
         int counter = 1;
         new MadGUI.ArrayList<MadLevelScene>(scenes, (scene) => {
-            MadGUI.Validate(() => scene != null, () => {
+            MadGUI.Validate(() => scene.sceneObject != null, () => {
                 MadGUI.LookLikeControls(70);
                 scene.sceneObject = MadGUI.SceneField(scene.sceneObject, "Scene " + (counter++));
                 MadGUI.LookLikeControls(0);

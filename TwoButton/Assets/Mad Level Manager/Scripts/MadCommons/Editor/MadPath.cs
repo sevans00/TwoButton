@@ -8,6 +8,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 
+#if !UNITY_3_5
+namespace MadLevelManager {
+#endif
+
 public class MadPath : MonoBehaviour {
 
     // ===========================================================
@@ -55,3 +59,7 @@ public class MadPath : MonoBehaviour {
     // ===========================================================
 
 }
+
+#if !UNITY_3_5
+} // namespace
+#endif

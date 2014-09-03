@@ -30,6 +30,9 @@ public class MadPanel : MadNode {
     private static List<MadPanel> panels = new List<MadPanel>();
     
     public bool halfPixelOffset = true;
+
+    [NonSerialized]
+    public bool ignoreInput = false;
     
     [NonSerialized]
     public HashSet<MadSprite> sprites = new HashSet<MadSprite>();
@@ -93,6 +96,9 @@ public class MadPanel : MadNode {
     // input helpers
     HashSet<MadSprite> hoverSprites = new HashSet<MadSprite>();
 
+    // helper for making Unity Remote working
+    bool haveTouch;
+
     // set of sprites that has been clicked or touched. When mouse button or finger is up,
     // and sprite still resists in here, it may be treated as "pressed"
     HashSet<MadSprite> touchDownSprites = new HashSet<MadSprite>();
@@ -111,6 +117,13 @@ public class MadPanel : MadNode {
     // ===========================================================
     // Methods
     // ===========================================================
+
+    // trial version methods
+    void OnGUI() {
+        if (MadTrial.isTrialVersion) {
+            MadTrial.InfoLabel("This is an evaluation version of Mad Level Manager");
+        }
+    }
 
     public Vector3 WorldToPanel(Camera worldCamera, Vector3 worldPos) {
         var pos = worldCamera.WorldToScreenPoint(worldPos);
@@ -162,6 +175,10 @@ public class MadPanel : MadNode {
     }
     
     void UpdateInput() {
+        if (ignoreInput) {
+            return;
+        }
+
 #if UNITY_ANDROID || UNITY_IPHONE || UNITY_WP8 || UNITY_BLACKBERRY
         UpdateTouchInput();
         if (Application.isEditor) {
@@ -171,30 +188,64 @@ public class MadPanel : MadNode {
         UpdateMouseInput();
 #endif
     }
-    
+
     void UpdateTouchInput() {
         var touches = Input.touches;
-        foreach (var touch in touches) {
+        var sprites = new HashSet<MadSprite>();
 
-            var sprites = AllSpritesForScreenPoint(touch.position);
+        // to make Unity Remote work
+        haveTouch = Input.touchCount > 0;
+
+        if (touches.Length == 1) {
+            var touch = touches[0];
+
+            var allSprites = AllSpritesForScreenPoint(touch.position);
+            for (int i = 0; i < allSprites.Count; ++i) {
+                sprites.Add(allSprites[i]);
+            }
+
             foreach (var sprite in sprites) {
 
                 if (touch.phase == TouchPhase.Began) {
                     touchDownSprites.Add(sprite);
+
+                    sprite.onTouchEnter(sprite);
+
                 } else if (touch.phase == TouchPhase.Ended && touchDownSprites.Contains(sprite)) {
                     sprite.onTap(sprite);
                     sprite.TryFocus();
                 } else {
                     // will remove sprite from mouse down if dragging is registered
                     if (IsDragging(sprite)) {
+                        sprite.onTouchExit(sprite);
                         touchDownSprites.Remove(sprite);
                     }
                 }
             }
         }
+
+        // find sprites that are no longer hovered
+        //if (sprites.Count != touchDownSprites.Count) {
+            List<MadSprite> unhovered = new List<MadSprite>();
+            foreach (var touchDownSprite in touchDownSprites) {
+                if (!sprites.Contains(touchDownSprite)) {
+                    unhovered.Add(touchDownSprite);
+                    touchDownSprite.onTouchExit(touchDownSprite);
+                }
+            }
+
+            foreach (var u in unhovered) {
+                hoverSprites.Remove(u);
+            }
+        //}
     }
 
     void UpdateMouseInput() {
+        if (haveTouch) {
+            // if I am here this means that Unity Remote is working
+            return;
+        }
+
         var sprites = new HashSet<MadSprite>(AllSpritesForScreenPoint(Input.mousePosition));
 
         foreach (var sprite in sprites) {
@@ -261,18 +312,22 @@ public class MadPanel : MadNode {
         return false;
     }
     
-    IEnumerable<MadSprite> AllSpritesForScreenPoint(Vector2 point) {
+    List<MadSprite> AllSpritesForScreenPoint(Vector2 point) {
+        List<MadSprite> result = new List<MadSprite>();
+
         var ray = currentCamera.ScreenPointToRay(point);
-        RaycastHit[] hits = Physics.RaycastAll(ray, 4);
+        RaycastHit[] hits = Physics.RaycastAll(ray, 4000);
         foreach (var hit in hits) {
             var collider = hit.collider;
             var sprite = collider.GetComponent<MadSprite>();
             if (sprite != null && sprite.panel == this) {
-                yield return sprite;
+                result.Add(sprite);
             }
         }
+
+        return result;
     }
-    
+
     // ===========================================================
     // Static Methods
     // ===========================================================

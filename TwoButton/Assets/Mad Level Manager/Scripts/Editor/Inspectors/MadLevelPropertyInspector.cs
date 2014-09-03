@@ -97,12 +97,14 @@ public class MadLevelPropertyInspector : MadLevelManager.MadEditorBase {
 
             EditorGUILayout.EndHorizontal();
 
-            EditorGUILayout.Space();
+            if (property.GetComponent<MadText>() != null) {
+                EditorGUILayout.Space();
 
-            MadGUI.PropertyField(textFromProperty, "Text From Property");
-            MadGUI.ConditionallyEnabled(textFromProperty.boolValue, () => {
-                MadGUI.PropertyField(textPropertyName, "Text Property Name");
-            });
+                MadGUI.PropertyField(textFromProperty, "Text From Property");
+                MadGUI.ConditionallyEnabled(textFromProperty.boolValue, () => {
+                    MadGUI.PropertyField(textPropertyName, "Text Property Name");
+                });
+            }
         });
 
 

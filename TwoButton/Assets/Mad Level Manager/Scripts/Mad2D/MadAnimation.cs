@@ -23,6 +23,8 @@ public class MadAnimation : MonoBehaviour {
     
     public Action onMouseEnter;
     public Action onMouseExit;
+    public Action onTouchEnter;
+    public Action onTouchExit;
     public Action onFocus;
     public Action onFocusLost;
     
@@ -45,6 +47,8 @@ public class MadAnimation : MonoBehaviour {
         if (sprite != null) {
             sprite.onMouseEnter += (s) => AnimOnMouseEnter();
             sprite.onMouseExit += (s) => AnimOnMouseExit();
+            sprite.onTouchEnter += (s) => AnimOnTouchEnter();
+            sprite.onTouchExit += (s) => AnimOnTouchExit();
             sprite.onFocus += (s) => PlayOnFocus();
             sprite.onFocusLost += (s) => PlayOnFocusLost();
         } else {
@@ -60,6 +64,16 @@ public class MadAnimation : MonoBehaviour {
     void AnimOnMouseExit() {
         UpdateOrigs();
         PlayAction(onMouseExit);
+    }
+
+    void AnimOnTouchEnter() {
+        UpdateOrigs();
+        PlayAction(onTouchEnter);
+    }
+
+    void AnimOnTouchExit() {
+        UpdateOrigs();
+        PlayAction(onTouchExit);
     }
     
     void PlayOnFocus() {
@@ -98,6 +112,10 @@ public class MadAnimation : MonoBehaviour {
                 sprite.AnimColorTo(action.tint.color, action.time, action.easeType);
             }
         }
+
+        if (action.playSound != null) {
+            AudioSource.PlayClipAtPoint(action.playSound, Camera.main.transform.position, action.playSoundVolume);
+        }
     }
 
     // ===========================================================
@@ -118,6 +136,8 @@ public class MadAnimation : MonoBehaviour {
         public float time = 1f;
         public bool tintEnabled = false;
         public Tint tint = new Tint();
+        public AudioClip playSound;
+        public float playSoundVolume = 1;
         
         [System.Serializable]
         public class Tint {

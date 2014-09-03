@@ -152,8 +152,8 @@ public class MadAnchor : MadNode {
         }
 
         var pos = panel.WorldToPanel(camera, anchorObject.transform.position);
-        
-        transform.position = pos;
+
+        MadTransform.SetPosition(transform, pos);
     }
 
     // ===========================================================

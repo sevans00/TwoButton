@@ -17,16 +17,14 @@ namespace MadLevelManager {
 [CustomEditor(typeof(MadSprite))]   
 public class MadSpriteInspector : Editor {
 
-    // ===========================================================
-    // Constants
-    // ===========================================================
-
+    #region Constants
+    
     private static readonly Color BoundsColor = new Color(1f, 0f, 1f, 1f);
 
-    // ===========================================================
-    // Fields
-    // ===========================================================
+    #endregion
 
+    #region Fields
+    
     private SerializedProperty panel;
     private SerializedProperty visible;
     private SerializedProperty pivotPoint;
@@ -58,9 +56,9 @@ public class MadSpriteInspector : Editor {
 
     protected bool showLiveBounds = true;
 
-    // ===========================================================
-    // Methods for/from SuperClass/Interfaces
-    // ===========================================================
+    #endregion
+
+    #region Unity Methods
     
     protected void OnEnable() {
         sprite = target as MadSprite;
@@ -100,16 +98,25 @@ public class MadSpriteInspector : Editor {
     }
 
     public override bool HasPreviewGUI() {
-        return sprite.texture != null && showLiveBounds;
+        switch (sprite.inputType) {
+            case MadSprite.InputType.SingleTexture:
+                return sprite.texture != null && showLiveBounds;
+            case MadSprite.InputType.TextureAtlas:
+                return sprite.textureAtlas != null && sprite.textureAtlas.GetItem(sprite.textureAtlasSpriteGUID) != null && showLiveBounds;
+            default:
+                Debug.LogError("Unknown input type: " + sprite.inputType);
+                return false;
+        }
+        
     }
 
     public override void OnPreviewGUI(Rect r, GUIStyle background) {
         DrawLiveBoundsPreview(r);
     }
 
-    // ===========================================================
-    // Methods
-    // ===========================================================
+    #endregion
+
+    #region Methods
     
     protected void SectionSprite() {
         SectionSprite(DisplayFlag.None);
@@ -117,6 +124,8 @@ public class MadSpriteInspector : Editor {
     
     protected void SectionSprite(DisplayFlag flags) {
         serializedObject.Update();
+        GUIDepthCheck();
+
         MadGUI.PropertyField(panel, "Panel", MadGUI.ObjectIsSet);
         EditorGUILayout.Space();
 
@@ -196,10 +205,10 @@ public class MadSpriteInspector : Editor {
         if (showLiveBounds) {
             GUILayout.Label("Sprite Border", "HeaderLabel");
             EditorGUILayout.Space();
-            if (sprite.texture != null) {
+            if (sprite.CanDraw()) {
                 FieldLiveBounds();
             } else {
-                MadGUI.Info("More settings will be available when the sprite texture is set.");
+                MadGUI.Info("More settings will be available when the sprite texture or atlas is set.");
             }
         }
 
@@ -208,8 +217,8 @@ public class MadSpriteInspector : Editor {
 
     private void FieldLiveBounds() {
 
-        int texWidth = sprite.texture.width;
-        int texHeight = sprite.texture.height;
+        int texWidth = sprite.currentTextureWidth;
+        int texHeight = sprite.currentTextureHeight;
 
         MadGUI.PropertyField(hasLiveBounds, "Has Border");
 
@@ -247,15 +256,34 @@ public class MadSpriteInspector : Editor {
     private Rect DrawLiveBoundsPreview(Rect rect) {
         DrawGrid(rect);
 
-        var textureRect = KeepRatio(sprite.texture, rect);
-        GUI.DrawTexture(textureRect, sprite.texture);
+        switch (sprite.inputType) {
+            case MadSprite.InputType.SingleTexture: {
+                var textureRect = KeepRatio(sprite.texture.width, sprite.texture.height, rect);
+                GUI.DrawTexture(textureRect, sprite.texture);
 
-        DrawLiveBounds(textureRect);
+                DrawLiveBounds(textureRect);
+            }
+                break;
+
+            case MadSprite.InputType.TextureAtlas: {
+                var item = sprite.textureAtlas.GetItem(sprite.textureAtlasSpriteGUID);
+                if (item != null) {
+                    var textureRect = KeepRatio(item.pixelsWidth, item.pixelsHeight, rect);
+                    GUI.DrawTextureWithTexCoords(textureRect, sprite.textureAtlas.atlasTexture, item.region);
+
+                    DrawLiveBounds(textureRect);
+                }
+            }
+                break;
+        }
+        
+
+        
         return rect;
     }
 
-    private Rect KeepRatio(Texture2D texture, Rect rect) {
-        float targetRatio = texture.width / (float) texture.height;
+    private Rect KeepRatio(int textureWidth, int textureHeight, Rect rect) {
+        float targetRatio = textureWidth / (float) textureHeight;
         float rectRatio = rect.width / rect.height;
 
         if (rectRatio > targetRatio) { // rect is wider than the texture, correct width
@@ -308,13 +336,13 @@ public class MadSpriteInspector : Editor {
 
     private void ComputeLiveBounds() {
 
-        bool changed = SetReadable(sprite.texture, true);
+        bool changed = SetReadable(sprite.currentTexture, true);
         try {
             sprite.RecalculateLiveBounds();
             EditorUtility.SetDirty(sprite);
         } finally {
             if (changed) {
-                SetReadable(sprite.texture, false);
+                SetReadable(sprite.currentTexture, false);
             }
         }
 
@@ -333,13 +361,68 @@ public class MadSpriteInspector : Editor {
         return false;
     }
 
-    // ===========================================================
-    // Static Methods
-    // ===========================================================
+    private void GUIDepthCheck() {
+        var sprites = SharingDepthWithOtherTexturesCount();
+        if (sprites.Count > 0) {
+            bool select = MadGUI.WarningFix("This sprite is have the same GUI depth as " + sprites.Count + " other sprites with other textures on the scene. "
+                + " This may lead to situations when something is randomly disappearing.", "Select These Sprites");
+            if (select) {
+                Select(sprites);
+            }
 
-    // ===========================================================
-    // Inner and Anonymous Classes
-    // ===========================================================
+            EditorGUILayout.Space();
+        }
+    }
+
+    // searches for other sprites with other textures with the same depth
+    private List<MadSprite> SharingDepthWithOtherTexturesCount() {
+        List<MadSprite> result = new List<MadSprite>();
+
+        var panel = sprite.panel;
+        if (panel == null) {
+            return result;
+        }
+
+        foreach (var s in panel.sprites) {
+            if (s == sprite) {
+                continue;
+            }
+
+            if (s.guiDepth == sprite.guiDepth) {
+                if (s.inputType == sprite.inputType) {
+                    switch (s.inputType) {
+                        case MadSprite.InputType.SingleTexture:
+                            if (s.texture != sprite.texture) {
+                                result.Add(s);
+                            }
+                            break;
+
+                        case MadSprite.InputType.TextureAtlas:
+                            // checking guid is sufficient. I don't need to check atlas texture
+                            if (s.textureAtlasSpriteGUID != sprite.textureAtlasSpriteGUID) {
+                                result.Add(s);
+                            }
+                            break;
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+
+    private void Select(List<MadSprite> sprites) {
+        List<GameObject> gameObjects = new List<GameObject>();
+        foreach (var sprite in sprites) {
+            gameObjects.Add(sprite.gameObject);
+        }
+
+        Selection.objects = gameObjects.ToArray();
+    }
+
+    #endregion
+
+    #region Inner Types
     
     [Flags]
     protected enum DisplayFlag {
@@ -348,6 +431,8 @@ public class MadSpriteInspector : Editor {
         WithoutMaterial = 2,
         WithoutFill = 4,
     }
+
+    #endregion
 
 }
 

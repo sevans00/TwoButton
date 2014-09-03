@@ -101,6 +101,11 @@ public class MadLevelGridLayoutInspector : MadLevelAbstractLayoutInspector {
     MadLevelGridLayout.SetupMethod newSetupMethod;
 
     public override void OnInspectorGUI() {
+        if (MadTrialEditor.isTrialVersion && MadTrialEditor.expired) {
+            MadTrialEditor.OnEditorGUIExpired("Mad Level Manager");
+            return;
+        }
+
         newSetupMethod = (MadLevelGridLayout.SetupMethod) EditorGUILayout.EnumPopup("Setup Method", script.setupMethod);
         if (newSetupMethod != script.setupMethod) {
             if (newSetupMethod == MadLevelGridLayout.SetupMethod.Generate && EditorUtility.DisplayDialog(
@@ -153,6 +158,13 @@ public class MadLevelGridLayoutInspector : MadLevelAbstractLayoutInspector {
             GUI.enabled = generate;
             
             MadGUI.PropertyField(iconTemplate, "Icon Template", MadGUI.ObjectIsSet);
+            if (script.iconTemplate != null) {
+                var prefabType = PrefabUtility.GetPrefabType(script.iconTemplate);
+                if (prefabType == PrefabType.None) {
+                    MadGUI.Warning("It's recommended to use prefab as a template. All visible icon instances will be linked to this prefab.");
+                }
+            }
+
             MadGUI.Indent(() => {
                 MadGUI.PropertyFieldVector2(iconScale, "Scale");
                 MadGUI.PropertyFieldVector2(iconOffset, "Offset");
@@ -209,6 +221,8 @@ public class MadLevelGridLayoutInspector : MadLevelAbstractLayoutInspector {
             HandleMobileBack();
             EditorGUILayout.Space();
             TwoStepActivation();
+            EditorGUILayout.Space();
+            LoadLevel();
         });
         
         GUILayout.Label("Debug", "HeaderLabel");

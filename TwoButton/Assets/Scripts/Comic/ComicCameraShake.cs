@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using MadLevelManager;
 
 public class ComicCameraShake : MonoBehaviour {
 	
@@ -14,14 +15,13 @@ public class ComicCameraShake : MonoBehaviour {
 
 	bool shakeStarted = false;
 
-
-
 	//Initialize:
 	public CameraPath cameraPath;
 	public CameraPathAnimator cameraPathAnimator;
 	public void Start () {
 		//Link in Animator
 		cameraPathAnimator.AnimationFinishedEvent += StartShake;
+		cameraPathAnimator.Play();
 	}
 
 
@@ -66,8 +66,8 @@ public class ComicCameraShake : MonoBehaviour {
 			yield return new WaitForEndOfFrame();
 		}
 
-		yield return new WaitForSeconds(0.5f);
-		//Shake is done, animate in button:
+		yield return new WaitForSeconds(0.1f);
+		//Shake is done, animate in next button:
 		Vector3 nextlevelTarget = new Vector3 (12.74888f, -19.5491f, 0f);
 		float buttonSpeed = 10.0f;
 		while ( Vector3.Distance( nextLevelButton.transform.position, nextlevelTarget ) > Time.deltaTime * buttonSpeed ) {
@@ -78,6 +78,7 @@ public class ComicCameraShake : MonoBehaviour {
 
 	public GameObject nextLevelButton;
 	public void NextLevel () {
+		MadLevelProfile.SetCompleted(MadLevel.currentLevelName, true);
 		Game.instance.NextLevel();
 	}
 

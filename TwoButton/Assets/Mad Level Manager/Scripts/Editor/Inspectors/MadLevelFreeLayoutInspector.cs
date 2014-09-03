@@ -48,13 +48,45 @@ public class MadLevelFreeLayoutInspector : MadLevelAbstractLayoutInspector {
     }
 
     public override void OnInspectorGUI() {
+        if (MadTrialEditor.isTrialVersion && MadTrialEditor.expired) {
+            MadTrialEditor.OnEditorGUIExpired("Mad Level Manager");
+            return;
+        }
+
         serializedObject.UpdateIfDirtyOrScript();
         
         GUILayout.Label("Fundaments", "HeaderLabel");
         MadGUI.Indent(() => {
             MadGUI.PropertyField(configuration, "Configuration", MadGUI.ObjectIsSet);
+            if (script.configuration != null) {
+                var group = script.configuration.FindGroupById(script.configurationGroup);
+                int index = GroupToIndex(script.configuration, group);
+                var names = GroupNames(script.configuration);
+
+                EditorGUI.BeginChangeCheck();
+                index = EditorGUILayout.Popup("Group", index, names);
+                if (EditorGUI.EndChangeCheck()) {
+                    MadUndo.RecordObject2(script, "Changed Group");
+                    script.configurationGroup = IndexToGroup(script.configuration, index).id;
+                    script.dirty = true;
+                    EditorUtility.SetDirty(script);
+                }
+                GUI.enabled = true;
+            }
+
+            EditorGUILayout.Space();
+
             MadGUI.PropertyField(iconTemplate, "Icon Template", MadGUI.ObjectIsSet);
+            if (script.iconTemplate != null) {
+                var prefabType = PrefabUtility.GetPrefabType(script.iconTemplate);
+                if (prefabType == PrefabType.None) {
+                    MadGUI.Warning("It's recommended to use prefab as a template. All visible icon instances will be linked to this prefab.");
+                }
+            }
+
             MadGUI.PropertyField(backgroundTexture, "Background Texture");
+
+            EditorGUILayout.Space();
 
             MadGUI.Info("Use the button below if you've updated your icon template and you want to replace all icons in your layout with it.");
 
@@ -68,6 +100,8 @@ public class MadLevelFreeLayoutInspector : MadLevelAbstractLayoutInspector {
                 SelectDraggable();
             }
         });
+
+        EditorGUILayout.Space();
         
         GUILayout.Label("Mechanics", "HeaderLabel");
         
@@ -77,6 +111,8 @@ public class MadLevelFreeLayoutInspector : MadLevelAbstractLayoutInspector {
             HandleMobileBack();
             EditorGUILayout.Space();
             TwoStepActivation();
+            EditorGUILayout.Space();
+            LoadLevel();
         });
         
         serializedObject.ApplyModifiedProperties();

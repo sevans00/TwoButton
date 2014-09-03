@@ -154,13 +154,17 @@ public class MadLevel  {
     
     static void FindCurrentSceneLevel() {
         // find first level with matching scene name
-        var level = activeConfiguration.FindFirstForScene(Application.loadedLevelName);
+        bool hasMany;
+        var level = activeConfiguration.FindFirstForScene(Application.loadedLevelName, out hasMany);
         if (level != null) {
             currentLevelName = level.name;
             arguments = level.arguments;
+
+            if (hasMany) {
+                Debug.Log("Mad Level Manager: This was first scene opened. Assuming that this was '"
+                + _currentLevelName + "' level, but there are many scenes with this name. " + MadLevelHelp.FAQ);
+            }
             
-            Debug.Log("Mad Level Manager: This was first scene opened. Assuming that this was '"
-                + _currentLevelName + "' level. " + MadLevelHelp.FAQ);
         } else {
             Debug.LogError("Mad Level Manager: Cannot find scene " + Application.loadedLevelName
                 + " in the configuration. Is the level configuration broken or wrong configuration is active?");
@@ -619,6 +623,17 @@ public class MadLevel  {
     }
 
     /// <summary>
+    /// Tells if there is at least one level set in current group.
+    /// </summary>
+    /// <param name="groupName">Name of a group.</param>
+    /// <returns>
+    /// <c>true</c> if there is at least one level configured; otherwise, <c>false</c>.
+    /// </returns>
+    public static bool HasFirstInGroup() {
+        return HasFirstInGroup(currentGroupName);
+    }
+
+    /// <summary>
     /// Tells if there is at least one level set in active level configuration group.
     /// </summary>
     /// <param name="groupName">Name of a group.</param>
@@ -647,6 +662,19 @@ public class MadLevel  {
     /// </returns>
     public static bool HasFirst(Type levelType) {
         return activeConfiguration.LevelCount(levelType) != 0;
+    }
+
+    /// <summary>
+    /// Tells if there is at least one level of type <code>levelType</code> set in current group.
+    /// </summary>
+    /// <param name='levelType'>
+    /// Level type to find.
+    /// </param>
+    /// <returns>
+    /// <c>true</c> if there is at least one level of given type configured; otherwise, <c>false</c>.
+    /// </returns>
+    public static bool HasFirstInGroup(Type levelType) {
+        return HasFirstInGroup(levelType, currentGroupName);
     }
 
     /// <summary>
@@ -682,6 +710,13 @@ public class MadLevel  {
     }
 
     /// <summary>
+    /// Loads the first level set in current group.
+    /// </summary>
+    public static void LoadFirstInGroup() {
+        LoadFirstInGroup(currentGroupName);
+    }
+
+    /// <summary>
     /// Loads the first level set in level configuration group.
     /// </summary>
     public static void LoadFirstInGroup(string groupName) {
@@ -712,6 +747,15 @@ public class MadLevel  {
             Debug.LogError("Cannot load first level: there are no levels defined");
             return null;
         }
+    }
+
+    /// <summary>
+    /// Loads the first level set in current group asynchronously in the background.
+    /// This function requires Unity Pro.
+    /// </summary>
+    /// <returns>AsyncOperation object.</returns>
+    public static AsyncOperation LoadFirstInGroupAsync() {
+        return LoadFirstInGroupAsync(currentGroupName);
     }
 
     /// <summary>
@@ -751,6 +795,16 @@ public class MadLevel  {
     }
 
     /// <summary>
+    /// Loads the first level of type <code>levelType</code> set in current group.
+    /// </summary>
+    /// <param name='levelType'>
+    /// Level type.
+    /// </param>
+    public static void LoadFirstInGroup(Type levelType) {
+        LoadFirstInGroupAsync(levelType, currentGroupName);
+    }
+
+    /// <summary>
     /// Loads the first level of type <code>levelType</code> set in level configuration group.
     /// </summary>
     /// <param name='levelType'>
@@ -787,6 +841,18 @@ public class MadLevel  {
             Debug.LogError("Cannot load first level: there's no level of type " + levelType);
             return null;
         }
+    }
+
+    /// <summary>
+    /// Loads the first level of type <code>levelType</code> set in current group in the
+    /// background. This function requires Unity Pro.
+    /// </summary>
+    /// <param name='levelType'>
+    /// Level type.
+    /// </param>
+    /// <returns>AsyncOperation object.</returns>
+    public static AsyncOperation LoadFirstInGroupAsync(Type levelType) {
+        return LoadFirstInGroupAsync(levelType, currentGroupName);
     }
 
     /// <summary>
@@ -898,7 +964,16 @@ public class MadLevel  {
         
         return output.ToArray();
     }
-    
+
+    /// <summary>
+    /// Finds the first completed level (in the order).
+    /// </summary>
+    /// <returns>The first completed level name or <code>null</code> if there's no level
+    /// that is marked as completed.</returns>
+    public static string FindFirstCompletedLevelName() {
+        return FindFirstCompletedLevelName(null);
+    }
+
     /// <summary>
     /// Finds the first completed level (in the order).
     /// </summary>
@@ -907,7 +982,16 @@ public class MadLevel  {
     public static string FindFirstCompletedLevelName(string groupName) {
         return FindFirstLevelName(groupName, (level) => MadLevelProfile.IsCompleted(level.name));
     }
-    
+
+    /// <summary>
+    /// Finds the last completed level (in the order).
+    /// </summary>
+    /// <returns>The last completed level name or <code>null</code> if there's no level
+    /// that is marked as completed.</returns>
+    public static string FindLastCompletedLevelName() {
+        return FindLastCompletedLevelName(null);
+    }
+
     /// <summary>
     /// Finds the last completed level (in the order).
     /// </summary>
@@ -916,7 +1000,17 @@ public class MadLevel  {
     public static string FindLastCompletedLevelName(string groupName) {
         return FindLastLevelName(groupName, (level) => MadLevelProfile.IsCompleted(level.name));
     }
-    
+
+    /// <summary>
+    /// Finds the first locked level (in the order). Be aware that locked flag in the new
+    /// game is set when the player visits level select screen for the first time.
+    /// </summary>
+    /// <returns>The first locked level name or <code>null</code> if there's no level
+    /// that is marked as locked.</returns>
+    public static string FindFirstLockedLevelName() {
+        return FindFirstLockedLevelName(null);
+    }
+
     /// <summary>
     /// Finds the first locked level (in the order). Be aware that locked flag in the new
     /// game is set when the player visits level select screen for the first time.
@@ -926,7 +1020,17 @@ public class MadLevel  {
     public static string FindFirstLockedLevelName(string groupName) {
         return FindFirstLevelName(groupName, (level) => MadLevelProfile.IsLocked(level.name));
     }
-    
+
+    /// <summary>
+    /// Finds the last locked level (in the order). Be aware that locked flag in the new
+    /// game is set when the player visits level select screen for the first time.
+    /// </summary>
+    /// <returns>The last locked level name or <code>null</code> if there's no level
+    /// that is marked as locked.</returns>
+    public static string FindLastLockedLevelName() {
+        return FindLastLockedLevelName(null);
+    }
+
     /// <summary>
     /// Finds the last locked level (in the order). Be aware that locked flag in the new
     /// game is set when the player visits level select screen for the first time.
@@ -936,7 +1040,17 @@ public class MadLevel  {
     public static string FindLastLockedLevelName(string groupName) {
         return FindLastLevelName(groupName, (level) => MadLevelProfile.IsLocked(level.name));
     }
-    
+
+    /// <summary>
+    /// Finds the first unlocked level (in the order). Be aware that locked flag in the new
+    /// game is set when the player visits level select screen for the first time.
+    /// </summary>
+    /// <returns>The first locked level name or <code>null</code> if there's no level
+    /// that is marked as locked.</returns>
+    public static string FindFirstUnlockedLevelName() {
+        return FindFirstUnlockedLevelName(null);
+    }
+
     /// <summary>
     /// Finds the first unlocked level (in the order). Be aware that locked flag in the new
     /// game is set when the player visits level select screen for the first time.
@@ -944,9 +1058,25 @@ public class MadLevel  {
     /// <returns>The first locked level name or <code>null</code> if there's no level
     /// that is marked as locked.</returns>
     public static string FindFirstUnlockedLevelName(string groupName) {
-        return FindFirstLevelName(groupName, (level) => !MadLevelProfile.IsLocked(level.name));
+        return FindFirstLevelName(groupName, (level) => {
+            if (MadLevelProfile.IsLockedSet(level.name)) {
+                return !MadLevelProfile.IsLocked(level.name);
+            } else {
+                return !level.lockedByDefault;
+            }
+        });
     }
-    
+
+    /// <summary>
+    /// Finds the last unlocked level (in the order). Be aware that locked flag in the new
+    /// game is set when the player visits level select screen for the first time.
+    /// </summary>
+    /// <returns>The first locked level name or <code>null</code> if there's no level
+    /// that is marked as locked.</returns>
+    public static string FindLastUnlockedLevelName() {
+        return FindLastUnlockedLevelName(null);
+    }
+
     /// <summary>
     /// Finds the last unlocked level (in the order). Be aware that locked flag in the new
     /// game is set when the player visits level select screen for the first time.
@@ -954,9 +1084,15 @@ public class MadLevel  {
     /// <returns>The first locked level name or <code>null</code> if there's no level
     /// that is marked as locked.</returns>
     public static string FindLastUnlockedLevelName(string groupName) {
-        return FindLastLevelName(groupName, (level) => !MadLevelProfile.IsLocked(level.name));
+        return FindLastLevelName(groupName, (level) => {
+            if (MadLevelProfile.IsLockedSet(level.name)) {
+                return !MadLevelProfile.IsLocked(level.name);
+            } else {
+                return !level.lockedByDefault;
+            }
+        });
     }
-    
+
     /// <summary>
     /// Finds the first name of the level, that predicate returns <code>true</code> value.
     /// </summary>
@@ -965,17 +1101,21 @@ public class MadLevel  {
     public static string FindFirstLevelName(string groupName, LevelPredicate predicate) {
         CheckHasConfiguration();
 
-        var group = activeConfiguration.FindGroupByName(groupName);
-        if (group == null) {
-            Debug.LogError("Cannot find group named " + groupName);
-            return null;
+        MadLevelConfiguration.Group group = null;
+
+        if (groupName != null) {
+            group = activeConfiguration.FindGroupByName(groupName);
+            if (group == null) {
+                Debug.LogError("Cannot find group named " + groupName);
+                return null;
+            }
         }
-        
+
         var levels = activeConfiguration.GetLevelsInOrder();
         for (int i = 0; i < levels.Length; i++) {
             var level = levels[i];
 
-            if (level.groupId != group.id) {
+            if (group != null && level.groupId != group.id) {
                 continue;
             }
 
@@ -983,10 +1123,19 @@ public class MadLevel  {
                 return level.name;
             }
         }
-        
+
         return null;
     }
-    
+
+    /// <summary>
+    /// Finds the first name of the level, that predicate returns <code>true</code> value.
+    /// </summary>
+    /// <returns>The first found level or <code>null<code> if not found.</returns>
+    /// <param name="predicate">The predicate.</param>
+    public static string FindFirstLevelName(LevelPredicate predicate) {
+        return FindFirstLevelName(null, predicate);
+    }
+
     /// <summary>
     /// Finds the first name of the level of given <code>type</code>.
     /// </summary>
@@ -995,7 +1144,16 @@ public class MadLevel  {
     public static string FindFirstLevelName(MadLevel.Type levelType, string groupName) {
         return FindFirstLevelName(groupName, (level) => level.type == levelType);
     }
-    
+
+    /// <summary>
+    /// Finds the first name of the level of given <code>type</code>.
+    /// </summary>
+    /// <returns>The first found level or <code>null<code> if not found.</returns>
+    /// <param name="levelType">The level type.</param>
+    public static string FindFirstLevelName(MadLevel.Type levelType) {
+        return FindFirstLevelName(null, (level) => level.type == levelType);
+    }
+
     /// <summary>
     /// Finds the last name of the level, that predicate returns <code>true</code> value.
     /// </summary>
@@ -1004,17 +1162,20 @@ public class MadLevel  {
     public static string FindLastLevelName(string groupName, LevelPredicate predicate) {
         CheckHasConfiguration();
 
-        var group = activeConfiguration.FindGroupByName(groupName);
-        if (group == null) {
-            Debug.LogError("Cannot find group named " + groupName);
-            return null;
+        MadLevelConfiguration.Group group = null;
+        if (groupName != null) {
+            group = activeConfiguration.FindGroupByName(groupName);
+            if (group == null) {
+                Debug.LogError("Cannot find group named " + groupName);
+                return null;
+            }
         }
-    
+
         var levels = activeConfiguration.GetLevelsInOrder();
         for (int i = levels.Length - 1; i >= 0; i--) {
             var level = levels[i];
 
-            if (level.groupId != group.id) {
+            if (group != null && level.groupId != group.id) {
                 continue;
             }
 
@@ -1022,10 +1183,19 @@ public class MadLevel  {
                 return level.name;
             }
         }
-        
+
         return null;
     }
-    
+
+    /// <summary>
+    /// Finds the last name of the level, that predicate returns <code>true</code> value.
+    /// </summary>
+    /// <returns>The last found level or <code>null<code> if not found.</returns>
+    /// <param name="predicate">The predicate.</param>
+    public static string FindLastLevelName(LevelPredicate predicate) {
+        return FindLastLevelName(null, predicate);
+    }
+
     /// <summary>
     /// Finds the last name of the level of given <code>type</code>.
     /// </summary>
@@ -1033,6 +1203,15 @@ public class MadLevel  {
     /// <param name="levelType">The level type.</param>
     public static string FindLastLevelName(MadLevel.Type levelType, string groupName) {
         return FindLastLevelName(groupName, (level) => level.type == levelType);
+    }
+
+    /// <summary>
+    /// Finds the last name of the level of given <code>type</code>.
+    /// </summary>
+    /// <returns>The last found level or <code>null<code> if not found.</returns>
+    /// <param name="levelType">The level type.</param>
+    public static string FindLastLevelName(MadLevel.Type levelType) {
+        return FindLastLevelName(null, (level) => level.type == levelType);
     }
     
     /// <summary>

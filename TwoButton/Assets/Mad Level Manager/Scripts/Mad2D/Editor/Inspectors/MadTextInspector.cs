@@ -29,6 +29,9 @@ public class MadTextInspector : MadSpriteInspector {
     SerializedProperty text;
     SerializedProperty scale;
     SerializedProperty letterSpacing;
+    SerializedProperty align;
+    SerializedProperty wordWrap;
+    SerializedProperty wordWrapLength;
 
     // ===========================================================
     // Methods for/from SuperClass/Interfaces
@@ -42,6 +45,9 @@ public class MadTextInspector : MadSpriteInspector {
         text = serializedObject.FindProperty("text");
         scale = serializedObject.FindProperty("scale");
         letterSpacing = serializedObject.FindProperty("letterSpacing");
+        align = serializedObject.FindProperty("align");
+        wordWrap = serializedObject.FindProperty("wordWrap");
+        wordWrapLength = serializedObject.FindProperty("wordWrapLength");
 
         showLiveBounds = false;
     }
@@ -53,11 +59,16 @@ public class MadTextInspector : MadSpriteInspector {
         MadGUI.PropertyField(panel, "Panel", MadGUI.ObjectIsSet);
         EditorGUILayout.Space();
 
-        MadGUI.PropertyField(font, "Font");
+        MadGUI.PropertyField(font, "Font", MadGUI.ObjectIsSet);
         EditorGUILayout.LabelField("Text");
         text.stringValue = EditorGUILayout.TextArea(text.stringValue);
         MadGUI.PropertyField(scale, "Scale");
+        MadGUI.PropertyField(align, "Align");
         MadGUI.PropertyField(letterSpacing, "Letter Spacing");
+        MadGUI.PropertyField(wordWrap, "Word Wrap");
+        MadGUI.Indent(() => { 
+            MadGUI.PropertyField(wordWrapLength, "Line Length");
+        });
         
         serializedObject.ApplyModifiedProperties();
     }

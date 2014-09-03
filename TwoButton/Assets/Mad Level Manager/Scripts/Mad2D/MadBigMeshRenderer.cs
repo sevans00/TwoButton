@@ -31,6 +31,8 @@ public class MadBigMeshRenderer : MonoBehaviour {
     MadList<Vector2> uv = new MadList<Vector2>();
     MadList<MadList<int>> triangleList = new MadList<MadList<int>>();
 
+    MadObjectPool<MadList<int>> trianglesPool = new MadObjectPool<MadList<int>>(32);
+
     public MadDrawCall drawCall;
 
     // ===========================================================
@@ -42,6 +44,15 @@ public class MadBigMeshRenderer : MonoBehaviour {
     // ===========================================================
 
     void OnEnable() {
+        if (drawCall == null) {
+            drawCall = MadDrawCall.Create();
+            drawCall.gameObject.layer = gameObject.layer;
+
+            MadTransform.SetLocalScale(drawCall.transform, transform.lossyScale);
+        }
+
+        panel = GetComponent<MadPanel>();
+
         if (drawCall != null) {
             MadGameObject.SetActive(drawCall.gameObject, true);
         }
@@ -54,11 +65,6 @@ public class MadBigMeshRenderer : MonoBehaviour {
     }
 
     void Start() {
-        drawCall = MadDrawCall.Create();
-        drawCall.gameObject.layer = gameObject.layer;
-        panel = GetComponent<MadPanel>();
-
-        MadTransform.SetLocalScale(drawCall.transform, transform.lossyScale);
     }
 
     void Update() {
@@ -71,6 +77,10 @@ public class MadBigMeshRenderer : MonoBehaviour {
     }
 
     void LateUpdate() {
+        if (panel == null) {
+            panel = GetComponent<MadPanel>();
+        }
+
         var mesh = drawCall.mesh;
 
         mesh.Clear();
@@ -85,7 +95,14 @@ public class MadBigMeshRenderer : MonoBehaviour {
 
         for (int i = 0; i < batchedSprites.Count; ++i) {
             List<MadSprite> sprites = batchedSprites[i];
-            MadList<int> triangles = new MadList<int>();
+
+            MadList<int> triangles;
+
+            if (!trianglesPool.CanTake()) {
+                trianglesPool.Add(new MadList<int>());
+            }
+
+            triangles = trianglesPool.Take();
 
             for (int j = 0; j < sprites.Count; ++j) {
                 var sprite = sprites[j];
@@ -106,11 +123,17 @@ public class MadBigMeshRenderer : MonoBehaviour {
         mesh.vertices = vertices.Array;
         mesh.colors32 = colors.Array;
         mesh.uv = uv.Array;
+
+        // excluding for metro, because of a bug
+#if !UNITY_METRO
         mesh.RecalculateNormals();
+#endif
 
         for (int i = 0; i < triangleList.Count; ++i) {
             MadList<int> triangles = triangleList[i];
             mesh.SetTriangles(triangles.Array, i);
+            triangles.Clear();
+            trianglesPool.Release(triangles);
         }
 
         //renderer.sharedMaterials = materials;

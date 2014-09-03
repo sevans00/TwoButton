@@ -382,16 +382,19 @@ public class JumperSMB : MonoBehaviour {
 				if ( transform.position.x < cameraFollow.boundaryPoint1.x + 0.64f ) {
 					boundedPosition.x = cameraFollow.boundaryPoint1.x + 0.64f;
 					transform.position = boundedPosition;
+					spritePhysics.velocity.x = 0f;
 				}
 			}
 			if ( cameraFollow.boundaryPoints == 2 ) {
 				if ( transform.position.x < cameraFollow.boundaryPoint1.x + 0.64f ) {
 					boundedPosition.x = cameraFollow.boundaryPoint1.x + 0.64f;
 					transform.position = boundedPosition;
+					spritePhysics.velocity.x = 0f;
 				}
 				if ( transform.position.x > cameraFollow.boundaryPoint2.x - 0.64f) {
 					boundedPosition.x = cameraFollow.boundaryPoint2.x - 0.64f;
 					transform.position = boundedPosition;
+					spritePhysics.velocity.x = 0f;
 				}
 			}
 		}

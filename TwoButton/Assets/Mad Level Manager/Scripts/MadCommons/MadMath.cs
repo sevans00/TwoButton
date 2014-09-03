@@ -114,6 +114,10 @@ public class MadMath  {
     public static Rect Scale(Rect r, Vector2 scale) {
         return new Rect(r.x * scale.x, r.y * scale.y, r.width * scale.x, r.height * scale.y);
     }
+
+    public static bool Overlaps(Rect a, Rect b) {
+        return a.xMin < b.xMax && a.xMax > b.xMin && a.yMin < b.yMax && a.yMax > b.yMin;
+    }
     
     // ===========================================================
     // Inner and Anonymous Classes

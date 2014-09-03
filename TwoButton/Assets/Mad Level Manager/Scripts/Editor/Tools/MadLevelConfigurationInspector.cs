@@ -93,6 +93,8 @@ public class MadLevelConfigurationInspector : Editor {
     static Texture textureExtra;
     static Texture textureError;
     static Texture textureStar;
+    static Texture textureLock;
+    static Texture textureLockUnlocked;
     
     // ===========================================================
     // Methods for/from SuperClass/Interfaces
@@ -109,6 +111,7 @@ public class MadLevelConfigurationInspector : Editor {
     
         list = new MadGUI.ScrollableList<LevelItem>(items);
         list.height = 0; // expand
+        list.spaceAfter = 150;
         list.label = "Level List";
         list.selectionEnabled = true;
         
@@ -140,6 +143,8 @@ public class MadLevelConfigurationInspector : Editor {
         textureExtra = Resources.Load("MadLevelManager/Textures/icon_extra") as Texture;
         textureError = Resources.Load("MadLevelManager/Textures/icon_error") as Texture;
         textureStar = Resources.Load("MadLevelManager/Textures/icon_star") as Texture;
+        textureLock = Resources.Load("MadLevelManager/Textures/icon_lock") as Texture;
+        textureLockUnlocked = Resources.Load("MadLevelManager/Textures/icon_lock_unlocked") as Texture;
         
         texturesLoaded = true;
     }
@@ -154,6 +159,11 @@ public class MadLevelConfigurationInspector : Editor {
     }
     
     public override void OnInspectorGUI() {
+        if (MadTrialEditor.isTrialVersion && MadTrialEditor.expired) {
+            MadTrialEditor.OnEditorGUIExpired("Mad Level Manager");
+            return;
+        }
+
         LoadTextures(); // loading textures with delay to prevent editor errors
         CheckAssetLocation();
         ActiveInfo();
@@ -162,7 +172,12 @@ public class MadLevelConfigurationInspector : Editor {
 
         LoadItems();
 
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.BeginVertical(GUILayout.Width(1));
+        GUILayout.Space(200);
+        EditorGUILayout.EndVertical();
         list.Draw();
+        EditorGUILayout.EndHorizontal();
         
         EditorGUILayout.BeginHorizontal();
         GUI.backgroundColor = Color.green;
@@ -179,16 +194,28 @@ public class MadLevelConfigurationInspector : Editor {
         GUI.backgroundColor = Color.white;
         
         GUILayout.FlexibleSpace();
+
+        GUILayout.Label("Move");
         
-        string downLabel = "Move Down";
-        if (GUILayout.Button(downLabel)) {
+        if (GUILayout.Button("Down")) {
             MoveDown();
             configuration.SetDirty();
         }
         
-        string upLabel = "Move Up";
-        if (GUILayout.Button(upLabel)) {
+        if (GUILayout.Button("Up")) {
             MoveUp();
+            configuration.SetDirty();
+        }
+
+        GUILayout.Space(10);
+
+        if (GUILayout.Button("Bottom")) {
+            MoveToBottom();
+            configuration.SetDirty();
+        }
+
+        if (GUILayout.Button("Top")) {
+            MoveToTop();
             configuration.SetDirty();
         }
         
@@ -238,6 +265,9 @@ public class MadLevelConfigurationInspector : Editor {
             
             GUI.SetNextControlName("arguments"); // needs names to unfocus
             item.level.arguments = EditorGUILayout.TextField("Arguments", item.level.arguments);
+
+            GUI.SetNextControlName("locked by default"); // needs names to unfocus
+            item.level.lockedByDefault = EditorGUILayout.Toggle("Locked By Default", item.level.lockedByDefault);
 
             EditorGUILayout.Space();
 
@@ -289,8 +319,10 @@ public class MadLevelConfigurationInspector : Editor {
         EditorGUILayout.EndHorizontal();
         
         if (!configuration.IsValid()) {
-            MadGUI.Error("Configuration is invalid. Please insect entries marked with \"!!!\" and make sure that " +
-                "\"Scene\" and \"Level Name\" are set and level names are not duplicated.");
+            MadGUI.Error("Configuration is invalid. Please make sure that:\n"
+                + "- There's no levels with \"!!!\" icon. These levels may have duplicated name or missing scene.\n"
+                + "- All your extensions have no missing scenes (in Extension Editor)"
+            );
         }
         
         if (configuration.active && !configuration.CheckBuildSynchronized()) {
@@ -313,11 +345,13 @@ public class MadLevelConfigurationInspector : Editor {
     void GUIGroupPopup() {
         MadGUI.Box("Groups", () => {
 
-            EditorGUILayout.BeginHorizontal();        
+            EditorGUILayout.BeginHorizontal();
+            MadGUI.LookLikeControls(75);
             currentGroupIndex = EditorGUILayout.Popup("Group", currentGroupIndex, GroupNames());
+            MadGUI.LookLikeControls(0);
 
             GUI.enabled = currentGroup != configuration.defaultGroup;
-            if (MadGUI.Button("Remove", Color.red, GUILayout.Width(70))) {
+            if (MadGUI.Button("X", Color.red, GUILayout.Width(20))) {
                 RemoveGroup(currentGroup);
             }
 
@@ -476,12 +510,21 @@ public class MadLevelConfigurationInspector : Editor {
             levelItem.level.name = UniqueLevelName(template.level.name);
             levelItem.level.sceneObject = template.level.sceneObject;
             levelItem.level.type = template.level.type;
+
+            levelItem.level.extension = template.level.extension;
         } else {
             levelItem.level.order = 0;
             
             levelItem.level.name = "New Level";
             levelItem.level.type = MadLevel.Type.Level;
-        } 
+        }
+
+        // check if there is a level that is not locked by default
+        // if there isn't one, then set this one to be
+        bool hasLockedByDefault = items.Find((item) => item.level.type == MadLevel.Type.Level && !item.level.lockedByDefault) != null;
+        if (!hasLockedByDefault) {
+            levelItem.level.lockedByDefault = false;
+        }
         
         items.Add(levelItem);
         configuration.levels.Add(levelItem.level);
@@ -599,6 +642,18 @@ public class MadLevelConfigurationInspector : Editor {
         MadUndo.RecordObject2(configuration, "Move '" + list.selectedItem.level.name + "' Down");
         MoveWith(1);
     }
+
+    void MoveToBottom() {
+        MadUndo.RecordObject2(configuration, "Move '" + list.selectedItem.level.name + "' To Bottom");
+        list.selectedItem.level.order = int.MaxValue;
+        Reorder();
+    }
+
+    void MoveToTop() {
+        MadUndo.RecordObject2(configuration, "Move '" + list.selectedItem.level.name + "' To Top");
+        list.selectedItem.level.order = int.MinValue;
+        Reorder();
+    }
     
     void MoveWith(int delta) {
         int index = items.IndexOf(list.selectedItem);
@@ -640,15 +695,13 @@ public class MadLevelConfigurationInspector : Editor {
         public override void OnGUI() {
             var rect = EditorGUILayout.BeginHorizontal();
             
-            GUILayout.Space(20);
+            GUILayout.Space(45);
             
             EditorGUILayout.BeginVertical();
             EditorGUILayout.Space();
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField(level.name);
 
-            GUILayout.FlexibleSpace();
-            
             Color origColor = GUI.color;
             GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, 0.5f);
             EditorGUILayout.LabelField(level.sceneName);
@@ -684,6 +737,13 @@ public class MadLevelConfigurationInspector : Editor {
             if (level.hasExtension) {
                 GUI.DrawTexture(new Rect(rect.x, rect.y, 28, 34), textureStar);
             }
+
+            // draw lock
+            if (level.type == MadLevel.Type.Level) {
+                Texture lockTexture = level.lockedByDefault ? textureLock : textureLockUnlocked;
+                GUI.DrawTexture(new Rect(rect.x + 22, rect.y, 28, 34), lockTexture);
+            }
+            
 
             EditorGUILayout.EndHorizontal();
             

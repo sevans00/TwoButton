@@ -13,7 +13,9 @@ public class PreviewCamera : MonoBehaviour {
 
 	public bool showingLevelInitially = true;
 
-	public float zoomTime = 0.8f;
+	public bool zoomedOut = true;
+
+	public float zoomTime = 0.4f;
 
 	public void Awake () {
 		PreviewCamera.instance = this;
@@ -65,8 +67,9 @@ public class PreviewCamera : MonoBehaviour {
 		Vector2 dimensions = new Vector2((topRight.x - bottomLeft.x),(topRight.y - bottomLeft.y));
 		Vector2 cameraDimensions = new Vector2 ( camera.aspect*dimensions.y, dimensions.y );
 		Vector2 cameraDimensionsWidth = new Vector2 ( dimensions.x, dimensions.x/camera.aspect );
-		Debug.LogWarning("Dimensions:"+cameraDimensions);
-		Debug.LogWarning("Dimensions:"+cameraDimensionsWidth);
+//		Debug.LogWarning("Dimensions:"+cameraDimensions);
+//		Debug.LogWarning("Dimensions:"+cameraDimensionsWidth);
+		//Set the orthosize based on the largest dimension:
 		if ( cameraDimensions.y > cameraDimensionsWidth.y ) {
 			orthosize = cameraDimensions.y / 2;
 		} else {
@@ -79,7 +82,9 @@ public class PreviewCamera : MonoBehaviour {
 		startOrthographicSize = camera.orthographicSize;
 
 		showingLevelInitially = true;
+		zoomedOut = true;
 	}
+
 
 	public void Update () {
 		if ( !showingLevelInitially ) {
@@ -87,7 +92,9 @@ public class PreviewCamera : MonoBehaviour {
 		}
 		//Game.instance.pause();
 		if ( ( Input.touches.Length > 0 && Input.GetTouch(0).phase == TouchPhase.Began ) 
-		    || (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D) ) ) {
+		    || (//Input.GetMouseButtonDown(0) || 
+		    Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D) ) ) {
+
 			showingLevelInitially = false;
 			zoomIn();
 		}
@@ -95,11 +102,16 @@ public class PreviewCamera : MonoBehaviour {
 
 	//Zoom in:
 	public void zoomIn() {
+		zoomedOut = false;
+		iTween.StopByName("zoom_out");
+		iTween.StopByName("zoom_out_ortho");
 		iTween.MoveTo( gameObject, iTween.Hash(
+			"name", "zoom_in",
 			"position", mainCamera.transform.position,
 			"time", zoomTime,
 			"easetype", iTween.EaseType.easeOutQuad ) );
 		iTween.ValueTo( gameObject, iTween.Hash(
+			"name", "zoom_in_ortho",
 			"from", startOrthographicSize, 
 			"to", mainCamera.orthographicSize, 
 			"onupdatetarget", gameObject, 
@@ -116,8 +128,23 @@ public class PreviewCamera : MonoBehaviour {
 
 	//Zoom out:
 	public void zoomOut() {
-		iTween.MoveTo( gameObject, startPosition, zoomTime );
+		if ( zoomedOut ) {
+			return;
+		}
+		iTween.StopByName("zoom_in");
+		iTween.StopByName("zoom_in_ortho");
+		camera.enabled = true;
+		mainCamera.enabled = false;
+		transform.position = mainCamera.transform.position;
+		//camera.orthographicSize = mainCamera.orthographicSize;
+		Game.instance.pause();
+		iTween.MoveTo( gameObject, iTween.Hash(
+			"name", "zoom_out",
+		    "position", startPosition,
+			"time", zoomTime,
+			"easetype", iTween.EaseType.easeOutQuad ) );
 		iTween.ValueTo( gameObject, iTween.Hash(
+			"name", "zoom_out_ortho",
 			"from", mainCamera.orthographicSize, 
 			"to", startOrthographicSize, 
 			"onupdatetarget", gameObject, 
@@ -127,8 +154,7 @@ public class PreviewCamera : MonoBehaviour {
 			"easetype", iTween.EaseType.easeOutQuad ) );
 	}
 	public void zoomOutComplete() {
-
-
+		zoomedOut = true;
 	}
 
 

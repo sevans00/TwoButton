@@ -46,78 +46,73 @@ public class MadAtlasBuilder : MonoBehaviour {
             
         CreateAtlas(textures);
     }
-    
-    private static bool IsReadable(Texture2D texture) {
-        var path = AssetDatabase.GetAssetPath(texture);
-        var importer = AssetImporter.GetAtPath(path) as TextureImporter;
-        return importer != null && importer.isReadable;
-    }
-    
-    private static bool CheckTextures(Texture2D[] textures) {
-        bool allReadable = true;
-        List<TextureImporter> notReadable = new List<TextureImporter>();
-    
+
+    private static IEnumerable<Texture2D> MakeReadable(IEnumerable<Texture2D> textures) {
+        List<Texture2D> modified = new List<Texture2D>();
+
         foreach (var texture in textures) {
             var path = AssetDatabase.GetAssetPath(texture);
             var importer = AssetImporter.GetAtPath(path) as TextureImporter;
-            
+
             if (importer != null) {
                 if (!importer.isReadable) {
-                    allReadable = false;
-                    notReadable.Add(importer);
-                }
-            }
-        }
-        
-        if (!allReadable) {
-            if (EditorUtility.DisplayDialog(
-                "Cannot create atlas",
-                "Some textures have not read/write option enabled. Do you want me to enable it for you?",
-                "Yes", "No")) {
-                foreach (var importer in notReadable) {
                     importer.isReadable = true;
                     AssetDatabase.ImportAsset(importer.assetPath, ImportAssetOptions.ForceUpdate);
-                    allReadable = true;
+                    modified.Add(texture);
                 }
             }
-            
         }
-        
-        return allReadable;
+
+        return modified;
     }
-    
+
+    private static void RevertReadable(IEnumerable<Texture2D> textures) {
+        foreach (var texture in textures) {
+            var path = AssetDatabase.GetAssetPath(texture);
+            var importer = AssetImporter.GetAtPath(path) as TextureImporter;
+
+            if (importer != null) {
+                importer.isReadable = false;
+                AssetDatabase.ImportAsset(importer.assetPath, ImportAssetOptions.ForceUpdate);
+            }
+        }
+    }
+
     public static MadAtlas CreateAtlas(Texture2D[] textures) {
-        if (!CheckTextures(textures)) {
-            return null;
+        var modified = MakeReadable(textures);
+
+        try {
+            var saveFolder = System.IO.Path.GetDirectoryName(AssetDatabase.GetAssetPath(textures[0]));
+            var prefabPath = EditorUtility.SaveFilePanel("Save atlas", saveFolder, "New Texture Atlas", "prefab");
+            if (string.IsNullOrEmpty(prefabPath)) {
+                return null;
+            }
+
+            prefabPath = MadPath.MakeRelative(prefabPath);
+
+            var texturePath = System.IO.Path.ChangeExtension(prefabPath, "png");
+            List<MadAtlas.Item> items = new List<MadAtlas.Item>();
+
+            PackTextures(textures, texturePath, ref items);
+
+            var go = new GameObject() { name = System.IO.Path.GetFileNameWithoutExtension(prefabPath) };
+            var atlas = go.AddComponent<MadAtlas>();
+            atlas.atlasTexture = AssetDatabase.LoadAssetAtPath(texturePath, typeof(Texture2D)) as Texture2D;
+
+            atlas.AddItemRange(items);
+
+            var prefab = PrefabUtility.CreateEmptyPrefab(prefabPath);
+            prefab.name = atlas.name;
+            var prefabGo = PrefabUtility.ReplacePrefab(go, prefab);
+            DestroyImmediate(go);
+
+            AssetDatabase.Refresh();
+
+            return prefabGo.GetComponent<MadAtlas>();
+        } finally {
+            RevertReadable(modified);
+            AssetDatabase.Refresh();
         }
-
-        var saveFolder = System.IO.Path.GetDirectoryName(AssetDatabase.GetAssetPath(textures[0]));
-        var prefabPath = EditorUtility.SaveFilePanel("Save atlas", saveFolder, "New Texture Atlas", "prefab" );
-        if (string.IsNullOrEmpty(prefabPath)) {
-            return null;
-        }
-        
-        prefabPath = MadPath.MakeRelative(prefabPath);
-
-        var texturePath = System.IO.Path.ChangeExtension(prefabPath, "png");
-        List<MadAtlas.Item> items = new List<MadAtlas.Item>();
-        
-        PackTextures(textures, texturePath, ref items);
-
-        var go = new GameObject() { name = System.IO.Path.GetFileNameWithoutExtension(prefabPath) };
-        var atlas = go.AddComponent<MadAtlas>();
-        atlas.atlasTexture = AssetDatabase.LoadAssetAtPath(texturePath, typeof(Texture2D)) as Texture2D;
-        
-        atlas.AddItemRange(items);
-        
-        var prefab = PrefabUtility.CreateEmptyPrefab(prefabPath);
-        prefab.name = atlas.name;
-        var prefabGo = PrefabUtility.ReplacePrefab(go, prefab);
-        DestroyImmediate(go);
-        
-        AssetDatabase.Refresh();
-
-        return prefabGo.GetComponent<MadAtlas>();
     }
     
     public static void AddToAtlas(MadAtlas atlas, Texture2D texture) {
@@ -125,21 +120,26 @@ public class MadAtlasBuilder : MonoBehaviour {
     }
     
     public static void AddToAtlas(MadAtlas atlas, Texture2D[] textures) {
-        if (!CheckTextures(textures)) {
-            return;
+        var modified = MakeReadable(textures);
+        try {
+
+            List<MadAtlas.Item> liveItems = LiveItems(atlas);
+            List<Texture2D> allTextures = new List<Texture2D>();
+
+            allTextures.AddRange(from i in liveItems select MadAtlasUtil.GetItemOrigin(i));
+            allTextures.AddRange(textures);
+
+            string atlasTexturePath = AssetDatabase.GetAssetPath(atlas.atlasTexture);
+            PackTextures(allTextures.ToArray(), atlasTexturePath, ref liveItems);
+
+            atlas.ClearItems();
+            atlas.AddItemRange(liveItems);
+
+            EditorUtility.SetDirty(atlas);
+        } finally {
+            RevertReadable(modified);
+            AssetDatabase.Refresh();
         }
-    
-        List<MadAtlas.Item> liveItems = LiveItems(atlas);
-        List<Texture2D> allTextures = new List<Texture2D>();
-        
-        allTextures.AddRange(from i in liveItems select MadAtlasUtil.GetItemOrigin(i));
-        allTextures.AddRange(textures);
-        
-        string atlasTexturePath = AssetDatabase.GetAssetPath(atlas.atlasTexture);
-        PackTextures(allTextures.ToArray(), atlasTexturePath, ref liveItems);
-        
-        atlas.ClearItems();
-        atlas.AddItemRange(liveItems);
     }
     
     public static void RemoveFromAtlas(MadAtlas atlas, MadAtlas.Item item) {

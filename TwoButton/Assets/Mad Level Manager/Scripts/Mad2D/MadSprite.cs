@@ -82,8 +82,8 @@ public class MadSprite : MadNode {
     // ===========================================================
     // Properties
     // ===========================================================
-    
-    Texture2D currentTexture {
+
+    public Texture2D currentTexture {
         get {
             switch (inputType) {
                 case InputType.SingleTexture:
@@ -97,6 +97,34 @@ public class MadSprite : MadNode {
                 default:
                     Debug.LogError("Unknown input type: " + inputType);
                     return null;
+            }
+        }
+    }
+
+    public int currentTextureWidth {
+        get {
+            switch (inputType) {
+                case InputType.SingleTexture:
+                    return texture.width;
+                case InputType.TextureAtlas:
+                    return textureAtlas.GetItem(textureAtlasSpriteGUID).pixelsWidth;
+                default:
+                    Debug.LogError("Unknown input type: " + inputType);
+                    return 0;
+            }
+        }
+    }
+
+    public int currentTextureHeight {
+        get {
+            switch (inputType) {
+                case InputType.SingleTexture:
+                    return texture.height;
+                case InputType.TextureAtlas:
+                    return textureAtlas.GetItem(textureAtlasSpriteGUID).pixelsHeight;
+                default:
+                    Debug.LogError("Unknown input type: " + inputType);
+                    return 0;
             }
         }
     }
@@ -191,6 +219,30 @@ public class MadSprite : MadNode {
         }
         set { InitActions(); _onMouseExit = value; }
     }
+
+    Action _onTouchEnter = (sprite) => { };
+    public Action onTouchEnter {
+        get {
+            if ((eventFlags & EventFlags.Touch) != 0) {
+                return _onTouchEnter;
+            } else {
+                return NullAction;
+            }
+        }
+        set { InitActions(); _onTouchEnter = value; }
+    }
+
+    Action _onTouchExit = (sprite) => { };
+    public Action onTouchExit {
+        get {
+            if ((eventFlags & EventFlags.Touch) != 0) {
+                return _onTouchExit;
+            } else {
+                return NullAction;
+            }
+        }
+        set { InitActions(); _onTouchExit = value; }
+    }
     
     Action _onMouseDown = (sprite) => {};
     public Action onMouseDown {
@@ -221,7 +273,7 @@ public class MadSprite : MadNode {
     Action _onTap = (sprite) => {};
     public Action onTap {
         get {
-            if ((eventFlags & EventFlags.FingerTap) != 0) {
+            if ((eventFlags & EventFlags.Touch) != 0) {
                 return _onTap;
             } else {
                 return NullAction;
@@ -347,7 +399,7 @@ public class MadSprite : MadNode {
         }
     }
     
-    protected void Update() {
+    protected virtual void Update() {
         RegisterSpriteIfNeeded();
 
         UpdateTexture();
@@ -422,7 +474,7 @@ public class MadSprite : MadNode {
             return;
         }
         
-        if (currentTexture == null) {
+        if (currentTexture == null && !(this is MadText)) {
             // no texture, no size
             return;
         }
@@ -454,10 +506,6 @@ public class MadSprite : MadNode {
 #endif
 
     public virtual bool CanDraw() {
-        if (fillType != FillType.None && fillValue == 0) {
-            return false;
-        }
-        
         if (inputType == InputType.TextureAtlas) {
             if (textureAtlas == null || string.IsNullOrEmpty(textureAtlasSpriteGUID) || textureAtlas.GetItem(textureAtlasSpriteGUID) == null) {
                 return false;
@@ -491,13 +539,15 @@ public class MadSprite : MadNode {
     
     public virtual void DrawOn(ref MadList<Vector3> vertices, ref MadList<Color32> colors, ref MadList<Vector2> uv,
                ref MadList<int> triangles, out Material material) {
-        
+
         UpdatePivotPoint();
 
-        if ((fillType == FillType.RadialCW || fillType == FillType.RadialCCW) && (fillValue != 1 || radialFillLength != 1)) {
-            DrawOnQuad(ref vertices, ref colors, ref uv, ref triangles);
-        } else {
-            DrawOnRegular(ref vertices, ref colors, ref uv, ref triangles);
+        if (fillType == FillType.None || fillValue > 0) {
+            if ((fillType == FillType.RadialCW || fillType == FillType.RadialCCW) && (fillValue != 1 || radialFillLength != 1)) {
+                DrawOnQuad(ref vertices, ref colors, ref uv, ref triangles);
+            } else {
+                DrawOnRegular(ref vertices, ref colors, ref uv, ref triangles);
+            }
         }
         
         material = GetMaterial();
@@ -1220,7 +1270,7 @@ public class MadSprite : MadNode {
     }
     
     // color change receiver
-    void OnTintChange(Color color) {
+    public void OnTintChange(Color color) {
         tint = color;
     }
 #endregion
@@ -1276,7 +1326,7 @@ public class MadSprite : MadNode {
         /// <summary>
         /// Finger tap events.
         /// </summary>
-        FingerTap = 4,
+        Touch = 4,
         /// <summary>
         /// Focus event.
         /// </summary>

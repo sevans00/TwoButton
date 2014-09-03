@@ -9,6 +9,10 @@ using System.Collections.Generic;
 using System.Linq;
 using MadLevelManager;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 #if !UNITY_3_5
 namespace MadLevelManager {
 #endif
@@ -23,8 +27,8 @@ public class MadLevelFreeLayout : MadLevelAbstractLayout {
     // ===========================================================
     // Fields
     // ===========================================================
-    
-    public Vector2 offset = new Vector2(16, -16);
+
+    private Vector2 offset = new Vector2(128, 0);
     public Texture2D backgroundTexture;
     
     public MadFreeDraggable draggable {
@@ -49,7 +53,7 @@ public class MadLevelFreeLayout : MadLevelAbstractLayout {
     public override MadLevelIcon GetIcon(string levelName) {
         MadDebug.Assert(!string.IsNullOrEmpty(levelName), "null or empty level name");
         return MadTransform.FindChild<MadLevelIcon>(draggable.transform, (icon) => {
-            return icon.level.name == levelName;
+            return MadGameObject.IsActive(icon.gameObject) && icon.level.name == levelName;
         }, 0);
     }
     
@@ -69,7 +73,7 @@ public class MadLevelFreeLayout : MadLevelAbstractLayout {
         
         return closestIcon;
     }
-    
+
     public override void LookAtIcon(MadLevelIcon icon) {
         LookAtIcon(icon, default(MadiTween.EaseType), 0);
     }
@@ -131,11 +135,10 @@ public class MadLevelFreeLayout : MadLevelAbstractLayout {
 
             MadUndo.DestroyObjectImmediate(icon.gameObject);
 
-            var go = MadTransform.CreateChild(draggable.transform, name, newIcon);
-            go.transform.position = position;
-            go.transform.rotation = rotation;
-            go.transform.localScale = localScale;
-            var nIcon = go.GetComponent<MadLevelIcon>();
+            var nIcon = CreateIcon(draggable.transform, name, iconTemplate);
+            nIcon.transform.position = position;
+            nIcon.transform.rotation = rotation;
+            nIcon.transform.localScale = localScale;
             nIcon.guiDepth = baseDepth;
             nIcon.levelIndex = levelIndex;
             nIcon.configuration = configuration;
@@ -144,20 +147,22 @@ public class MadLevelFreeLayout : MadLevelAbstractLayout {
             createdIcons.Add(nIcon);
             
 
-            var childSprites = MadTransform.FindChildren<MadSprite>(go.transform);
+            var childSprites = MadTransform.FindChildren<MadSprite>(nIcon.transform);
             foreach (var cs in childSprites) {
                 cs.guiDepth += baseDepth;
             }
 
-            MadUndo.RegisterCreatedObjectUndo(go.gameObject, "Replaced Icons");
+            MadUndo.RegisterCreatedObjectUndo(nIcon.gameObject, "Replaced Icons");
         }
+
+        icons = MadTransform.FindChildren<MadLevelIcon>(draggable.transform);
 
         // apply unlock on complete list
         foreach (var icon in createdIcons) {
             List<int> unlockList = unlockOnCompleteDict[icon.levelIndex];
             foreach (var unlockLevelIndex in unlockList) {
-                var query = from i in createdIcons where i.levelIndex == unlockLevelIndex select i;
-                var iconToUnlock = query.First();
+                var query = from i in icons where i.levelIndex == unlockLevelIndex select i;
+                MadLevelIcon iconToUnlock = query.First();
                 icon.unlockOnComplete.Add(iconToUnlock);
             }
         }
@@ -196,11 +201,12 @@ public class MadLevelFreeLayout : MadLevelAbstractLayout {
         if (configuration == null || iconTemplate == null) {
             return false;
         }
-        
-        int hash = 11;
-        hash = hash * 37 + configuration.GetHashCode();
-        hash = hash * 37 + iconTemplate.GetHashCode();
-        hash = hash * 37 + (backgroundTexture != null ? backgroundTexture.GetHashCode() : 0);
+
+        var hash = MadHashCode.FirstPrime;
+        hash = MadHashCode.Add(hash, configuration);
+        hash = MadHashCode.Add(hash, configurationGroup);
+        hash = MadHashCode.Add(hash, iconTemplate);
+        hash = MadHashCode.Add(hash, backgroundTexture);
         
         if (hash != lastHash) {
             lastHash = hash;
@@ -211,18 +217,21 @@ public class MadLevelFreeLayout : MadLevelAbstractLayout {
     }
     
     void Build() {
+        List<MadLevelIcon> allIcons = new List<MadLevelIcon>();
+        allIcons.AddRange(MadTransform.FindChildren<MadLevelIcon>(transform));
+
         int levelCount = configuration.LevelCount(MadLevel.Type.Level, configurationGroup);
         Vector2 currentOffset = Vector2.zero;
-        
+
         MadLevelIcon previousIcon = null;
         
         // find out min and max depth
         int min, max;
         iconTemplate.MinMaxDepthRecursively(out min, out max);
-        int depthDiff = (max - min) + 1;
-        
         const string name = "level {0:D3}";
-        
+
+        HashSet<MadLevelIcon> activeIcons = new HashSet<MadLevelIcon>();
+
         for (int levelIndex = 0; levelIndex < levelCount; ++levelIndex) {
             MadLevelIcon levelIcon = MadTransform.FindChild<MadLevelIcon>(
                     draggable.transform, (ic) => ic.levelIndex == levelIndex, 0);
@@ -230,22 +239,18 @@ public class MadLevelFreeLayout : MadLevelAbstractLayout {
             
             // create new icon instance if it's not exists
             if (newInstance) {
-                levelIcon = MadTransform.CreateChild(
-                    draggable.transform, string.Format(name, levelIndex + 1), iconTemplate);
-                    
-                // adjust gui depth for each icon
-                levelIcon.guiDepth += levelIndex * depthDiff;
-                var sprites = MadTransform.FindChildren<MadSprite>(levelIcon.transform);
-                foreach (var sprite in sprites) {
-                    sprite.guiDepth += levelIndex * depthDiff;
-                }
-                
+                levelIcon = CreateIcon(draggable.transform, string.Format(name, levelIndex + 1), iconTemplate);
+
                 // position & scale
                 levelIcon.pivotPoint = MadSprite.PivotPoint.Center;
-                levelIcon.transform.localPosition = currentOffset;
-                currentOffset += offset;
-                    
                 levelIcon.transform.localScale = Vector3.one;
+
+                do {
+                    levelIcon.transform.localPosition = currentOffset;
+                    currentOffset += offset;
+                } while (Collides(levelIcon, allIcons));
+
+                allIcons.Add(levelIcon);
             }
             
             // make it active if deactivated
@@ -272,13 +277,33 @@ public class MadLevelFreeLayout : MadLevelAbstractLayout {
             } else {
                 levelIcon.locked = false;
             }
-            
+
+            if (!Application.isPlaying || !MadLevelProfile.IsLockedSet(levelIcon.level.name)) {
+                levelIcon.locked = levelIcon.level.lockedByDefault;
+            }
+
             previousIcon = levelIcon;
+
+            activeIcons.Add(levelIcon);
         }
         
         BuildBackgroundTexture();
+
+        DeactivateAllOther(activeIcons);
     }
-    
+
+    private bool Collides(MadLevelIcon icon, List<MadLevelIcon> iconList) {
+        var b1 = icon.GetTransformedBounds();
+        foreach (var i in iconList) {
+            var b2 = i.GetTransformedBounds();
+            if (MadMath.Overlaps(b1, b2)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     void BuildBackgroundTexture() {
         if (backgroundTexture != null) {
             var background = MadTransform.GetOrCreateChild<MadSprite>(draggable.transform, "background");
@@ -288,6 +313,16 @@ public class MadLevelFreeLayout : MadLevelAbstractLayout {
             var background = MadTransform.FindChildWithName<MadSprite>(draggable.transform, "background");
             if (background != null) {
                 DestroyImmediate(background.gameObject);
+            }
+        }
+    }
+
+    // deactivates all other icons under the draggable than given
+    private void DeactivateAllOther(HashSet<MadLevelIcon> activeIcons) {
+        var allIcons = MadTransform.FindChildren<MadLevelIcon>(draggable.transform);
+        foreach (var icon in allIcons) {
+            if (!activeIcons.Contains(icon)) {
+                MadGameObject.SetActive(icon.gameObject, false);
             }
         }
     }

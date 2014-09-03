@@ -8,5 +8,10 @@ labels:
 - stars
 - star
 - lock
+- scene
+- screen
+- progress
+- save
+- select
 DefaultImporter:
   userData: 

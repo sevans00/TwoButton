@@ -115,19 +115,84 @@ public class MadLevelMenu : MonoBehaviour {
         MadLevelIconTool.Display();
     }
     
-    [MenuItem("Tools/Mad Level Manager/Create Level Property/Empty", false, 155)]
-    static void CreateEmptyProperty() {
-        ScriptableWizard.DisplayWizard<MadLevelPropertyEmptyTool>("Create Empty Property", "Create");
-    }
+    //[MenuItem("Tools/Mad Level Manager/Create Level Property/Empty", false, 155)]
+    //static void CreateEmptyProperty() {
+    //    ScriptableWizard.DisplayWizard<MadLevelPropertyEmptyTool>("Create Empty Property", "Create");
+    //}
     
-    [MenuItem("Tools/Mad Level Manager/Create Level Property/Sprite", false, 160)]
-    static void CreateSpriteProperty() {
-        ScriptableWizard.DisplayWizard<MadLevelPropertySpriteTool>("Create Sprite Property", "Create");
-    }
+    //[MenuItem("Tools/Mad Level Manager/Create Level Property/Sprite", false, 160)]
+    //static void CreateSpriteProperty() {
+    //    ScriptableWizard.DisplayWizard<MadLevelPropertySpriteTool>("Create Sprite Property", "Create");
+    //}
     
-    [MenuItem("Tools/Mad Level Manager/Create Level Property/Text", false, 165)]
-    static void CreateTextProperty() {
-        ScriptableWizard.DisplayWizard<MadLevelPropertyTextTool>("Create Text Property", "Create");
+    //[MenuItem("Tools/Mad Level Manager/Create Level Property/Text", false, 165)]
+    //static void CreateTextProperty() {
+    //    ScriptableWizard.DisplayWizard<MadLevelPropertyTextTool>("Create Text Property", "Create");
+    //}
+
+    [MenuItem("Tools/Mad Level Manager/Animations/Add Animator", false, 155)]
+    static void AddAnimator() {
+        var go = Selection.activeGameObject;
+        if (!CheckAnimationValidObject(go)) {
+            return;
+        }
+
+        if (go.GetComponent<MadLevelIcon>() != null) {
+            go.AddComponent<MadLevelAnimator>();
+        } else if (go.GetComponent<MadSprite>() != null) {
+            go.AddComponent<MadAnimator>();
+        } else {
+            EditorUtility.DisplayDialog("Cannot Add Animator", "Animator can be added only to level icons or sprites.", "OK");
+        }
+    }
+
+    [MenuItem("Tools/Mad Level Manager/Animations/Add Move Animation", false, 170)]
+    static void AddMoveAnimation() {
+        var go = Selection.activeGameObject;
+        if (!CheckAnimationValidObject(go)) {
+            return;
+        }
+
+        go.AddComponent<MadAnimMove>();
+    }
+
+    [MenuItem("Tools/Mad Level Manager/Animations/Add Rotate Animation", false, 171)]
+    static void AddRotateAnimation() {
+        var go = Selection.activeGameObject;
+        if (!CheckAnimationValidObject(go)) {
+            return;
+        }
+
+        go.AddComponent<MadAnimRotate>();
+    }
+
+    [MenuItem("Tools/Mad Level Manager/Animations/Add Scale Animation", false, 172)]
+    static void AddScaleAnimation() {
+        var go = Selection.activeGameObject;
+        if (!CheckAnimationValidObject(go)) {
+            return;
+        }
+
+        go.AddComponent<MadAnimScale>();
+    }
+
+    [MenuItem("Tools/Mad Level Manager/Animations/Add Color Animation", false, 173)]
+    static void AddColorAnimation() {
+        var go = Selection.activeGameObject;
+        if (!CheckAnimationValidObject(go)) {
+            return;
+        }
+
+        go.AddComponent<MadAnimColor>();
+    }
+
+    static bool CheckAnimationValidObject(GameObject go) {
+        if (go == null) {
+            EditorUtility.DisplayDialog("Cannot Add Animation", "Please select object with MadSprite or MadLevelIcon component attached.", "OK");
+            return false;
+        }
+
+        return true;
     }
     
     [MenuItem("Tools/Mad Level Manager/Grid Layout/Create", false, 200)]
@@ -140,13 +205,20 @@ public class MadLevelMenu : MonoBehaviour {
         }
     }
 
-    [MenuItem("Tools/Mad Level Manager/Grid Layout/Create Bullets", false, 300)]
+    [MenuItem("Tools/Mad Level Manager/Grid Layout/Add Input Control", false, 300)]
+    [MenuItem("Tools/Mad Level Manager/Free Layout/Add Input Control", false, 300)]
+    static void CreateKeyboardControl() {
+        var inputControl = MadTransform.CreateChild<MadLevelInputControl>(null, "Input Control");
+        Selection.activeGameObject = inputControl.gameObject;
+    }
+
+    [MenuItem("Tools/Mad Level Manager/Grid Layout/Create Bullets", false, 301)]
     static void CreateBullets() {
         var panel = MadPanel.UniqueOrNull();
         var bullets = MadLevelGridBulletsTool.Create(panel);
         Selection.activeObject = bullets.gameObject;
     }
-    
+
     [MenuItem("Tools/Mad Level Manager/Free Layout/Create", false, 200)]
     static void CreateFreeLayout() {
         var panel = MadPanel.UniqueOrNull();
@@ -195,10 +267,38 @@ public class MadLevelMenu : MonoBehaviour {
 
     [MenuItem("Tools/Mad Level Manager/About", false, 1001)]
     static void OpenAbout() {
+        string trialInfo = "";
+
+        if (MadTrialEditor.isTrialVersion) {
+            if (MadTrialEditor.expired) {
+                trialInfo = "\n\nYour evaluation period has expired!";
+            } else {
+                int daysLeft = MadTrialEditor.DaysLeft();
+                trialInfo = "\n\nYour have " + daysLeft + " evaluation days left.";
+            }
+            
+        }
+
         EditorUtility.DisplayDialog("Mad Level Manager",
-            "Copyright (c) Mad Pixel Machine\nVersion: 2.0.1\n\nhttp://madlevelmanager.madpixelmachine.com/",
+            "Copyright (c) Mad Pixel Machine\nVersion: 2.2.0a\n\nhttp://madlevelmanager.madpixelmachine.com/" + trialInfo,
             "OK");
     }
+
+#if !true
+    [MenuItem("Tools/Mad Level Manager/Debug/Reset Update Data", false, 10000)]
+    static void ResetUpdateData() {
+        MadLevelUpdater.ResetUpdateData();
+    }
+#endif
+
+    #if TRIAL
+
+    [MenuItem("Tools/Mad Level Manager/Request Evaluation Key", false, 10001)]
+    public static void Extend() {
+        MadTrialEditor.RequestExtend("Mad Level Manager");
+    }
+
+    #endif
     
     //
     // validators

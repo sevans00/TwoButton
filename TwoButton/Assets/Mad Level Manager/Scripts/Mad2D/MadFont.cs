@@ -37,7 +37,7 @@ public class MadFont : MonoBehaviour {
     public string glyphs;
     public int linesCount = 1;
     public float fillFactorTolerance = 0.01f;
-    
+
     // glyph designer properties
     public TextAsset fntFile;
     
@@ -47,9 +47,6 @@ public class MadFont : MonoBehaviour {
     
     public Material material;
     public string dimensions;
-    
-    [HideInInspector]
-    public float height;
     
     private MadFontData _data;
     public MadFontData data {
@@ -95,7 +92,6 @@ public class MadFont : MonoBehaviour {
         hash.Add(created);
         hash.Add(material);
         hash.Add(dimensions);
-        hash.Add(height);
         
         return hash.GetHashCode();
     }

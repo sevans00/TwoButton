@@ -30,11 +30,15 @@ public class MadLevelProfileTool : EditorWindow {
     
     string newProfileName;
 
+    Vector2 scrollPosition;
+
     // ===========================================================
     // Methods
     // ===========================================================
     
     void OnGUI() {
+        scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
+
         MadGUI.BeginBox("Profiles");
         MadGUI.Indent(() => {
         
@@ -113,6 +117,47 @@ public class MadLevelProfileTool : EditorWindow {
             EditorGUILayout.EndHorizontal();
             MadGUI.EndBox();
         MadGUI.EndBox();
+
+        MadGUI.BeginBox("Toolbox");
+        EditorGUILayout.BeginHorizontal();
+        if (MadGUI.Button("Unlock All Levels")) {
+            UnlockAllLevels();
+        }
+
+        if (MadGUI.Button("Complete All Levels")) {
+            CompleteAllLevels();
+        }
+        EditorGUILayout.EndHorizontal();
+
+        MadGUI.EndBox();
+
+        EditorGUILayout.EndScrollView();
+    }
+
+    void UnlockAllLevels() {
+        if (!CheckPlaying()) {
+            return;
+        }
+
+        var levelNames = MadLevel.GetAllLevelNames();
+        foreach (var levelName in levelNames) {
+            MadLevelProfile.SetLocked(levelName, false);
+        }
+
+        MadLevel.ReloadCurrent();
+    }
+
+    void CompleteAllLevels() {
+        if (!CheckPlaying()) {
+            return;
+        }
+
+        var levelNames = MadLevel.GetAllLevelNames();
+        foreach (var levelName in levelNames) {
+            MadLevelProfile.SetCompleted(levelName, true);
+        }
+
+        MadLevel.ReloadCurrent();
     }
     
     void SwitchProfile(string profile) {

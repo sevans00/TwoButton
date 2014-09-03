@@ -292,15 +292,35 @@ public class MadLevelProfile {
     /// Property name.
     /// </param>
     public static string GetLevelAny(string levelName, string property) {
+        return GetLevelAny(levelName, property, "");
+    }
+
+    /// <summary>
+    /// Gets level-scoped property value of any type as string. Use this method if you only need a string
+    /// representation of a value and you don't want to concern about its type.
+    /// </summary>
+    /// <returns>
+    /// String representation of property value. Empty string if value is unset.
+    /// </returns>
+    /// <param name='levelName'>
+    /// Level name.
+    /// </param>
+    /// <param name='property'>
+    /// Property name.
+    /// </param>
+    /// <param name='def'>
+    /// Default value.
+    /// </param>
+    public static string GetLevelAny(string levelName, string property, string def) {
         if (levels.ContainsKey(levelName)) {
             var level = levels[levelName];
             if (level.HasProperty(property)) {
                 return level.GetPropertyAny(property);
             } else {
-                return "";
+                return def;
             }
         } else {
-            return "";
+            return def;
         }
     }
     
@@ -1104,7 +1124,7 @@ public class MadLevelProfile {
             string outStr = strValue;
             
             if (type == Type.String) {
-                var bytes = Encoding.UTF8.GetBytes(outStr);
+                var bytes = Encoding.UTF8.GetBytes(outStr.ToCharArray(), 0, outStr.Length);
                 outStr = Convert.ToBase64String(bytes);
             }
         

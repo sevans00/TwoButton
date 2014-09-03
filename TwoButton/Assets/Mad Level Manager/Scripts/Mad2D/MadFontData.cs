@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Text;
 using MadLevelManager;
 using System;
+using System.Globalization;
 
 #if !UNITY_3_5
 namespace MadLevelManager {
@@ -298,11 +299,11 @@ public class MadFontData {
             
             var parts = line.Split(' ');
             char c = parts[0][0];
-            
-            float x = float.Parse(parts[1]);
-            float y = float.Parse(parts[2]);
-            float width = float.Parse(parts[3]);
-            float height = float.Parse(parts[4]);
+
+            float x = float.Parse(parts[1], CultureInfo.InvariantCulture);
+            float y = float.Parse(parts[2], CultureInfo.InvariantCulture);
+            float width = float.Parse(parts[3], CultureInfo.InvariantCulture);
+            float height = float.Parse(parts[4], CultureInfo.InvariantCulture);
             
             var ch = new Char();
             ch.c = c;

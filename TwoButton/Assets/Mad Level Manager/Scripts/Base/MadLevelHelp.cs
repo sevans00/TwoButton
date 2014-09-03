@@ -28,12 +28,14 @@ public class MadLevelHelp {
     public const string LevelConfigurationHelp = Latest + "tutorial/your_first_level_select_screen.html#creating-level-configuration";
 
     // Extensions Editor Help
-
-    public const string ExtensionEditor = Safe + "advanced/extensions_editor.html";
+    public const string ExtensionEditor = Latest + "advanced/extension_editor.html";
 
     // Mad Level Icon
     public const string IconGenerated = Safe + "context/icon_generated.html";
     public const string SpecialProperty = Safe + "context/special_property.html";
+
+    // Keyboard controller help
+    public const string InputControl = Latest + "advanced/input_control.html";
 
     // ===========================================================
     // Fields

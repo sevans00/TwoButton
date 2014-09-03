@@ -124,10 +124,16 @@ public class MadLevelGridLayout : MadLevelAbstractLayout {
         
         return closestIcon;
     }
-    
+
     public override void LookAtIcon(MadLevelIcon icon) {
         int pageIndex = PageIndexForLevel(icon.level.name);
-        SwitchPage(pageIndex);
+        SwitchPage(pageIndex, true);
+    }
+
+    // TODO: make this a abstract method
+    public void LookAtIconAnimate(MadLevelIcon icon) {
+        int pageIndex = PageIndexForLevel(icon.level.name);
+        SwitchPage(pageIndex, false);
     }
     
     // ===========================================================
@@ -169,20 +175,31 @@ public class MadLevelGridLayout : MadLevelAbstractLayout {
         } finally {
             MadTransform.registerUndo = true;
         }
-        
+
+        UpdateDraggable();
         SlideIconsUpdate();
     }
+
+    private void UpdateDraggable() {
+        var panel = MadPanel.UniqueOrNull();
+        if (panel != null) {
+            panel.ignoreInput = draggable.animating;
+        }
+    }
+
+
     
     void UpdateLayout(bool forceDelete) {
         if (IsDirty()) {
-            CleanUp(forceDelete || deepClean || generate);
-            Build();
+            bool deep = !Application.isPlaying && (forceDelete || deepClean || generate);
+            CleanUp(deep);
+            Build(deep);
             MakeClean();
             
             configuration.callbackChanged = () => {
                 if (this != null) {
-                    CleanUp(forceDelete);
-                    Build();
+                    CleanUp(generate);
+                    Build(generate);
                     MakeClean();
                 }
             };
@@ -220,17 +237,17 @@ public class MadLevelGridLayout : MadLevelAbstractLayout {
     }
     
     void GoToNextPage() {
-        SwitchPage(pageCurrentIndex + 1);
+        SwitchPage(pageCurrentIndex + 1, false);
     }
     
     void GoToPrevPage() {
-        SwitchPage(pageCurrentIndex - 1);
+        SwitchPage(pageCurrentIndex - 1, false);
     }
     
-    void SwitchPage(int newIndex) {
+    void SwitchPage(int newIndex, bool now) {
         MadDebug.Assert(newIndex >= 0 && newIndex < pages.Count, "There's no page with index " + newIndex);
         pageCurrentIndex = newIndex;
-        draggable.MoveTo(newIndex);
+        draggable.MoveTo(newIndex, now);
     }
     
     int PageIndexForLevel(string levelName) {
@@ -324,7 +341,7 @@ public class MadLevelGridLayout : MadLevelAbstractLayout {
     }
     
     // builds level icons that are absent now
-    void Build() {
+    void Build(bool forceDelete) {
         // create or get a draggable
         draggable = MadTransform.GetOrCreateChild<MadDragStopDraggable>(transform, "Draggable");
         
@@ -368,23 +385,25 @@ public class MadLevelGridLayout : MadLevelAbstractLayout {
                     // now they should be placed inside "Page X" transforms
                     MadLevelIcon levelIcon = null;
 
-                    // look directly under Draggable
-                    levelIcon = MadTransform.FindChild<MadLevelIcon>(
-                        draggable.transform, (ic) => ic.levelIndex == levelIndex, 0);
-                    if (levelIcon != null) {
-                        // move to page
-                        levelIcon.transform.parent = page;
-                    } else {
-                        // find under the page
+                    if (!forceDelete) {
+                        // look directly under Draggable
                         levelIcon = MadTransform.FindChild<MadLevelIcon>(
-                            page.transform, (ic) => ic.levelIndex == levelIndex, 0);
+                            draggable.transform, (ic) => ic.levelIndex == levelIndex, 0);
+                        if (levelIcon != null) {
+                            // move to page
+                            levelIcon.transform.parent = page;
+                        } else {
+                            // find under the page
+                            levelIcon = MadTransform.FindChild<MadLevelIcon>(
+                                page.transform, (ic) => ic.levelIndex == levelIndex, 0);
+                        }
                     }
                         
                     var level = configuration.GetLevel(MadLevel.Type.Level, configurationGroup, levelIndex);
                     bool createNewInstance = levelIcon == null;
                     
                     if (createNewInstance) {
-                        levelIcon = MadTransform.CreateChild(
+                        levelIcon = CreateIcon(
                             page.transform, level.name, iconTemplate);
                     } else {
                         levelIcon.name = level.name;
@@ -398,6 +417,10 @@ public class MadLevelGridLayout : MadLevelAbstractLayout {
                     levelIcon.hasLevelConfiguration = true;
 
                     if (!MadGameObject.IsActive(levelIcon.gameObject)) {
+                        MadGameObject.SetActive(levelIcon.gameObject, true);
+                    } else {
+                        // re-enable icon to reload its properties
+                        MadGameObject.SetActive(levelIcon.gameObject, false);
                         MadGameObject.SetActive(levelIcon.gameObject, true);
                     }
                     
@@ -422,10 +445,10 @@ public class MadLevelGridLayout : MadLevelAbstractLayout {
                         if (createNewInstance) {
                             previousIcon.unlockOnComplete.Add(levelIcon);
                         }
-                    } else {
-                        if (generate) {
-                            levelIcon.locked = false;
-                        }
+                    }
+
+                    if (!Application.isPlaying || !MadLevelProfile.IsLockedSet(level.name)) {
+                        levelIcon.locked = levelIcon.level.lockedByDefault;
                     }
                     
                     previousIcon = levelIcon;

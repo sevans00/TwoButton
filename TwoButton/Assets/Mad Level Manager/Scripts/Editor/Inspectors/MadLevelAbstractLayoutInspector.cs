@@ -15,13 +15,7 @@ namespace MadLevelManager {
 
 public class MadLevelAbstractLayoutInspector : Editor {
 
-    // ===========================================================
-    // Constants
-    // ===========================================================
-
-    // ===========================================================
-    // Fields
-    // ===========================================================
+    #region Fields
     
     protected SerializedProperty iconTemplate;
 
@@ -29,6 +23,12 @@ public class MadLevelAbstractLayoutInspector : Editor {
     protected SerializedProperty lookAtLevel;
     
     protected SerializedProperty twoStepActivationType;
+
+    protected SerializedProperty loadLevel;
+    protected SerializedProperty loadLevelLoadLevelDelay;
+    protected SerializedProperty loadLevelMessageReceiver;
+    protected SerializedProperty loadLevelMessageName;
+    protected SerializedProperty loadLevelMessageIncludeChildren;
 
     protected SerializedProperty onIconActivatePlayAudio;
     protected SerializedProperty onIconActivatePlayAudioClip;
@@ -41,10 +41,12 @@ public class MadLevelAbstractLayoutInspector : Editor {
     protected SerializedProperty onIconActivateMessage;
     protected SerializedProperty onIconActivateMessageReceiver;
     protected SerializedProperty onIconActivateMessageMethodName;
+    protected SerializedProperty onIconActivateMessageIncludeChildren;
     
     protected SerializedProperty onIconDeactivateMessage;
     protected SerializedProperty onIconDeactivateMessageReceiver;
     protected SerializedProperty onIconDeactivateMessageMethodName;
+    protected SerializedProperty onIconDeactivateMessageIncludeChildren;
     
     protected SerializedProperty handleMobileBackButton;
     protected SerializedProperty handleMobileBackButtonAction;
@@ -55,13 +57,9 @@ public class MadLevelAbstractLayoutInspector : Editor {
     
     private MadLevelAbstractLayout s;
 
-    // ===========================================================
-    // Methods for/from SuperClass/Interfaces
-    // ===========================================================
+    #endregion
 
-    // ===========================================================
-    // Methods
-    // ===========================================================
+    #region Methods
     
     protected virtual void OnEnable() {
         s = target as MadLevelAbstractLayout;
@@ -72,6 +70,12 @@ public class MadLevelAbstractLayoutInspector : Editor {
         lookAtLevel = serializedObject.FindProperty("lookAtLevel");
         
         twoStepActivationType = serializedObject.FindProperty("twoStepActivationType");
+
+        loadLevel = serializedObject.FindProperty("loadLevel");
+        loadLevelLoadLevelDelay = serializedObject.FindProperty("loadLevelLoadLevelDelay");
+        loadLevelMessageReceiver = serializedObject.FindProperty("loadLevelMessageReceiver");
+        loadLevelMessageName = serializedObject.FindProperty("loadLevelMessageName");
+        loadLevelMessageIncludeChildren = serializedObject.FindProperty("loadLevelMessageIncludeChildren");
         
         onIconActivatePlayAudio = serializedObject.FindProperty("onIconActivatePlayAudio");
         onIconActivatePlayAudioClip = serializedObject.FindProperty("onIconActivatePlayAudioClip");
@@ -84,10 +88,12 @@ public class MadLevelAbstractLayoutInspector : Editor {
         onIconActivateMessage = serializedObject.FindProperty("onIconActivateMessage");
         onIconActivateMessageReceiver = serializedObject.FindProperty("onIconActivateMessageReceiver");
         onIconActivateMessageMethodName = serializedObject.FindProperty("onIconActivateMessageMethodName");
+        onIconActivateMessageIncludeChildren = serializedObject.FindProperty("onIconActivateMessageIncludeChildren");
         
         onIconDeactivateMessage = serializedObject.FindProperty("onIconDeactivateMessage");
         onIconDeactivateMessageReceiver = serializedObject.FindProperty("onIconDeactivateMessageReceiver");
         onIconDeactivateMessageMethodName = serializedObject.FindProperty("onIconDeactivateMessageMethodName");
+        onIconDeactivateMessageIncludeChildren = serializedObject.FindProperty("onIconDeactivateMessageIncludeChildren");
         
         handleMobileBackButton = serializedObject.FindProperty("handleMobileBackButton");
         handleMobileBackButtonAction = serializedObject.FindProperty("handleMobileBackButtonAction");
@@ -120,7 +126,8 @@ public class MadLevelAbstractLayoutInspector : Editor {
                             onIconActivatePlayAudioVolume,
                             onIconActivateMessage,
                             onIconActivateMessageReceiver,
-                            onIconActivateMessageMethodName
+                            onIconActivateMessageMethodName,
+                            onIconActivateMessageIncludeChildren
                         );
                     });
                 }
@@ -133,21 +140,57 @@ public class MadLevelAbstractLayoutInspector : Editor {
                             onIconDeactivatePlayAudioVolume,
                             onIconDeactivateMessage,
                             onIconDeactivateMessageReceiver,
-                            onIconDeactivateMessageMethodName
+                            onIconDeactivateMessageMethodName,
+                            onIconDeactivateMessageIncludeChildren
                             );
                     });
                 }
             });
         });
     }
-    
+
+    protected void LoadLevel() {
+        MadGUI.PropertyFieldEnumPopup(loadLevel, "Load Level...");
+
+        switch (s.loadLevel) {
+            case MadLevelAbstractLayout.LoadLevel.Immediately:
+                // do nothing
+                break;
+                
+            case MadLevelAbstractLayout.LoadLevel.WithDelay:
+                using (MadGUI.Indent()) {
+                    MadGUI.PropertyField(loadLevelLoadLevelDelay, "Delay");
+                    if (loadLevelLoadLevelDelay.floatValue < 0) {
+                        loadLevelLoadLevelDelay.floatValue = Mathf.Max(0, loadLevelLoadLevelDelay.floatValue);
+                    }
+                }
+                break;
+
+            case MadLevelAbstractLayout.LoadLevel.SendMessage:
+                using (MadGUI.Indent()) {
+                    MadGUI.Info("By choosing this option you are responsible for loading the level. "
+                        + "Activated MadLevelIcon will be passed as message argument.");
+
+                    MadGUI.PropertyField(loadLevelMessageReceiver, "Receiver", MadGUI.ObjectIsSet);
+                    MadGUI.PropertyField(loadLevelMessageName, "Method Name", MadGUI.StringNotEmpty);
+                    MadGUI.PropertyField(loadLevelMessageIncludeChildren, "Include Children");
+                }
+                break;
+
+            default:
+                Debug.LogError("Unknown option: " + s.loadLevel);
+                break;
+        }
+    }
+
     void ActivateAction(
         SerializedProperty playAudio,
         SerializedProperty playAudioClip,
         SerializedProperty playAudioVolume,
         SerializedProperty message,
         SerializedProperty messageReceiver,
-        SerializedProperty messageMethodName
+        SerializedProperty messageMethodName,
+        SerializedProperty messageIncludeChildren
     ) {
         MadGUI.PropertyField(playAudio, "Play Audio");
         MadGUI.ConditionallyEnabled(playAudio.boolValue, () => {
@@ -177,6 +220,7 @@ public class MadLevelAbstractLayoutInspector : Editor {
             MadGUI.Indent(() => {
                 MadGUI.PropertyField(messageReceiver, "Receiver", MadGUI.ObjectIsSet);
                 MadGUI.PropertyField(messageMethodName, "Method Name", MadGUI.StringNotEmpty);
+                MadGUI.PropertyField(messageIncludeChildren, "Include Children");
                 
                 if (message.boolValue) {
                     MadGUI.Info("This should look like this:\nvoid " + messageMethodName.stringValue + "(MadLevelIcon icon)");
@@ -237,13 +281,7 @@ public class MadLevelAbstractLayoutInspector : Editor {
         });
     }
 
-    // ===========================================================
-    // Static Methods
-    // ===========================================================
-
-    // ===========================================================
-    // Inner and Anonymous Classes
-    // ===========================================================
+    #endregion
 
 }
 

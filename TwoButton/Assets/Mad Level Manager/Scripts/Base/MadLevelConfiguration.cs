@@ -28,7 +28,10 @@ public class MadLevelConfiguration : ScriptableObject {
     // ===========================================================
     // Fields
     // ===========================================================
-    
+
+    [SerializeField]
+    private int creationDate = -1;
+
     // only one configuration can be active at time
     [SerializeField]
     private bool _active;
@@ -43,6 +46,10 @@ public class MadLevelConfiguration : ScriptableObject {
     // to prevent activation of everything that is found
     // sadly OnEnable() activation method can activate too much for some reason
     private static bool automaticallyActivatedSomething;
+
+    // for upgrading purposes
+    [SerializeField]
+    private int version;
     
     // ===========================================================
     // Properties
@@ -95,17 +102,54 @@ public class MadLevelConfiguration : ScriptableObject {
     // ===========================================================
     // Methods
     // ===========================================================
-    
+
     void OnEnable() {
+
+#if UNITY_EDITOR
+        if (creationDate == -1) {
+            creationDate = (int) (DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+        }
+#endif
+
         Upgrade();
+        Reorder();
     }
     
     void Upgrade() {
-        if (levels != null) {
-            foreach(var level in levels) {
-                level.parent = this;
-                level.Upgrade();
+        foreach(var level in levels) {
+            level.parent = this;
+            level.Upgrade();
+
+            if (version == 0) {
+                level.lockedByDefault = true;
             }
+        }
+
+        if (version == 0) {
+            // unlock first level of type level on each group
+            var q1 = from l
+                     in levels
+                     where l.type == MadLevel.Type.Level && l.groupId == defaultGroup.id
+                     orderby l.order
+                     select l;
+            var l1 = q1.FirstOrDefault();
+            if (l1 != null) {
+                l1.lockedByDefault = false;
+            }
+
+            foreach (var g in groups) {
+                var q2 = from l
+                        in levels
+                        where l.type == MadLevel.Type.Level && l.groupId == g.id
+                        orderby l.order
+                        select l;
+                var l2 = q2.FirstOrDefault();
+                if (l2 != null) {
+                    l2.lockedByDefault = false;
+                }
+            }
+
+            version = 1;
         }
     }
     
@@ -126,6 +170,9 @@ public class MadLevelConfiguration : ScriptableObject {
             level.order = order;
             order += 10;
         }
+
+        levels.Clear();
+        levels.AddRange(ordered);
     }
     
     public Level CreateLevel() {
@@ -194,10 +241,20 @@ public class MadLevelConfiguration : ScriptableObject {
             return query.Count();
         }
     }
-    
+
     public Level[] GetLevelsInOrder() {
-        var query = from l in levels orderby l.groupId, l.order ascending select l;
-        return query.ToArray();
+        List<Level> result = new List<Level>();
+        for (int i = -1; i < groups.Count; ++i) {
+            if (i == -1) {
+                var query = from l in levels where l.groupId == defaultGroup.id orderby l.order select l;
+                result.AddRange(query);
+            } else {
+                var query = from l in levels where l.groupId == groups[i].id orderby l.order select l;
+                result.AddRange(query);
+            }
+        }
+
+        return result.ToArray();
     }
 
     public Level GetLevel(int index) {
@@ -227,25 +284,18 @@ public class MadLevelConfiguration : ScriptableObject {
     }
     
     public Level GetLevel(MadLevel.Type type, int groupId, int index) {
-        Level[] queryResult;
-        
-        if (groupId == -1) {
-            var query = from l in levels where l.type == type orderby l.order ascending select l;
-            queryResult = query.ToArray();
-        } else {
-            var query = from l in levels where l.type == type && l.groupId == groupId orderby l.order ascending select l;
-            queryResult = query.ToArray();
-        }
-    
-        int skipped = 0;
-        foreach (var level in queryResult) {
-            if (skipped == index) {
-                return level;
-            } else {
-                skipped++;
+        int i2 = 0;
+        for (int i = 0; i < levels.Count; ++i) {
+            var level = levels[i];
+            if (level.type == type && (groupId == -1 || level.groupId == groupId)) {
+                if (i2 == index) {
+                    return level;
+                } else {
+                    i2++;
+                }
             }
         }
-        
+
         return null;
     }
     
@@ -402,20 +452,21 @@ public class MadLevelConfiguration : ScriptableObject {
             return prevLevel;
         }
     }
-    
-    public Level FindFirstForScene(string levelName) { // TODO: look for index
+
+    public Level FindFirstForScene(string levelName, out bool hasMany) { // TODO: look for index
         var ordered =
             from l in levels
+            where l.sceneName == levelName
             orderby l.order ascending
             select l;
-        
-        foreach (var level in ordered) {
-            if (level.sceneName == levelName) {
-                return level;
-            }
+
+        if (ordered.Count() > 1) {
+            hasMany = true;
+        } else {
+            hasMany = false;
         }
-        
-        return null;
+
+        return ordered.FirstOrDefault();
     }
 
     public MadLevelExtension FindExtensionByGUID(string guid) {
@@ -537,13 +588,13 @@ public class MadLevelConfiguration : ScriptableObject {
     
     public static MadLevelConfiguration FindActive() {
         var all = FindAll();
-        var active = from conf in all where conf.active == true select conf;
+        var active = from conf in all where conf.active == true orderby conf.creationDate descending select conf;
         
         var configuration = active.FirstOrDefault();
         
         if (active.Count() > 1) {
             Debug.Log("There are more than one active configuration. "
-                + "This shouldn't happen, but there's nothing to worry about. I will now use " + configuration.name
+                + "This shouldn't happen (unless you've just upgraded Mad Level Manager). Anyway there's nothing to worry about! I will now use " + configuration.name
                 + " and deactivate others.", configuration);
             configuration.active = true;
         }
@@ -567,6 +618,12 @@ public class MadLevelConfiguration : ScriptableObject {
             }
             
             if (level.sceneObject == null) {
+                return false;
+            }
+        }
+
+        foreach (var extension in extensions) {
+            if (!extension.IsValid()) {
                 return false;
             }
         }
@@ -629,8 +686,8 @@ public class MadLevelConfiguration : ScriptableObject {
         //public string guid;
 
         public string extensionGUID = "";
-        
-        
+
+        public bool lockedByDefault = true;
         
         public Group group {
             get {
@@ -671,6 +728,11 @@ public class MadLevelConfiguration : ScriptableObject {
 
         internal Level(MadLevelConfiguration parent) {
             this.parent = parent;
+        }
+
+        // workaround for linq
+        public Group GetGroup() {
+            return group;
         }
 
         public override void Load() {

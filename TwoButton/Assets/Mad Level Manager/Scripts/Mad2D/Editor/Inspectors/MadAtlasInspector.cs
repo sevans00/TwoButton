@@ -65,6 +65,8 @@ public class MadAtlasInspector : Editor {
         int iconH = textureDragDrop.height;
         GUI.DrawTexture(new Rect(dropArea.center.x - iconW / 2, dropArea.yMax - iconH - 2, iconW, iconH), textureDragDrop);
         GUI.color = Color.white;
+
+        List<Texture2D> texturesToAdd = new List<Texture2D>();
         
         switch (evt.type) {
             case EventType.MouseDrag:
@@ -81,21 +83,28 @@ public class MadAtlasInspector : Editor {
                     
                     foreach (Object draggedObject in DragAndDrop.objectReferences) {
                         if (draggedObject is Texture2D) {
-                            AddTexture(draggedObject as Texture2D);
+                            texturesToAdd.Add(draggedObject as Texture2D);
                         }
                     }
                 }
                 break;
         }
+
+        if (texturesToAdd.Count > 0) {
+            AddTextures(texturesToAdd.ToArray());
+        }
         
     }
     
-    void AddTexture(Texture2D texture) {
-        if (texture != atlas.atlasTexture) {
-            MadAtlasBuilder.AddToAtlas(atlas, texture);
-        } else {
-            EditorUtility.DisplayDialog("Wrong texture", "Cannot add atlas texture to the same atlas!", "OK");
+    void AddTextures(Texture2D[] textures) {
+        foreach (var tex in textures) {
+            if (tex == atlas.atlasTexture) {
+                EditorUtility.DisplayDialog("Wrong texture", "Cannot add atlas texture to the same atlas!", "OK");
+                return;
+            }
         }
+
+        MadAtlasBuilder.AddToAtlas(atlas, textures);
     }
     
     void SpriteList() {

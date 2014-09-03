@@ -45,22 +45,29 @@ public class MadLevelTesterOption : MonoBehaviour {
             // that are nested under every icon in the level select screen
             
             // note that if you've gained 3 stars already there's no possibility to lost them
+
+            // If you want to create a sprite that should change depending on property value (like medals)
+            // here you can see how to do that. There's property called "medal" and it's set to bronze, silver or gold
+            // depending on which medal should be gained. Please look for medals example scene
         
             // first star gained when points number is at least 100
             if (points >= 100) {
                 EarnStar("star_1");
+                EarnMedal("bronze");
                 MarkLevelCompleted();
             }
             
             // second star gained when points number is at least 150
             if (points >= 150) {
                 EarnStar("star_2");
+                EarnMedal("silver");
                 MarkLevelCompleted();
             }
             
             // third star gained when points number is at least 200
             if (points >= 200) {
                 EarnStar("star_3");
+                EarnMedal("gold");
                 MarkLevelCompleted();
             }
             
@@ -73,6 +80,10 @@ public class MadLevelTesterOption : MonoBehaviour {
     void EarnStar(string name) {
         // set level boolean sets level property of type boolean
         MadLevelProfile.SetLevelBoolean(MadLevel.currentLevelName, name, true);
+    }
+
+    void EarnMedal(string name) {
+        MadLevelProfile.SetLevelString(MadLevel.currentLevelName, "medal", name);
     }
     
     void MarkLevelCompleted() {

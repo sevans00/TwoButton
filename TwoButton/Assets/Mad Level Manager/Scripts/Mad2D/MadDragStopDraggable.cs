@@ -39,6 +39,20 @@ public class MadDragStopDraggable : MadDraggable {
 
     public int dragStopCurrentIndex { get; private set; }
 
+    public override Vector2 progress {
+        get {
+            if (dragStopCount == 0) {
+                return Vector2.zero;
+            } else if (dragStopCount == 1) {
+                return new Vector2(dragStopCurrentIndex, 0);
+            } else {
+                return new Vector2(dragStopCurrentIndex / (float) (dragStopCount - 1) , 0);
+            }
+        }
+    }
+
+    public bool animating { get; private set; }
+
     // ===========================================================
     // Methods
     // ===========================================================
@@ -56,12 +70,12 @@ public class MadDragStopDraggable : MadDraggable {
         
         if (!IsTouchingSingle()) {
             dragging = false;
-            Clear();
             ReturnToDragStop();
             cameraPos = cachedCamPos;
+            Clear();
         } else {
             forcedDragStopIndex = -1;
-            int closest = ClosestDragStopIndex();
+            int closest = IntendedDragStopIndex();
             Vector2 lastCamPos = cachedCamPos;
             var touchPos = TouchPosition();
             
@@ -106,28 +120,36 @@ public class MadDragStopDraggable : MadDraggable {
         return dragStops.Count - 1;
     }
     
-    public void MoveTo(int dragStop) {
+    public void MoveTo(int dragStop, bool now) {
         forcedDragStopIndex = dragStop;
+
+        if (!now) {
+            // little hack :-(
+            lastTouchTime = Time.time;
+            lastTouchCameraPos = cameraPos;
+        }
     }
     
     void ReturnToDragStop() {
-        int index = ClosestDragStopIndex();
+        int index = IntendedDragStopIndex();
         if (index != dragStopCurrentIndex) {
             dragStopCurrentIndex = index;
             dragStopCallback(index);
         }
-        
+
         Vector3 closest = dragStops[index];
         float timeDiff = Time.time - lastTouchTime;
-        if (timeDiff < moveEasingDuration) {
+        if (timeDiff < moveEasingDuration && cameraPos != (Vector2) closest) {
+            animating = true;
             cachedCamPos = Ease(moveEasingType, lastTouchCameraPos, (Vector2) closest, timeDiff / moveEasingDuration);
         } else {
+            animating = false;
             cachedCamPos = closest;
         }
     }
-    
-    Vector3 ClosestDragStop() {
-        var index = ClosestDragStopIndex();
+
+    Vector3 IntendedDragStop() {
+        var index = IntendedDragStopIndex();
         if (index != -1) {
             return dragStops[index];
         } else {
@@ -135,16 +157,49 @@ public class MadDragStopDraggable : MadDraggable {
             return Vector3.zero;
         }
     }
+
+    int IntendedDragStopIndex() {
+        if (dragStops.Count == 0) {
+            return -1;
+        }
+
+        if (forcedDragStopIndex != -1) {
+            return forcedDragStopIndex;
+        }
+
+        int index = dragStopCurrentIndex;
+
+        if (interiaForce.x > 300) {
+            index++;
+        } else if (interiaForce.x < -300) {
+            index--;
+        } else if (IsTouchingJustEnded()) {
+            index = ClosestDragStopIndex();
+        }
+
+        index = Mathf.Clamp(index, 0, dragStops.Count - 1);
+        return index;
+    }
     
+    //Vector3 ClosestDragStop() {
+    //    var index = ClosestDragStopIndex();
+    //    if (index != -1) {
+    //        return dragStops[index];
+    //    } else {
+    //        Debug.LogError("No drag stops defined");
+    //        return Vector3.zero;
+    //    }
+    //}
+
     int ClosestDragStopIndex() {
         if (forcedDragStopIndex != -1) {
             return forcedDragStopIndex;
         }
-        
-        Vector3 currentPosition = estaminatedPos;
+
+        Vector3 currentPosition = cachedCamPos;
         float closestDistance = float.PositiveInfinity;
         int index = -1;
-        
+
         for (int i = 0; i < dragStops.Count; ++i) {
             var dragStop = dragStops[i];
             float distance = Vector2.Distance(currentPosition, dragStop);
@@ -153,7 +208,15 @@ public class MadDragStopDraggable : MadDraggable {
                 index = i;
             }
         }
-        
+
+        if (Mathf.Abs(dragStopCurrentIndex - index) > 1) {
+            if (index > dragStopCurrentIndex) {
+                index = dragStopCurrentIndex + 1;
+            } else {
+                index = dragStopCurrentIndex - 1;
+            }
+        }
+
         return index;
     }
     
