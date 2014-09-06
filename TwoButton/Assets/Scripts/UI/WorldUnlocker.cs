@@ -29,7 +29,7 @@ public class WorldUnlocker : MonoBehaviour {
 				starId = 2;
 				MadLevelProfile.SetLevelBoolean(groupName, "star_"+starId, true);
 			}
-			if ( acquired == allStars ) {
+			if ( acquired >= allStars - 3 ) { //-3 accounts for comic level
 				starId = 3;
 				MadLevelProfile.SetLevelBoolean(groupName, "star_"+starId, true);
 			}

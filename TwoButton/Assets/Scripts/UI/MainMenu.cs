@@ -41,9 +41,15 @@ public class MainMenu : UIMenu {
 	}
 	
 	public void PlayGame() {
-		MadLevel.LoadLevelByName("World Select Screen");
+		if ( PlayerPrefs.GetInt("First Time", 0) == 0 ) {
+			MadLevel.LoadLevelByName("0_IntroComic");
+			PlayerPrefs.SetInt("First Time", 1);
+		} else {
+			MadLevel.LoadLevelByName("World Select Screen");
+		}
 	}
 
 
 
 }
+
