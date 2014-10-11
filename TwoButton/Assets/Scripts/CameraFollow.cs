@@ -13,6 +13,9 @@ public class CameraFollow : MonoBehaviour {
 	public bool _prevPosAssigned;
 	public Vector3 previousPosition;
 	public Vector3 deltaMovement;
+	//World backgrounds:
+	public ParallaxBGSection world1_parallaxBGSection;
+	public ParallaxBGSection world2_parallaxBGSection;
 
 	//Boundary
 	public int boundaryPoints = 0;
@@ -59,6 +62,16 @@ public class CameraFollow : MonoBehaviour {
 			boundaryPoint2 = bound2;
 		}
 
+		//Initialize parallax bg:
+		if ( MadLevel.currentGroupName == "World2" ) {
+			world1_parallaxBGSection.gameObject.SetActive(false);
+			world2_parallaxBGSection.gameObject.SetActive(true);
+			parallaxBGSection = world2_parallaxBGSection;
+		} else {
+			world1_parallaxBGSection.gameObject.SetActive(true);
+			world2_parallaxBGSection.gameObject.SetActive(false);
+			parallaxBGSection = world1_parallaxBGSection;
+		}
 		//Reset parallax bg:
 		_prevPosAssigned = false;
 		parallaxBGSection.reset();

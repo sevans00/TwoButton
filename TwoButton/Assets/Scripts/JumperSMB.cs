@@ -3,8 +3,6 @@ using UnityEngine;
 using System.Collections;
 
 public class JumperSMB : MonoBehaviour {
-
-
 	
 	public GameObject gibsPrefab;
 
@@ -127,18 +125,11 @@ public class JumperSMB : MonoBehaviour {
 		if ( Input.touchCount > 0 ) {
 			//Multitouch:
 			foreach ( Touch touch in Input.touches ) {
-				//Jumping check:
-				if ( touch.position.y < Screen.height - Screen.height / 3 ) {
-					if ( touch.position.x > Screen.width / 2 ) {
-						rightnew = true;
-					}
-					if ( touch.position.x < Screen.width / 2 ) {
-						leftnew = true;
-					}
+				if ( touch.position.x > Screen.width / 2 ) {
+					rightnew = true;
 				}
-				//Jumping:
-				if ( touch.position.y > Screen.height - Screen.height / 3 ) {
-					jumpnew = true;
+				if ( touch.position.x < Screen.width / 2 ) {
+					leftnew = true;
 				}
 			}
 		}

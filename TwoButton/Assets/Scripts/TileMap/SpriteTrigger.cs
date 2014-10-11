@@ -5,6 +5,7 @@ using System.Collections;
 [RequireComponent (typeof (BoxCollider2D))]
 public class SpriteTrigger : MonoBehaviour {
 
+	public GameObject target = null;
 	private BoxCollider2D boxcollider;
 	private bool wasTriggeredLastUpdate = false;
 
@@ -23,9 +24,9 @@ public class SpriteTrigger : MonoBehaviour {
 				if ( boxcollider.OverlapPoint(boundPoint) ) {
 					if ( !wasTriggeredLastUpdate ) {
 						wasTriggeredLastUpdate = true;
-						BroadcastMessage("OnSpriteTriggerEnter", SendMessageOptions.DontRequireReceiver);
+						Broadcast("OnSpriteTriggerEnter", SendMessageOptions.DontRequireReceiver);
 					} else {
-						BroadcastMessage("OnSpriteTriggerStay", SendMessageOptions.DontRequireReceiver);
+						Broadcast("OnSpriteTriggerStay", SendMessageOptions.DontRequireReceiver);
 					}
 					return;
 				}
@@ -33,7 +34,15 @@ public class SpriteTrigger : MonoBehaviour {
 		}
 		if ( wasTriggeredLastUpdate ) {
 			wasTriggeredLastUpdate = false;
-			BroadcastMessage("OnSpriteTriggerExit", SendMessageOptions.DontRequireReceiver);
+			Broadcast("OnSpriteTriggerExit", SendMessageOptions.DontRequireReceiver);
+		}
+	}
+
+	public void Broadcast(string message, SendMessageOptions options) {
+		if ( target == null ) {
+			BroadcastMessage(message, options);
+		} else {
+			target.BroadcastMessage(message, options);
 		}
 	}
 
