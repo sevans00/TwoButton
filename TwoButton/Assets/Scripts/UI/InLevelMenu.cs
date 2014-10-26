@@ -9,6 +9,10 @@ public class InLevelMenu : MonoBehaviour {
 
 	public GameObject endOfLevelMenu;
 
+	public GameObject levelNameGameObject;
+	private Vector3 levelNameDeployedPosition;
+	private Vector3 levelNameHiddenPosition;
+
 	public Vector3 deployedPosition;
 	public Vector3 hiddenPosition;
 	private float animateTime = 0.4f;
@@ -19,8 +23,20 @@ public class InLevelMenu : MonoBehaviour {
 		hiddenPosition = deployedPosition + Vector3.down * 0.46f;
 		inLevelMenu.transform.position = hiddenPosition;
 		inLevelMenu.SetActive(false);
+		levelNameDeployedPosition = levelNameGameObject.transform.position;
+		levelNameHiddenPosition = levelNameGameObject.transform.position+Vector3.up*0.4f;
+		levelNameGameObject.transform.position = levelNameHiddenPosition;
+		levelNameGameObject.SetActive(false);
 	}
-	
+
+	public void DoLevelWasLoaded () {
+		//Set to "shown" view:
+		inLevelMenu.SetActive(true);
+		inLevelMenu.transform.position = deployedPosition;
+		levelNameGameObject.SetActive(true);
+		levelNameGameObject.transform.position = levelNameDeployedPosition;
+	}
+
 	// Update is called once per frame
 	void Update () {
 		if ( Input.GetKeyDown ( KeyCode.Escape ) && !MadLevel.currentGroupName.Equals(MadLevel.defaultGroupName) && !Game.instance.endLevel ) {
@@ -34,7 +50,9 @@ public class InLevelMenu : MonoBehaviour {
 
 	public void Show () {
 		iTween.StopByName("inlevel_hide");
+		iTween.StopByName("inlevel_hide_levelname");
 		inLevelMenu.SetActive(true);
+		levelNameGameObject.SetActive(true);
 		Game.instance.pause();
 		if ( Game.instance.isGameLevel ) {
 			PreviewCamera.instance.zoomOut();
@@ -49,10 +67,16 @@ public class InLevelMenu : MonoBehaviour {
 			"position", deployedPosition,
 			"time", animateTime,
 			"easetype", iTween.EaseType.easeOutQuad ) );
+		iTween.MoveTo( levelNameGameObject, iTween.Hash(
+			"name", "inlevel_show_levelname",
+			"position", levelNameDeployedPosition,
+			"time", animateTime,
+			"easetype", iTween.EaseType.easeOutQuad ) );
 	}
 
 	public void Hide () {
 		iTween.StopByName("inlevel_show");
+		iTween.StopByName("inlevel_show_levelname");
 		if ( Game.instance.isGameLevel ) {
 			PreviewCamera.instance.zoomIn();
 		}
@@ -63,9 +87,15 @@ public class InLevelMenu : MonoBehaviour {
 			"oncompletetarget", gameObject,
 			"oncomplete", "onHideComplete",
 			"easetype", iTween.EaseType.easeOutQuad ) );
+		iTween.MoveTo( levelNameGameObject, iTween.Hash(
+			"name", "inlevel_hide_levelname",
+			"position", levelNameHiddenPosition,
+			"time", animateTime,
+			"easetype", iTween.EaseType.easeOutQuad ) );
 	}
 	public void onHideComplete () {
 		inLevelMenu.SetActive(false);
+		levelNameGameObject.SetActive(false);
 		CameraPathAnimator pathAnimator = GameObject.FindObjectOfType<CameraPathAnimator>();
 		if ( pathAnimator != null ) {
 			pathAnimator.Play();

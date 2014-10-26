@@ -81,11 +81,11 @@ public class PreviewCamera : MonoBehaviour {
 		startPosition = transform.position;
 		startOrthographicSize = camera.orthographicSize;
 
-		showingLevelInitially = true;
+		//showingLevelInitially = true;
 		zoomedOut = true;
 	}
 
-
+	/*
 	public void Update () {
 		if ( !showingLevelInitially ) {
 			return;
@@ -99,6 +99,7 @@ public class PreviewCamera : MonoBehaviour {
 			zoomIn();
 		}
 	}
+	*/
 
 	//Zoom in:
 	public void zoomIn() {

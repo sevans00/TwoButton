@@ -1,6 +1,7 @@
 using MadLevelManager;
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Game : MonoBehaviour {
 
@@ -26,6 +27,8 @@ public class Game : MonoBehaviour {
 	public tk2dTextMesh elapsedTimeTextMesh;
 	public EndOfLevelMenu endOfLevelMenu;
 	public StarCount starCount;
+	public tk2dTextMesh levelNameTextMesh;
+	public InLevelMenu inLevelMenu; //Has all the above within it
 
 	public bool paused = false;
 
@@ -87,6 +90,19 @@ public class Game : MonoBehaviour {
 		tiles = GameObject.FindObjectsOfType<InteractiveTile>();
 		previewCamera.camera.enabled = true;
 		previewCamera.DoLevelWasLoaded();
+
+		//Determine level name:
+		MadLevelConfiguration.Level level = MadLevel.activeConfiguration.FindLevelByName(MadLevel.currentLevelName);
+		List<MadLevelConfiguration.Level> levelList = level.group.GetLevels();
+		int ii;
+		for ( ii = 0; ii < levelList.Count; ii++ ) {
+			if ( levelList[ii].name == MadLevel.currentLevelName ) {
+				ii++;
+				break;
+			}
+		}
+		levelNameTextMesh.text = "World "+ level.groupId +" Level "+ii;
+		inLevelMenu.DoLevelWasLoaded();
 
 		//Spawn player:
 		if ( SpawnPoint != null ) {

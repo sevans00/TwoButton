@@ -1,0 +1,364 @@
+Initialize engine version: 4.3.4f1 (e444f76e01cd)
+GfxDevice: creating device client; threaded=1
+Direct3D:
+    Version:  Direct3D 9.0c [igdumdx32.dll 8.15.10.2342]
+    Renderer: Intel(R) HD Graphics Family
+    Vendor:   Intel
+    VRAM:     880 MB (via DXGI)
+    Caps:     Shader=30 DepthRT=1 NativeDepth=1 NativeShadow=1 DF16=1 INTZ=1 RAWZ=0 NULL=1 RESZ=1 SlowINTZ=0
+Begin MonoManager ReloadAssembly
+Platform assembly: C:\Users\Shaun\Documents\GitHub\TwoButton\MrTwoButton_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading C:\Users\Shaun\Documents\GitHub\TwoButton\MrTwoButton_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: C:\Users\Shaun\Documents\GitHub\TwoButton\MrTwoButton_Data\Managed\Assembly-CSharp-firstpass.dll (this message is harmless)
+Loading C:\Users\Shaun\Documents\GitHub\TwoButton\MrTwoButton_Data\Managed\Assembly-CSharp-firstpass.dll into Unity Child Domain
+Platform assembly: C:\Users\Shaun\Documents\GitHub\TwoButton\MrTwoButton_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading C:\Users\Shaun\Documents\GitHub\TwoButton\MrTwoButton_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: C:\Users\Shaun\Documents\GitHub\TwoButton\MrTwoButton_Data\Managed\Assembly-UnityScript-firstpass.dll (this message is harmless)
+Loading C:\Users\Shaun\Documents\GitHub\TwoButton\MrTwoButton_Data\Managed\Assembly-UnityScript-firstpass.dll into Unity Child Domain
+Platform assembly: C:\Users\Shaun\Documents\GitHub\TwoButton\MrTwoButton_Data\Managed\poly2tri.dll (this message is harmless)
+Loading C:\Users\Shaun\Documents\GitHub\TwoButton\MrTwoButton_Data\Managed\poly2tri.dll into Unity Child Domain
+- Completed reload, in  0.060 seconds
+desktop: 1366x768 60Hz; virtual: 1366x768 at 0,0
+<RI> Initializing input.
+<RI> Input initialized.
+Platform assembly: C:\Users\Shaun\Documents\GitHub\TwoButton\MrTwoButton_Data\Managed\System.Core.dll (this message is harmless)
+Platform assembly: C:\Users\Shaun\Documents\GitHub\TwoButton\MrTwoButton_Data\Managed\System.dll (this message is harmless)
+Discarding unnecessary tk2dUIManager instance.
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+Warning - Game could not find spawn point
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+Fallback handler could not load library C:/Users/Shaun/Documents/GitHub/TwoButton/MrTwoButton_Data/Mono/libc
+Fallback handler could not load library C:/Users/Shaun/Documents/GitHub/TwoButton/MrTwoButton_Data/Mono/.\libc
+Fallback handler could not load library C:/Users/Shaun/Documents/GitHub/TwoButton/MrTwoButton_Data/Mono/libc
+GA has confirmed internet connection..
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GameAnalytics: Queue submit started
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GameAnalytics: Submission queue started.
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GA URL: http://api.gameanalytics.com/1/f54b083e133957bce620762c9c4a7499/design
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GA Submit: [{"value":"0","event_id":"GA:LevelStarted","area":"MainMenu","session_id":"0af243a9-6c9d-4699-b9fd-914530f955d0","user_id":"C31C0D99F8F8E752371B9FDA2779555CC623687F","build":"0.80"}]
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GA Hash: 2a0635ce760aaf2534a678df60b2f0fe
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GA Result: {"status":"ok"}
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GA URL: http://api.gameanalytics.com/1/f54b083e133957bce620762c9c4a7499/quality
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GA Submit: [{"build":"0.80","area":"MainMenu","event_id":"system:unity_wrapper","message":"0.6.1","session_id":"0af243a9-6c9d-4699-b9fd-914530f955d0","user_id":"C31C0D99F8F8E752371B9FDA2779555CC623687F"},{"build":"0.80","area":"MainMenu","event_id":"system:os","message":"Windows 7 Service Pack 1 (6.1.7601) 64bit","session_id":"0af243a9-6c9d-4699-b9fd-914530f955d0","user_id":"C31C0D99F8F8E752371B9FDA2779555CC623687F"},{"build":"0.80","area":"MainMenu","event_id":"system:processor_type","message":"Intel(R) Core(TM) i7-2630QM CPU @ 2.00GHz","session_id":"0af243a9-6c9d-4699-b9fd-914530f955d0","user_id":"C31C0D99F8F8E752371B9FDA2779555CC623687F"},{"build":"0.80","area":"MainMenu","event_id":"system:gfx_name","message":"Intel(R) HD Graphics Family","session_id":"0af243a9-6c9d-4699-b9fd-914530f955d0","user_id":"C31C0D99F8F8E752371B9FDA2779555CC623687F"},{"build":"0.80","area":"MainMenu","event_id":"system:gfx_version","message":"Direct3D 9.0c [igdumdx32.dll 8.15.10.2342]","session_id":"0af243a9-6c9d-4699-b9fd-914530f955d0","user_id":"C31C0D99F8F8E752371B9FDA2779555CC623687F"}]
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GA Hash: a051a5df316b281c94c4f51c893f0d99
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GA Result: {"status":"ok"}
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GA URL: http://api.gameanalytics.com/1/f54b083e133957bce620762c9c4a7499/user
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GA Submit: [{"session_id":"0af243a9-6c9d-4699-b9fd-914530f955d0","build":"0.80","os_minor":"Windows 7 Service Pack 1 (6.1.7601) 64bit","device":"PC","os_major":"Windows","sdk_version":"GA Unity SDK 0.6.1","user_id":"C31C0D99F8F8E752371B9FDA2779555CC623687F","platform":"PC"}]
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GA Hash: 6564062db6b70af2fa32a60fa88a238d
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GA Result: {"status":"ok"}
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GA: Queue submit over
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+UnloadTime: 1.712884 ms
+Unloading 4 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
+
+Unloading 19 unused Assets to reduce memory usage. Loaded Objects now: 1496.
+Total: 1.717503 ms (FindLiveObjects: 0.057985 ms CreateObjectMapping: 0.021552 ms MarkObjects: 0.679919 ms  DeleteObjects: 0.350479 ms)
+
+Warning - Game could not find spawn point
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+Level Main Menu is of wrong type. Won't look at it.
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+UnloadTime: 1.411154 ms
+Unloading 2 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
+
+Unloading 2 unused Assets to reduce memory usage. Loaded Objects now: 2144.
+Total: 1.757528 ms (FindLiveObjects: 0.077485 ms CreateObjectMapping: 0.027196 ms MarkObjects: 1.099674 ms  DeleteObjects: 0.029249 ms)
+
+Warning - Game could not find spawn point
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+Level World Select Screen is of wrong type. Won't look at it.
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+UnloadTime: 1.147396 ms
+Unloading 3 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
+
+Unloading 9 unused Assets to reduce memory usage. Loaded Objects now: 2049.
+Total: 1.683635 ms (FindLiveObjects: 0.079537 ms CreateObjectMapping: 0.032328 ms MarkObjects: 1.012952 ms  DeleteObjects: 0.032328 ms)
+
+GameAnalytics: Queue submit started
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GA URL: http://api.gameanalytics.com/1/f54b083e133957bce620762c9c4a7499/design
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GA Submit: [{"value":"1.379039","event_id":"GA:LevelStarted","area":"WorldSelect","session_id":"0af243a9-6c9d-4699-b9fd-914530f955d0","user_id":"C31C0D99F8F8E752371B9FDA2779555CC623687F","build":"0.80"},{"value":"2.020722","event_id":"GA:LevelStarted","area":"World1_LevelSelectScreen","session_id":"0af243a9-6c9d-4699-b9fd-914530f955d0","user_id":"C31C0D99F8F8E752371B9FDA2779555CC623687F","build":"0.80"},{"value":"2.277516","event_id":"GA:LevelStarted","area":"Crumble_2_TheCrumbling","session_id":"0af243a9-6c9d-4699-b9fd-914530f955d0","user_id":"C31C0D99F8F8E752371B9FDA2779555CC623687F","build":"0.80"},{"y":"19.25","z":"0","event_id":"Start:JumperSMB","area":"Crumble_2_TheCrumbling","session_id":"0af243a9-6c9d-4699-b9fd-914530f955d0","build":"0.80","user_id":"C31C0D99F8F8E752371B9FDA2779555CC623687F","x":"1.92"},{"value":"59","event_id":"GA:AverageFPS","area":"Crumble_2_TheCrumbling","session_id":"0af243a9-6c9d-4699-b9fd-914530f955d0","user_id":"C31C0D99F8F8E752371B9FDA2779555CC623687F","build":"0.80"}]
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GA Hash: 0e880cc1498e4be5d97dd38ced315537
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GA Result: {"status":"ok"}
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GA URL: http://api.gameanalytics.com/1/f54b083e133957bce620762c9c4a7499/error
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GA Submit: [{"severity":"warning","x":"0","y":"0","z":"0","user_id":"C31C0D99F8F8E752371B9FDA2779555CC623687F","message":"Warning - Game could not find spawn point ","session_id":"0af243a9-6c9d-4699-b9fd-914530f955d0","area":"WorldSelect","build":"0.80"},{"severity":"warning","x":"0","y":"0","z":"0","user_id":"C31C0D99F8F8E752371B9FDA2779555CC623687F","message":"Level Main Menu is of wrong type. Won't look at it. ","session_id":"0af243a9-6c9d-4699-b9fd-914530f955d0","area":"WorldSelect","build":"0.80"},{"severity":"warning","x":"0","y":"0","z":"0","user_id":"C31C0D99F8F8E752371B9FDA2779555CC623687F","message":"Warning - Game could not find spawn point ","session_id":"0af243a9-6c9d-4699-b9fd-914530f955d0","area":"World1_LevelSelectScreen","build":"0.80"},{"severity":"warning","x":"0","y":"0","z":"0","user_id":"C31C0D99F8F8E752371B9FDA2779555CC623687F","message":"Level World Select Screen is of wrong type. Won't look at it. ","session_id":"0af243a9-6c9d-4699-b9fd-914530f955d0","area":"World1_LevelSelectScreen","build":"0.80"}]
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GA Hash: 441c6be43cf040ab2ca59b6370866c13
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GA Result: {"status":"ok"}
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GA URL: http://api.gameanalytics.com/1/f54b083e133957bce620762c9c4a7499/quality
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GA Submit: [{"build":"0.80","area":"WorldSelect","event_id":"system:unity_wrapper","message":"0.6.1: Warning - Game could not find spawn point","session_id":"0af243a9-6c9d-4699-b9fd-914530f955d0","user_id":"C31C0D99F8F8E752371B9FDA2779555CC623687F"},{"build":"0.80","area":"WorldSelect","event_id":"system:os","message":"Windows 7 Service Pack 1 (6.1.7601) 64bit: Warning - Game could not find spawn point","session_id":"0af243a9-6c9d-4699-b9fd-914530f955d0","user_id":"C31C0D99F8F8E752371B9FDA2779555CC623687F"},{"build":"0.80","area":"WorldSelect","event_id":"system:processor_type","message":"Intel(R) Core(TM) i7-2630QM CPU @ 2.00GHz: Warning - Game could not find spawn point","session_id":"0af243a9-6c9d-4699-b9fd-914530f955d0","user_id":"C31C0D99F8F8E752371B9FDA2779555CC623687F"},{"build":"0.80","area":"WorldSelect","event_id":"system:gfx_name","message":"Intel(R) HD Graphics Family: Warning - Game could not find spawn point","session_id":"0af243a9-6c9d-4699-b9fd-914530f955d0","user_id":"C31C0D99F8F8E752371B9FDA2779555CC623687F"},{"build":"0.80","area":"WorldSelect","event_id":"system:gfx_version","message":"Direct3D 9.0c [igdumdx32.dll 8.15.10.2342]: Warning - Game could not find spawn point","session_id":"0af243a9-6c9d-4699-b9fd-914530f955d0","user_id":"C31C0D99F8F8E752371B9FDA2779555CC623687F"},{"build":"0.80","area":"WorldSelect","event_id":"system:unity_wrapper","message":"0.6.1: Level Main Menu is of wrong type. Won't look at it.","session_id":"0af243a9-6c9d-4699-b9fd-914530f955d0","user_id":"C31C0D99F8F8E752371B9FDA2779555CC623687F"},{"build":"0.80","area":"WorldSelect","event_id":"system:os","message":"Windows 7 Service Pack 1 (6.1.7601) 64bit: Level Main Menu is of wrong type. Won't look at it.","session_id":"0af243a9-6c9d-4699-b9fd-914530f955d0","user_id":"C31C0D99F8F8E752371B9FDA2779555CC623687F"},{"build":"0.80","area":"WorldSelect","event_id":"system:processor_type","message":"Intel(R) Core(TM) i7-2630QM CPU @ 2.00GHz: Level Main Menu is of wrong type. Won't look at it.","session_id":"0af243a9-6c9d-4699-b9fd-914530f955d0","user_id":"C31C0D99F8F8E752371B9FDA2779555CC623687F"},{"build":"0.80","area":"WorldSelect","event_id":"system:gfx_name","message":"Intel(R) HD Graphics Family: Level Main Menu is of wrong type. Won't look at it.","session_id":"0af243a9-6c9d-4699-b9fd-914530f955d0","user_id":"C31C0D99F8F8E752371B9FDA2779555CC623687F"},{"build":"0.80","area":"WorldSelect","event_id":"system:gfx_version","message":"Direct3D 9.0c [igdumdx32.dll 8.15.10.2342]: Level Main Menu is of wrong type. Won't look at it.","session_id":"0af243a9-6c9d-4699-b9fd-914530f955d0","user_id":"C31C0D99F8F8E752371B9FDA2779555CC623687F"},{"build":"0.80","area":"World1_LevelSelectScreen","event_id":"system:unity_wrapper","message":"0.6.1: Warning - Game could not find spawn point","session_id":"0af243a9-6c9d-4699-b9fd-914530f955d0","user_id":"C31C0D99F8F8E752371B9FDA2779555CC623687F"},{"build":"0.80","area":"World1_LevelSelectScreen","event_id":"system:os","message":"Windows 7 Service Pack 1 (6.1.7601) 64bit: Warning - Game could not find spawn point","session_id":"0af243a9-6c9d-4699-b9fd-914530f955d0","user_id":"C31C0D99F8F8E752371B9FDA2779555CC623687F"},{"build":"0.80","area":"World1_LevelSelectScreen","event_id":"system:processor_type","message":"Intel(R) Core(TM) i7-2630QM CPU @ 2.00GHz: Warning - Game could not find spawn point","session_id":"0af243a9-6c9d-4699-b9fd-914530f955d0","user_id":"C31C0D99F8F8E752371B9FDA2779555CC623687F"},{"build":"0.80","area":"World1_LevelSelectScreen","event_id":"system:gfx_name","message":"Intel(R) HD Graphics Family: Warning - Game could not find spawn point","session_id":"0af243a9-6c9d-4699-b9fd-914530f955d0","user_id":"C31C0D99F8F8E752371B9FDA2779555CC623687F"},{"build":"0.80","area":"World1_LevelSelectScreen","event_id":"system:gfx_version","message":"Direct3D 9.0c [igdumdx32.dll 8.15.10.2342]: Warning - Game could not find spawn point","session_id":"0af243a9-6c9d-4699-b9fd-914530f955d0","user_id":"C31C0D99F8F8E752371B9FDA2779555CC623687F"},{"build":"0.80","area":"World1_LevelSelectScreen","event_id":"system:unity_wrapper","message":"0.6.1: Level World Select Screen is of wrong type. Won't look at it.","session_id":"0af243a9-6c9d-4699-b9fd-914530f955d0","user_id":"C31C0D99F8F8E752371B9FDA2779555CC623687F"},{"build":"0.80","area":"World1_LevelSelectScreen","event_id":"system:os","message":"Windows 7 Service Pack 1 (6.1.7601) 64bit: Level World Select Screen is of wrong type. Won't look at it.","session_id":"0af243a9-6c9d-4699-b9fd-914530f955d0","user_id":"C31C0D99F8F8E752371B9FDA2779555CC623687F"},{"build":"0.80","area":"World1_LevelSelectScreen","event_id":"system:processor_type","message":"Intel(R) Core(TM) i7-2630QM CPU @ 2.00GHz: Level World Select Screen is of wrong type. Won't look at it.","session_id":"0af243a9-6c9d-4699-b9fd-914530f955d0","user_id":"C31C0D99F8F8E752371B9FDA2779555CC623687F"},{"build":"0.80","area":"World1_LevelSelectScreen","event_id":"system:gfx_name","message":"Intel(R) HD Graphics Family: Level World Select Screen is of wrong type. Won't look at it.","session_id":"0af243a9-6c9d-4699-b9fd-914530f955d0","user_id":"C31C0D99F8F8E752371B9FDA2779555CC623687F"},{"build":"0.80","area":"World1_LevelSelectScreen","event_id":"system:gfx_version","message":"Direct3D 9.0c [igdumdx32.dll 8.15.10.2342]: Level World Select Screen is of wrong type. Won't look at it.","session_id":"0af243a9-6c9d-4699-b9fd-914530f955d0","user_id":"C31C0D99F8F8E752371B9FDA2779555CC623687F"}]
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GA Hash: 1411188e94490360ea869e578af465a5
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GA Result: {"status":"ok"}
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GA: Queue submit over
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GameAnalytics: Queue submit started
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GA URL: http://api.gameanalytics.com/1/f54b083e133957bce620762c9c4a7499/design
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GA Submit: [{"value":"59","event_id":"GA:AverageFPS","area":"Crumble_2_TheCrumbling","session_id":"0af243a9-6c9d-4699-b9fd-914530f955d0","user_id":"C31C0D99F8F8E752371B9FDA2779555CC623687F","build":"0.80"}]
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GA Hash: 4be1e760ca9f7cbb60f061a96e0dfde9
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GA Result: {"status":"ok"}
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GA: Queue submit over
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+HandleD3DDeviceLost
+  HandleD3DDeviceLost: needs reset, doing it
+FullResetD3DDevice
+ResetD3DDevice
+dev->Reset
+D3Dwindow device not lost anymore
+GameAnalytics: Queue submit started
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GA URL: http://api.gameanalytics.com/1/f54b083e133957bce620762c9c4a7499/design
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GA Submit: [{"value":"9.35","event_id":"Game:Level:Level 5:Complete","area":"Crumble_2_TheCrumbling","session_id":"0af243a9-6c9d-4699-b9fd-914530f955d0","user_id":"C31C0D99F8F8E752371B9FDA2779555CC623687F","build":"0.80"},{"y":"19.25","z":"0","event_id":"Start:JumperSMB","area":"Crumble_2_TheCrumbling","session_id":"0af243a9-6c9d-4699-b9fd-914530f955d0","build":"0.80","user_id":"C31C0D99F8F8E752371B9FDA2779555CC623687F","x":"1.92"},{"value":"58","event_id":"GA:AverageFPS","area":"Crumble_2_TheCrumbling","session_id":"0af243a9-6c9d-4699-b9fd-914530f955d0","user_id":"C31C0D99F8F8E752371B9FDA2779555CC623687F","build":"0.80"}]
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GA Hash: 1df25628f8b5c02cdc73ce702ba8c26d
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GA Result: {"status":"ok"}
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GA: Queue submit over
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GameAnalytics: Queue submit started
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GA URL: http://api.gameanalytics.com/1/f54b083e133957bce620762c9c4a7499/design
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GA Submit: [{"value":"5.42","event_id":"Game:Level:Level 5:Complete","area":"Crumble_2_TheCrumbling","session_id":"0af243a9-6c9d-4699-b9fd-914530f955d0","user_id":"C31C0D99F8F8E752371B9FDA2779555CC623687F","build":"0.80"},{"value":"59","event_id":"GA:AverageFPS","area":"Crumble_2_TheCrumbling","session_id":"0af243a9-6c9d-4699-b9fd-914530f955d0","user_id":"C31C0D99F8F8E752371B9FDA2779555CC623687F","build":"0.80"}]
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GA Hash: 37c94ecfd49403bb8de4e4c9b5ad4b43
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GA Result: {"status":"ok"}
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GA: Queue submit over
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+UnloadTime: 1.638991 ms
+Unloading 1 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
+
+Unloading 6 unused Assets to reduce memory usage. Loaded Objects now: 1785.
+Total: 1.655925 ms (FindLiveObjects: 0.065169 ms CreateObjectMapping: 0.031301 ms MarkObjects: 0.963690 ms  DeleteObjects: 0.041051 ms)
+
+GameAnalytics: Queue submit started
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GA URL: http://api.gameanalytics.com/1/f54b083e133957bce620762c9c4a7499/design
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GA Submit: [{"value":"37.51163","event_id":"GA:LevelStarted","area":"9_MoreWalljumping","session_id":"0af243a9-6c9d-4699-b9fd-914530f955d0","user_id":"C31C0D99F8F8E752371B9FDA2779555CC623687F","build":"0.80"},{"y":"20.53","z":"-1E-06","event_id":"Start:JumperSMB","area":"9_MoreWalljumping","session_id":"0af243a9-6c9d-4699-b9fd-914530f955d0","build":"0.80","user_id":"C31C0D99F8F8E752371B9FDA2779555CC623687F","x":"27.52"},{"value":"60","event_id":"GA:AverageFPS","area":"9_MoreWalljumping","session_id":"0af243a9-6c9d-4699-b9fd-914530f955d0","user_id":"C31C0D99F8F8E752371B9FDA2779555CC623687F","build":"0.80"}]
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GA Hash: b85883a9616cddeff7c95681569cb0eb
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GA Error: 400 Bad Request
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+GA: Ending all data submission after this timer interval
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+UnloadTime: 0.628605 ms
+Unloading 1 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
+
+Unloading 1 unused Assets to reduce memory usage. Loaded Objects now: 2015.
+Total: 1.597426 ms (FindLiveObjects: 0.067735 ms CreateObjectMapping: 0.032841 ms MarkObjects: 0.970874 ms  DeleteObjects: 0.009236 ms)
+
+UnloadTime: 0.873889 ms
+Unloading 1 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
+
+Unloading 1 unused Assets to reduce memory usage. Loaded Objects now: 2002.
+Total: 1.625136 ms (FindLiveObjects: 0.075432 ms CreateObjectMapping: 0.032841 ms MarkObjects: 0.998584 ms  DeleteObjects: 0.009236 ms)
+
+HandleD3DDeviceLost
+  HandleD3DDeviceLost: needs reset, doing it
+FullResetD3DDevice
+ResetD3DDevice
+dev->Reset
+D3Dwindow device not lost anymore
+UnloadTime: 0.764589 ms
+Unloading 1 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
+
+Unloading 6 unused Assets to reduce memory usage. Loaded Objects now: 2334.
+Total: 1.710832 ms (FindLiveObjects: 0.086208 ms CreateObjectMapping: 0.043617 ms MarkObjects: 1.063240 ms  DeleteObjects: 0.024631 ms)
+
+UnloadTime: 0.982163 ms
+Unloading 2 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
+
+Unloading 1 unused Assets to reduce memory usage. Loaded Objects now: 1787.
+Total: 1.512757 ms (FindLiveObjects: 0.060551 ms CreateObjectMapping: 0.031815 ms MarkObjects: 0.913914 ms  DeleteObjects: 0.008210 ms)
+
+UnloadTime: 0.614237 ms
+Unloading 1 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
+
+Unloading 6 unused Assets to reduce memory usage. Loaded Objects now: 1690.
+Total: 1.585111 ms (FindLiveObjects: 0.056446 ms CreateObjectMapping: 0.032841 ms MarkObjects: 0.920585 ms  DeleteObjects: 0.023604 ms)
+
+UnloadTime: 0.341242 ms
+Unloading 2 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
+
+Unloading 140 unused Assets to reduce memory usage. Loaded Objects now: 2184.
+Total: 1.911472 ms (FindLiveObjects: 0.080564 ms CreateObjectMapping: 0.038486 ms MarkObjects: 1.204356 ms  DeleteObjects: 0.075432 ms)
+
+Warning - Game could not find spawn point
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+UnloadTime: 1.171001 ms
+Unloading 2 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
+
+Unloading 2 unused Assets to reduce memory usage. Loaded Objects now: 1507.
+Total: 1.467600 ms (FindLiveObjects: 0.053880 ms CreateObjectMapping: 0.027196 ms MarkObjects: 0.838995 ms  DeleteObjects: 0.015907 ms)
+
+Warning - Game could not find spawn point
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+UnloadTime: 0.594224 ms
+Unloading 2 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
+
+Unloading 14 unused Assets to reduce memory usage. Loaded Objects now: 1364.
+Total: 1.414233 ms (FindLiveObjects: 0.050801 ms CreateObjectMapping: 0.026683 ms MarkObjects: 0.795377 ms  DeleteObjects: 0.034894 ms)
+
+Warning - Game could not find spawn point
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
