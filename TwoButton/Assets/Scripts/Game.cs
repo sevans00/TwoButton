@@ -172,7 +172,7 @@ public class Game : MonoBehaviour {
 
 	//Spawn player:
 	public void spawnPlayer (){
-		jumper = Instantiate(JumperPrefab, SpawnPoint.position - Vector3.up*0.64f, Quaternion.identity) as GameObject;
+		jumper = Instantiate(JumperPrefab, SpawnPoint.position - Vector3.up*0.63f, Quaternion.identity) as GameObject;
 		jumperScript = jumper.GetComponent<JumperSMB>();
 		CameraFollow.instance.target = jumper.transform;
 		timeElapsed = 0f;
