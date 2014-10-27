@@ -88,8 +88,6 @@ public class Game : MonoBehaviour {
 		SpawnPoint = GameObject.FindObjectOfType<SpawnPoint>().transform;
 		//Caching interactive tiles:
 		tiles = GameObject.FindObjectsOfType<InteractiveTile>();
-		previewCamera.camera.enabled = true;
-		previewCamera.DoLevelWasLoaded();
 
 		//Determine level name:
 		MadLevelConfiguration.Level level = MadLevel.activeConfiguration.FindLevelByName(MadLevel.currentLevelName);
@@ -113,6 +111,10 @@ public class Game : MonoBehaviour {
 		pause();
 		//Setup references for FixedUpdates:
 		interactiveTiles = FindObjectsOfType<InteractiveTile>();
+
+		//Start preview camera
+		previewCamera.camera.enabled = true;
+		previewCamera.DoLevelWasLoaded();
 	}
 
 	//Fixed Update is called every physics frame: It handles all other fixedupdates of other objects
