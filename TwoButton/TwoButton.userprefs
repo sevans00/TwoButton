@@ -1,14 +1,10 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\UI\InLevelMenu.cs">
+  <MonoDevelop.Ide.Workspace />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\UI\EndOfLevelMenu.cs">
     <Files>
-      <File FileName="TwoButton.sln" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\UI\InLevelMenu.cs" Line="39" Column="67" />
-      <File FileName="Assets\Scripts\UI\MainMenu.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\UI\EndOfLevelMenu.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\UI\InLevelMenu.cs" Line="39" Column="67" />
-      <File FileName="Assets\Scripts\Game.cs" Line="117" Column="36" />
-      <File FileName="Assets\Scripts\PreviewCamera.cs" Line="108" Column="1" />
+      <File FileName="Assets\Scripts\UI\InLevelMenu.cs" Line="29" Column="40" />
+      <File FileName="Assets\Scripts\UI\EndOfLevelMenu.cs" Line="60" Column="57" />
+      <File FileName="Assets\Scripts\Game.cs" Line="30" Column="39" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

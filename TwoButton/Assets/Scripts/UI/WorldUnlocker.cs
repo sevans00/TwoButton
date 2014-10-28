@@ -22,6 +22,9 @@ public class WorldUnlocker : MonoBehaviour {
 			int acquired = StarsUtil.CountAcquiredStars(groupName);
 			int allStars = StarsUtil.CountTotalStars(groupName);
 			int starId = 1;
+			MadLevelProfile.SetLevelBoolean(groupName, "star_1", false);
+			MadLevelProfile.SetLevelBoolean(groupName, "star_2", false);
+			MadLevelProfile.SetLevelBoolean(groupName, "star_3", false);
 			if ( acquired > 1 ) {
 				MadLevelProfile.SetLevelBoolean(groupName, "star_"+starId, true);
 			}
@@ -29,9 +32,14 @@ public class WorldUnlocker : MonoBehaviour {
 				starId = 2;
 				MadLevelProfile.SetLevelBoolean(groupName, "star_"+starId, true);
 			}
-			if ( acquired >= allStars - 3 ) { //-3 accounts for comic level
-				starId = 3;
-				MadLevelProfile.SetLevelBoolean(groupName, "star_"+starId, true);
+			if ( allStars > 3 ) { //
+				if ( ii == 1 && acquired >= allStars - 3 ) { //-3 accounts for comic level
+					starId = 3;
+					MadLevelProfile.SetLevelBoolean(groupName, "star_"+starId, true);
+				}
+				if ( ii != 1 && acquired >= allStars ) {
+					MadLevelProfile.SetLevelBoolean(groupName, "star_"+starId, true);
+				}
 			}
 		}
 
