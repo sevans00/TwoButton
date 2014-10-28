@@ -215,6 +215,7 @@ public class Game : MonoBehaviour {
 	}
 
 	public void ResetProfile () {
+		PlayerPrefs.SetInt("First Time", 0);
 		MadLevelProfile.Reset();
 	}
 
