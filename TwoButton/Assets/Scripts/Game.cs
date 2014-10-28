@@ -99,7 +99,11 @@ public class Game : MonoBehaviour {
 				break;
 			}
 		}
-		levelNameTextMesh.text = "World "+ level.groupId +" Level "+ii;
+		if ( level.group.name == "World0" ) {
+			levelNameTextMesh.text = "Tutorial Level "+ii;
+		} else {
+			levelNameTextMesh.text = "World "+ level.groupId +" Level "+ii;
+		}
 		inLevelMenu.DoLevelWasLoaded();
 
 		//Spawn player:
