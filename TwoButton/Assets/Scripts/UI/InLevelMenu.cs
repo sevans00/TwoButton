@@ -10,8 +10,8 @@ public class InLevelMenu : MonoBehaviour {
 	public GameObject endOfLevelMenu;
 
 	public GameObject levelNameGameObject;
-	private Vector3 levelNameDeployedPosition;
-	private Vector3 levelNameHiddenPosition;
+	public Vector3 levelNameDeployedPosition;
+	public Vector3 levelNameHiddenPosition;
 
 	private Vector3 deployedPosition;
 	private Vector3 hiddenPosition;
@@ -27,18 +27,16 @@ public class InLevelMenu : MonoBehaviour {
 		levelNameHiddenPosition = levelNameGameObject.transform.position+Vector3.up*0.4f;
 		levelNameGameObject.transform.position = levelNameHiddenPosition;
 		levelNameGameObject.SetActive(false);
-		Debug.LogWarning("INLEVEL START "+levelNameDeployedPosition);
-		Debug.LogWarning("INLEVEL START "+levelNameGameObject.transform.position);
 	}
 
 	public void DoLevelWasLoaded () {
+		iTween.StopByName("inlevel_hide");
+		iTween.StopByName("inlevel_hide_levelname");
 		//Set to "shown" view:
 		inLevelMenu.SetActive(true);
 		inLevelMenu.transform.position = deployedPosition;
 		levelNameGameObject.SetActive(true);
 		levelNameGameObject.transform.position = levelNameDeployedPosition;
-		Debug.LogWarning("INLEVEL WASLOADED "+levelNameDeployedPosition);
-		Debug.LogWarning("INLEVEL WASLOADED "+levelNameGameObject.transform.position);
 	}
 
 	// Update is called once per frame

@@ -35,7 +35,7 @@ public class EndOfLevelMenu : MonoBehaviour {
 	public tk2dSprite star1;
 	public tk2dSprite star2;
 	public tk2dSprite star3;
-
+	public tk2dTextMesh levelName;
 	
 	//Populate the fields
 	public void populateFields () {
@@ -56,6 +56,8 @@ public class EndOfLevelMenu : MonoBehaviour {
 		timeText.Commit();
 		bestTimeText.text = prevFormattedTime;
 		bestTimeText.Commit();
+
+		levelName.text = Game.instance.levelNameTextMesh.text;
 
 		SetStars();
 	}
