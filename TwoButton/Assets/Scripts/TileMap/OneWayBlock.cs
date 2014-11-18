@@ -2,7 +2,7 @@
 using System.Collections;
 
 //A one-way block
-public class OneWayBlock : MonoBehaviour {
+public class OneWayBlock : InteractiveTile {
 
 	private BoxCollider2D boxcollider;
 	private float maxY;
@@ -11,13 +11,16 @@ public class OneWayBlock : MonoBehaviour {
 		maxY = transform.position.y + boxcollider.center.y + boxcollider.size.y/2 - 0.0f;
 	}
 
-	public void FixedUpdate () {
-		GameObject player = GameObject.FindGameObjectWithTag("Player");
-		if ( player == null ) {
+	override public void Reset () {
+		boxcollider.isTrigger = false; //Make a collider again
+	}
+
+	override public void DoFixedUpdate () {
+		if ( Game.instance.jumper == null ) {
 			return;
 		}
 		//For now, just check vertical:
-		if ( player.transform.position.y >= maxY ) { 
+		if ( Game.instance.jumper.transform.position.y >= maxY ) { 
 			boxcollider.isTrigger = false;
 		} else {
 			boxcollider.isTrigger = true;

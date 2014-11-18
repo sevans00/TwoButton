@@ -1,16 +1,13 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\UI\MainMenu.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Game.cs">
     <Files>
-      <File FileName="Assets\Scripts\UI\MainMenu.cs" Line="95" Column="1" />
-      <File FileName="Assets\Scripts\UI\InLevelMenu.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\UI\EndOfLevelMenu.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Game.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\UI\MainMenu.cs" Line="95" Column="4" />
-      <File FileName="Assets\Scripts\UI\WorldUnlocker.cs" Line="45" Column="3" />
-      <File FileName="Assets\Mad Level Manager\Scripts\Base\MadLevelProfile.cs" Line="885" Column="38" />
-      <File FileName="Assets\Mad Level Manager\Scripts\Base\MadLevelConfiguration.cs" Line="456" Column="66" />
-      <File FileName="Assets\Mad Level Manager\Scripts\Base\MadLevel.cs" Line="1000" Column="52" />
+      <File FileName="TwoButton.sln" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\UI\EndOfLevelMenu.cs" Line="82" Column="3" />
+      <File FileName="Assets\Scripts\UI\MainMenu.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\UI\InLevelMenu.cs" Line="43" Column="3" />
+      <File FileName="Assets\Scripts\Game.cs" Line="105" Column="3" />
+      <File FileName="Assets\Scripts\TileMap\SpriteTrigger.cs" Line="3" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

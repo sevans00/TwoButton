@@ -3,7 +3,7 @@ using System.Collections;
 
 //Used to detect the presence of the player inside this trigger
 [RequireComponent (typeof (BoxCollider2D))]
-public class SpriteTrigger : MonoBehaviour {
+public class SpriteTrigger : InteractiveTile {
 
 	public GameObject target = null;
 	private BoxCollider2D boxcollider;
@@ -14,7 +14,7 @@ public class SpriteTrigger : MonoBehaviour {
 		boxcollider.isTrigger = true;
 	}
 
-	//Detect if the player
+	//Detect if the player is in the trigger
 	public void FixedUpdate() {
 		//TODO: Cache this in Game perhaps.  Can't cache it here, because it'll be destroyed.
 		SpritePhysics spritePhysics = GameObject.FindObjectOfType<SpritePhysics>();

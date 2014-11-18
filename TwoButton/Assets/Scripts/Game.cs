@@ -41,7 +41,6 @@ public class Game : MonoBehaviour {
 
 	public PreviewCamera previewCamera;
 
-	private InteractiveTile [] tiles;
 	// Use this for initialization
 	void Start () {
 		Game.instance = this;
@@ -52,7 +51,7 @@ public class Game : MonoBehaviour {
 	void OnLevelWasLoaded () {
 		//Disable preview camera:
 		//previewCamera.camera.enabled = false;
-
+		inLevelMenu.setHidden();
 		//Debug.Log("Level loaded!");
 		//Debug to check if the level is even present - we don't care, we just don't want the if statement complaining
 		bool hasMany;
@@ -86,8 +85,6 @@ public class Game : MonoBehaviour {
 			return;
 		}
 		SpawnPoint = GameObject.FindObjectOfType<SpawnPoint>().transform;
-		//Caching interactive tiles:
-		tiles = GameObject.FindObjectsOfType<InteractiveTile>();
 
 		//Determine level name:
 		MadLevelConfiguration.Level level = MadLevel.activeConfiguration.FindLevelByName(MadLevel.currentLevelName);
@@ -105,6 +102,7 @@ public class Game : MonoBehaviour {
 			levelNameTextMesh.text = "World "+ level.groupId +" Level "+ii;
 		}
 		inLevelMenu.DoLevelWasLoaded();
+		inLevelMenu.setShown();
 
 		//Spawn player:
 		if ( SpawnPoint != null ) {
@@ -194,7 +192,7 @@ public class Game : MonoBehaviour {
 
 	//Spawn player:
 	public void spawnPlayer (){
-		jumper = Instantiate(JumperPrefab, SpawnPoint.position - Vector3.up*0.63f, Quaternion.identity) as GameObject;
+		jumper = Instantiate(JumperPrefab, SpawnPoint.position - Vector3.up*0.60f, Quaternion.identity) as GameObject;
 		jumperScript = jumper.GetComponent<JumperSMB>();
 		CameraFollow.instance.target = jumper.transform;
 		timeElapsed = 0f;
@@ -209,7 +207,7 @@ public class Game : MonoBehaviour {
 		timeElapsed = 0f;
 		gameOver = false;
 		endLevel = false;
-		foreach ( InteractiveTile tile in tiles ) {
+		foreach ( InteractiveTile tile in interactiveTiles ) {
 			tile.Reset();
 		}
 	}

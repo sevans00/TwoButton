@@ -17,6 +17,7 @@ public class InLevelMenu : MonoBehaviour {
 	private Vector3 hiddenPosition;
 	private float animateTime = 0.4f;
 
+	private bool _isInitialized = false; //Purely used to initialize on DoLevelWasLoaded if not initialized
 	// Use this for initialization
 	public void Start () {
 		deployedPosition = inLevelMenu.transform.position;
@@ -27,9 +28,15 @@ public class InLevelMenu : MonoBehaviour {
 		levelNameHiddenPosition = levelNameGameObject.transform.position+Vector3.up*0.4f;
 		levelNameGameObject.transform.position = levelNameHiddenPosition;
 		levelNameGameObject.SetActive(false);
+		_isInitialized = true;
+		DoLevelWasLoaded();
 	}
 
 	public void DoLevelWasLoaded () {
+		if ( !_isInitialized ) {
+			Start ();
+			return;
+		}
 		iTween.StopByName("inlevel_hide");
 		iTween.StopByName("inlevel_hide_levelname");
 		//Set to "shown" view:
@@ -107,8 +114,18 @@ public class InLevelMenu : MonoBehaviour {
 			//Game.instance.unpause();
 		}
 	}
-
-
+	public void setHidden () {
+		inLevelMenu.SetActive(false);
+		levelNameGameObject.SetActive(false);
+		inLevelMenu.transform.position = hiddenPosition;
+		levelNameGameObject.transform.position = levelNameHiddenPosition;
+	}
+	public void setShown () {
+		inLevelMenu.SetActive(true);
+		levelNameGameObject.SetActive(true);
+		inLevelMenu.transform.position = deployedPosition;
+		levelNameGameObject.transform.position = levelNameDeployedPosition;
+	}
 
 
 

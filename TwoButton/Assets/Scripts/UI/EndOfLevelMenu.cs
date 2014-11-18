@@ -94,12 +94,13 @@ public class EndOfLevelMenu : MonoBehaviour {
 			MadLevel.LoadNextInGroup(MadLevel.Type.Level);
 		} else {
 			if ( MadLevel.currentGroupName == "World0" ) {
-				MadLevel.LoadLevelByName(MadLevel.activeConfiguration.GetLevel(1,0).name);
+				MadLevel.LoadLevelByName("2_JumpLevel");
+				return;
 			}
 			if ( MadLevel.currentGroupName == "World2" ) {
 				MadLevel.LoadLevelByName("World3");
+				return;
 			}
-			PlayerPrefs.SetString("LastCompletedGroup",MadLevel.currentGroupName);
 			MadLevel.LoadNext(); //TODO: Determine if this is what we want
 		}
 		Game.instance.unpause();
