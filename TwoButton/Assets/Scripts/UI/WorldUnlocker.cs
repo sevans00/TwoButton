@@ -15,10 +15,14 @@ public class WorldUnlocker : MonoBehaviour {
     void Start() {
         string[] groups = MadLevel.GetAllLevelNames(MadLevel.Type.Level, MadLevel.defaultGroupName);
 
-		//Setting world stars:
+		//Setting world stars & world times:
 		string groupName;
 		for (int ii = 0; ii < groups.Length; ++ii) {
 			groupName = groups[ii];
+			float totalTime = StarsUtil.CountTotalTime(groupName);
+			if ( totalTime > 0f ) {
+				MadLevelProfile.SetLevelString(groupName, "time", totalTime.ToString() );
+			}
 			int acquired = StarsUtil.CountAcquiredStars(groupName);
 			int allStars = StarsUtil.CountTotalStars(groupName);
 			int starId = 1;
@@ -32,12 +36,12 @@ public class WorldUnlocker : MonoBehaviour {
 				starId = 2;
 				MadLevelProfile.SetLevelBoolean(groupName, "star_"+starId, true);
 			}
-			if ( allStars > 3 ) { //
-				if ( ii == 0 && acquired >= allStars - 3 ) { //-3 accounts for comic level
-					starId = 3;
+			if ( allStars >= 3 ) { //
+				starId = 3;
+				if ( groupName == "World0" && acquired >= allStars - 3 ) { //-3 accounts for comic level
 					MadLevelProfile.SetLevelBoolean(groupName, "star_"+starId, true);
 				}
-				if ( ii != 1 && acquired >= allStars ) {
+				if ( acquired >= allStars ) {
 					MadLevelProfile.SetLevelBoolean(groupName, "star_"+starId, true);
 				}
 			}
@@ -49,6 +53,7 @@ public class WorldUnlocker : MonoBehaviour {
             string group = groups[i];
 
 			if (MadLevel.FindLastLevelName(MadLevel.Type.Level, prevGroup).Equals(MadLevel.FindLastUnlockedLevelName(prevGroup)) ) {
+				MadLevelProfile.SetCompleted(prevGroup, true);
 				if (MadLevelProfile.IsLocked(group)) {
 					MadLevelProfile.SetLocked(group, false);
 					MadLevel.ReloadCurrent();

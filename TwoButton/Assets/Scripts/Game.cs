@@ -88,19 +88,24 @@ public class Game : MonoBehaviour {
 
 		//Determine level name:
 		MadLevelConfiguration.Level level = MadLevel.activeConfiguration.FindLevelByName(MadLevel.currentLevelName);
-		List<MadLevelConfiguration.Level> levelList = level.group.GetLevels();
-		int ii;
-		for ( ii = 0; ii < levelList.Count; ii++ ) {
-			if ( levelList[ii].name == MadLevel.currentLevelName ) {
-				ii++;
-				break;
+		if ( level == null ) {
+			levelNameTextMesh.text = "TEST LEVEL";
+		} else {
+			List<MadLevelConfiguration.Level> levelList = level.group.GetLevels();
+			int ii;
+			for ( ii = 0; ii < levelList.Count; ii++ ) {
+				if ( levelList[ii].name == MadLevel.currentLevelName ) {
+					ii++;
+					break;
+				}
+			}
+			if ( level.group.name == "World0" ) {
+				levelNameTextMesh.text = "Tutorial Level "+ii;
+			} else {
+				levelNameTextMesh.text = "World "+ level.groupId +" Level "+ii;
 			}
 		}
-		if ( level.group.name == "World0" ) {
-			levelNameTextMesh.text = "Tutorial Level "+ii;
-		} else {
-			levelNameTextMesh.text = "World "+ level.groupId +" Level "+ii;
-		}
+		levelNameTextMesh.Commit();
 		inLevelMenu.DoLevelWasLoaded();
 		inLevelMenu.setShown();
 
@@ -124,7 +129,7 @@ public class Game : MonoBehaviour {
 		if ( !isGameLevel || paused || gameOver ) { //If this isn't a game level, we don't care
 			return;
 		}
-		updateElapsedTime(); //Test
+		updateElapsedTime();
 		//Jumper input and collisions:
 		jumperScript.DoInputAndCollisions();
 		//Interactive objects:
@@ -184,7 +189,16 @@ public class Game : MonoBehaviour {
 		spawnPlayer();
 	}
 	//Reset level:
-	public void RestartLevel() {
+	public void RestartLevel() { //Called from ingame menu
+		if ( gameOver ) {
+			return; //Don't restart from ingame menu while game over
+		}
+		DestroyImmediate(jumper);
+		ResetLevel();
+		spawnPlayer();
+	}
+	//Reset level:
+	public void RestartLevelFromEndOfLevel() {
 		DestroyImmediate(jumper);
 		ResetLevel();
 		spawnPlayer();
@@ -192,7 +206,7 @@ public class Game : MonoBehaviour {
 
 	//Spawn player:
 	public void spawnPlayer (){
-		jumper = Instantiate(JumperPrefab, SpawnPoint.position - Vector3.up*0.60f, Quaternion.identity) as GameObject;
+		jumper = Instantiate(JumperPrefab, SpawnPoint.position - Vector3.up*0.64f, Quaternion.identity) as GameObject;
 		jumperScript = jumper.GetComponent<JumperSMB>();
 		CameraFollow.instance.target = jumper.transform;
 		timeElapsed = 0f;
@@ -293,15 +307,9 @@ public class Game : MonoBehaviour {
 	private float timeScale = 1;
 	public void pause() {
 		paused = true;
-		//CameraPathAnimator pathAnimator = GameObject.FindObjectOfType<CameraPathAnimator>();
-//		if ( timeScale == 0 ) {
-//			timeScale = Time.timeScale;
-//		}
-//		Time.timeScale = 0;
 	}
 	public void unpause() {
 		paused = false;
-//		Time.timeScale = timeScale;
 	}
 
 

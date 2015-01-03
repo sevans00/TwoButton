@@ -72,12 +72,9 @@ public class EndOfLevelMenu : MonoBehaviour {
 	}
 
 
-
-
 	//
 	//Button callbacks:
 	//
-
 	//Next level
 	public void NextLevel () {
 		Game.instance.pause();
@@ -116,7 +113,7 @@ public class EndOfLevelMenu : MonoBehaviour {
 	}
 	public void onRetryHideComplete () {
 		Hide();
-		Game.instance.RestartLevel();
+		Game.instance.RestartLevelFromEndOfLevel();
 		Game.instance.unpause();
 	}
 	//Back to level select

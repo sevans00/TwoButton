@@ -39,6 +39,18 @@ public class StarsUtil : MonoBehaviour {
 		
 		return collectedStars;
 	}
+	public static float CountTotalTime(string groupName) {
+		var levels = MadLevel.GetAllLevelNames(MadLevel.Type.Level, groupName);
+		float totalTime = 0f;
+		string time;
+		for (int i = 0; i < levels.Length; ++i) {
+			time = MadLevelProfile.GetLevelString(levels[i],"time");
+			if ( time != null && time != string.Empty ){
+				totalTime += float.Parse( MadLevelProfile.GetLevelString(levels[i] as string,"time") );
+			}
+		}
+		return totalTime;
+	}
     #endregion
 
 }

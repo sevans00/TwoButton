@@ -46,7 +46,7 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Prefabs\NewBehaviourScript.boo" />
+     <Compile Include="Assets\Levels\World2\NewBehaviourScript.boo" />
      <None Include="Assets\Mad Level Manager\Scripts\Mad2D\Resources\Shaders\Font White.shader" />
      <None Include="Assets\TK2DROOT\tk2d\Shaders\LitSolidVertexColor.shader" />
      <None Include="Assets\GameAnalytics\Plugins\Framework\Shaders\GA_HeatMapSolidOverlay.shader" />
@@ -54,6 +54,7 @@
      <None Include="Assets\GameAnalytics\Plugins\Framework\Shaders\GA_HeatMapTransparentOverlay.shader" />
      <None Include="Assets\TK2DROOT\tk2d\Goodies\TexturePacker\Exporter\2dtoolkit\exporter.xml" />
      <None Include="Assets\TK2DROOT\tk2d\Shaders\SolidVertexColor.shader" />
+     <None Include="Assets\Fonts\MadFonts\BradBunMadFont.txt" />
      <None Include="Assets\Plugins\StansAssets\Android\res\values\version.xml" />
      <None Include="Assets\GameAnalytics\Plugins\Framework\Shaders\GA_HeatMapSolid.shader" />
      <None Include="Assets\TK2DROOT\tk2dUI\Shaders\DepthMask.shader" />
@@ -62,12 +63,14 @@
      <None Include="Assets\TK2DROOT\tk2d\Shaders\LitPremulVertexColor.shader" />
      <None Include="Assets\TK2DROOT\tk2d\Shaders\PremulVertexColor.shader" />
      <None Include="Assets\TK2DROOT\tk2d_demo\Credits.txt" />
+     <None Include="Assets\Fonts\MadFonts\BradBunMadFont.fnt" />
      <None Include="Assets\Mad Level Manager\Themes\Theme2\Font\abeezee-glyphs.txt" />
      <None Include="Assets\TK2DROOT\tk2d\Shaders\goodies\PackedTextMesh.shader" />
      <None Include="Assets\GameAnalytics\Plugins\Framework\Shaders\GA_HeatMapTransparent.shader" />
      <None Include="Assets\TK2DROOT\tk2d\Shaders\Blend2TexVertexColor.shader" />
      <None Include="Assets\Mad Level Manager\Themes\Theme2\Font\abeezee-license.txt" />
      <None Include="Assets\TK2DROOT\tk2dUI\Shaders\DepthMaskSolid.shader" />
+     <None Include="Assets\Fonts\BradBunR.fnt" />
      <None Include="Assets\Mad Level Manager\Scripts\Mad2D\Resources\Shaders\Font.shader" />
      <None Include="Assets\TK2DROOT\tk2dUI_demo\Assets\Dark\Fonts\Nunito24.fnt" />
      <None Include="Assets\Mad Level Manager\Scripts\Mad2D\Resources\Shaders\UnlitTransparentTint.shader" />
@@ -85,6 +88,7 @@
      <None Include="Assets\TK2DROOT\tk2d\Editor\EditorUtility.shader" />
      <None Include="Assets\JMO Assets\Cartoon FX\Demo\Assets\CFX_Demo_WaterWiggle.shader" />
      <None Include="Assets\CameraPath3\readme.txt" />
+     <None Include="Assets\Plugins\Pixelplacement\iTween\ReadMe!\ReadMe!.txt" />
      <None Include="Assets\TK2DROOT\tk2d\Shaders\CutoutVertexColor.shader" />
      <None Include="Assets\TK2DROOT\tk2d_demo\demobmfont\test.fnt" />
      <None Include="Assets\GameAnalytics\Plugins\WebPlayer\crossdomain.xml" />
@@ -98,6 +102,7 @@
      <None Include="Assets\Curvy\ReadMe.txt" />
      <None Include="Assets\Materials\Backgrounds\BG_Material_shader.shader" />
      <None Include="Assets\Plugins\StansAssets\Android\res\values\ids.xml" />
+     <None Include="Assets\Fonts\BradBunR_owa.fnt" />
      <None Include="Assets\TK2DROOT\tk2d\Shaders\AdditiveVertexColor.shader" />
      <None Include="Assets\JMO Assets\Cartoon FX\CartoonFX Readme.txt" />
      <None Include="Assets\TK2DROOT\tk2d_demo\democameradata\source\democamerafont.fnt" />

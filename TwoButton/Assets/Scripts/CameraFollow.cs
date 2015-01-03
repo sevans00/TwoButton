@@ -16,11 +16,17 @@ public class CameraFollow : MonoBehaviour {
 	//World backgrounds:
 	public ParallaxBGSection world1_parallaxBGSection;
 	public ParallaxBGSection world2_parallaxBGSection;
+	public ParallaxBGSection world3_parallaxBGSection;
 
 	//Boundary
 	public int boundaryPoints = 0;
 	public Vector2 boundaryPoint1;
 	public Vector2 boundaryPoint2;
+
+	//Level boundary (allowing out-of-frame hidden areas)
+	public int levelBoundaryPoints = 0;
+	public Vector2 levelBoundaryPoint1;
+	public Vector2 levelBoundaryPoint2;
 
 	//Pre Initialization
 	void Awake () {
@@ -61,17 +67,64 @@ public class CameraFollow : MonoBehaviour {
 			boundaryPoint1 = bound1;
 			boundaryPoint2 = bound2;
 		}
+		//Reset the level boundaries (these should be BIGGER than the camera boundaries)
+		LevelBoundaryBlock[] levelBoundaryBlocks = GameObject.FindObjectsOfType<LevelBoundaryBlock>();
+		levelBoundaryPoints = levelBoundaryBlocks.Length;
+		if ( levelBoundaryPoints == 0 ) {
+			//Do nothing
+		} else if ( levelBoundaryPoints == 1 ) { //Boundary point 1 is bottom left - always
+			levelBoundaryBlocks[0].Setup();
+			levelBoundaryPoint1 = (Vector2) levelBoundaryBlocks[0].transform.position;
+			boundaryPoint1 = levelBoundaryPoint1; //FOR NOW
+		} else {
+			levelBoundaryBlocks[0].Setup();
+			levelBoundaryBlocks[1].Setup();
+			//Bound in a rectangle: (lower left to upper right)
+			Vector2 lbound1 = (Vector2) levelBoundaryBlocks[0].transform.position;
+			Vector2 lbound2 = (Vector2) levelBoundaryBlocks[1].transform.position;
+			float ltempXY;
+			if ( lbound1.x > lbound2.x ) {
+				ltempXY = lbound2.x;
+				lbound2.x = lbound1.x;
+				lbound1.x = ltempXY;
+			}
+			if ( lbound1.y > lbound2.y ) {
+				ltempXY = lbound2.y;
+				lbound2.y = lbound1.y;
+				lbound1.y = ltempXY;
+			}
+			levelBoundaryPoint1 = lbound1;
+			levelBoundaryPoint2 = lbound2;
+			boundaryPoint1 = levelBoundaryPoint1; //FOR NOW
+			boundaryPoint2 = levelBoundaryPoint2; //FOR NOW
+		}
 
 		//Initialize parallax bg:
-		if ( MadLevel.currentGroupName == "World2" ) {
-			world1_parallaxBGSection.gameObject.SetActive(false);
-			world2_parallaxBGSection.gameObject.SetActive(true);
-			parallaxBGSection = world2_parallaxBGSection;
-		} else {
+		world1_parallaxBGSection.gameObject.SetActive(false);
+		world2_parallaxBGSection.gameObject.SetActive(false);
+		world3_parallaxBGSection.gameObject.SetActive(false);
+		if ( MadLevel.currentGroupName == null ) {
 			world1_parallaxBGSection.gameObject.SetActive(true);
-			world2_parallaxBGSection.gameObject.SetActive(false);
 			parallaxBGSection = world1_parallaxBGSection;
+		} else {
+			if ( MadLevel.currentGroupName == "World2" ) {
+				world2_parallaxBGSection.gameObject.SetActive(true);
+				parallaxBGSection = world2_parallaxBGSection;
+			} else {
+				if ( MadLevel.currentGroupName == "World3" || MadLevel.currentGroupName == "World4" ) {
+					world3_parallaxBGSection.gameObject.SetActive(true);
+					parallaxBGSection = world3_parallaxBGSection;
+				} else {
+					world1_parallaxBGSection.gameObject.SetActive(true);
+					parallaxBGSection = world1_parallaxBGSection;
+				}
+			}
 		}
+		//For test sake, let's make world 3 always on:
+//		world1_parallaxBGSection.gameObject.SetActive(false);
+//		world2_parallaxBGSection.gameObject.SetActive(false);
+//		world3_parallaxBGSection.gameObject.SetActive(true);
+//		parallaxBGSection = world3_parallaxBGSection;
 		//Reset parallax bg:
 		_prevPosAssigned = false;
 		parallaxBGSection.reset();

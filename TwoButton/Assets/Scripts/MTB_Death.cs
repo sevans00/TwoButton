@@ -9,6 +9,7 @@ public class MTB_Death : MonoBehaviour {
 	}
 
 	IEnumerator DeathAnim() {
+		Vector3 bottomOfFrame = new Vector3(transform.position.x, Camera.main.ViewportToWorldPoint(Vector3.zero).y-0.64f, transform.position.z);
 		//tk2dSprite sprite = GetComponent<tk2dSprite>();
 		Game.instance.gameOver = true; //Pause the clock
 		yield return new WaitForSeconds(0.1f);
@@ -18,14 +19,21 @@ public class MTB_Death : MonoBehaviour {
 		float speed = 15f;
 		//while ( transform.position.y < upPos.y ) {
 		while ( speed > 0f ) {
+			if ( Game.instance != null && Game.instance.paused ) {
+				yield return new WaitForFixedUpdate(); //WaitForEndOfFrame
+				continue;
+			}
 			transform.position = Vector3.MoveTowards(transform.position, upPos, Time.deltaTime * Mathf.Abs(speed));
 			speed += gravity;
 			yield return new WaitForFixedUpdate(); //WaitForEndOfFrame
 		}
 		//yield return new WaitForFixedUpdate();
 		//speed = gravity;
-		Vector3 bottomOfFrame = new Vector3(transform.position.x, Camera.main.ViewportToWorldPoint(Vector3.zero).y-0.64f, transform.position.z);
 		while ( transform.position.y > bottomOfFrame.y ) {
+			if ( Game.instance != null && Game.instance.paused ) {
+				yield return new WaitForFixedUpdate(); //WaitForEndOfFrame
+				continue;
+			}
 			transform.position = Vector3.MoveTowards(transform.position, bottomOfFrame, Time.deltaTime * Mathf.Abs(speed));
 			speed += gravity;
 			yield return new WaitForFixedUpdate(); //WaitForEndOfFrame

@@ -1,13 +1,14 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Game.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\TileMap\RisingLava.cs">
     <Files>
-      <File FileName="TwoButton.sln" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\UI\EndOfLevelMenu.cs" Line="82" Column="3" />
+      <File FileName="Assets\Scripts\UI\EndOfLevelMenu.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\UI\MainMenu.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\UI\InLevelMenu.cs" Line="43" Column="3" />
-      <File FileName="Assets\Scripts\Game.cs" Line="105" Column="3" />
-      <File FileName="Assets\Scripts\TileMap\SpriteTrigger.cs" Line="3" Column="1" />
+      <File FileName="Assets\Scripts\UI\InLevelMenu.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Game.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\CameraFollow.cs" Line="27" Column="12" />
+      <File FileName="Assets\Scripts\TileMap\LevelBoundaryBlock.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\TileMap\RisingLava.cs" Line="10" Column="2" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

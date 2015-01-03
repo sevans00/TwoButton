@@ -113,7 +113,7 @@ public class PreviewCamera : MonoBehaviour {
 			"easetype", iTween.EaseType.easeOutQuad ) );
 		iTween.ValueTo( gameObject, iTween.Hash(
 			"name", "zoom_in_ortho",
-			"from", startOrthographicSize, 
+			"from", camera.orthographicSize, 
 			"to", mainCamera.orthographicSize, 
 			"onupdatetarget", gameObject, 
 			"onupdate", "doCameraZoom", 
@@ -146,7 +146,7 @@ public class PreviewCamera : MonoBehaviour {
 			"easetype", iTween.EaseType.easeOutQuad ) );
 		iTween.ValueTo( gameObject, iTween.Hash(
 			"name", "zoom_out_ortho",
-			"from", mainCamera.orthographicSize, 
+			"from", camera.orthographicSize, 
 			"to", startOrthographicSize, 
 			"onupdatetarget", gameObject, 
 			"onupdate", "doCameraZoom", 

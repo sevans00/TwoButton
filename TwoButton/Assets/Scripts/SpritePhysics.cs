@@ -377,9 +377,13 @@ public class SpritePhysics : MonoBehaviour {
 			if ( elevatorHit.currentDirection.Equals ( Vector3.down ) && direction == HitDirection.Bottom ) {
 				onGround = true;
 			}
+			//This is dealt with in Game's fixedupdate and this class' DoFixedUpdate:
 			if ( elevatorHit.currentDirection.Equals ( Vector3.down ) && direction == HitDirection.Top ) {
 				//Set vertical velocity to the elevator's:
 				velocity.y = elevatorHit.currentDirection.y * elevatorHit.speed;
+			}
+			if ( hitTop ) {
+				hitElevator = false;
 			}
 		}
 	}

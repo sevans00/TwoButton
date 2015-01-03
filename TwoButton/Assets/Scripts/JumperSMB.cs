@@ -133,11 +133,24 @@ public class JumperSMB : MonoBehaviour {
 				}
 			}
 		}
-		//Keyboard for debugging:
-		if ( Input.GetKey(KeyCode.A) ) {
+		//Keyboard:
+		/*
+		if ( Input.GetAxis("Vertical") > 0 ) {
+			jumpnew = true;
+		}
+		//Issue: Can't be both horizontal left and right axis at the same time:
+		if ( Input.GetAxis("Horizontal") > 0 ) {
+			rightnew = true;
+		}
+		if ( Input.GetAxis("Horizontal") < 0 ) {
+			leftnew = true;
+		}*/
+
+
+		if ( Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow) ) {
 			leftnew = true;
 		}
-		if ( Input.GetKey(KeyCode.D) ) {
+		if ( Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow) ) {
 			rightnew = true;
 		}
 		if ( Input.GetKey(KeyCode.W) ) {
@@ -389,6 +402,8 @@ public class JumperSMB : MonoBehaviour {
 				}
 			}
 		}
+		//CHECK FOR INSIDE OF WALL:
+
 	}
 	
 	public void DoElevatorCheck () {
