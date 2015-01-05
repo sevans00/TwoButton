@@ -94,8 +94,12 @@ public class EndOfLevelMenu : MonoBehaviour {
 				MadLevel.LoadLevelByName("2_JumpLevel");
 				return;
 			}
-			if ( MadLevel.currentGroupName == "World2" ) {
-				MadLevel.LoadLevelByName("World3");
+			if ( MadLevel.currentGroupName == "World3" ) {
+				MadLevel.LoadLevelByName("EndLevel");
+				return;
+			}
+			if ( MadLevel.currentGroupName == "World4" ) {
+				MadLevel.LoadLevelByName("Main Menu");
 				return;
 			}
 			MadLevel.LoadNext(); //TODO: Determine if this is what we want
@@ -119,6 +123,10 @@ public class EndOfLevelMenu : MonoBehaviour {
 	//Back to level select
 	public void BackToLevelSelect () {
 		Hide ( hiddenPositionBack );
+		if ( MadLevel.currentGroupName == "World4" ) {
+			MadLevel.LoadLevelByName("World3");
+			return;
+		}
 		MadLevel.LoadLevelByName(MadLevel.currentGroupName);
 	}
 

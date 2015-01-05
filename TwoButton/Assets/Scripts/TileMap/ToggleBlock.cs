@@ -5,13 +5,13 @@ using System.Collections;
 public class ToggleBlock : InteractiveTile {
 
 	public bool On = true;
-	private bool starting_On;
+	protected bool starting_On;
 
-	private string spriteNamePrefix = "toggleblock_blue_";
-	private tk2dSprite sprite;
-	private BoxCollider2D boxcollider;
+	protected string spriteNamePrefix = "toggleblock_blue_";
+	protected tk2dSprite sprite;
+	protected BoxCollider2D boxcollider;
 
-	public void Start () {
+	public virtual void Start () {
 		sprite = GetComponent<tk2dSprite>();
 		//Box collider setup:
 		boxcollider = GetComponent<BoxCollider2D>();
@@ -20,7 +20,7 @@ public class ToggleBlock : InteractiveTile {
 		Toggle(); //Setup toggle ;)
 	}
 	
-	public void Toggle () {
+	virtual public void Toggle () {
 		On = !On;
 		Color c = new Color(1f,1f,1f);
 		if ( On ) {

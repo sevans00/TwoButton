@@ -111,7 +111,7 @@ public class CameraFollow : MonoBehaviour {
 				world2_parallaxBGSection.gameObject.SetActive(true);
 				parallaxBGSection = world2_parallaxBGSection;
 			} else {
-				if ( MadLevel.currentGroupName == "World3" || MadLevel.currentGroupName == "World4" ) {
+				if ( MadLevel.currentGroupName == "World3" ) {
 					world3_parallaxBGSection.gameObject.SetActive(true);
 					parallaxBGSection = world3_parallaxBGSection;
 				} else {

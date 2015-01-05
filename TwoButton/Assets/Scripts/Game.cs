@@ -104,6 +104,9 @@ public class Game : MonoBehaviour {
 			} else {
 				levelNameTextMesh.text = "World "+ level.groupId +" Level "+ii;
 			}
+			if ( level.group.name == "World4" ) {
+				levelNameTextMesh.text = "Finale "+ii;
+			}
 		}
 		levelNameTextMesh.Commit();
 		inLevelMenu.DoLevelWasLoaded();

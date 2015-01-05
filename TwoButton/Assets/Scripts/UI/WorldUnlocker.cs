@@ -59,6 +59,9 @@ public class WorldUnlocker : MonoBehaviour {
 					MadLevel.ReloadCurrent();
 				}
 			}
+			if (MadLevel.FindLastLevelName(MadLevel.Type.Level, group).Equals(MadLevel.FindLastUnlockedLevelName(group)) ) {
+				MadLevelProfile.SetCompleted(group, true);
+			}
             /*int acquired = StarsUtil.CountAcquiredStars(prevGroup);
 			int allStars = MadLevel.GetAllLevelNames(prevGroup).Length;
             if (acquired >= allStars - 3 ) {
