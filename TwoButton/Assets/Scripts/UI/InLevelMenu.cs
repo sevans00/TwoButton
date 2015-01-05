@@ -182,6 +182,10 @@ public class InLevelMenu : MonoBehaviour {
 		Hide ();
 		string levelName = "World Select";
 		levelName = MadLevel.currentGroupName;
+		if ( MadLevel.currentGroupName == "World4" ) {
+			MadLevel.LoadLevelByName("Main Menu");
+			return;
+		}
 		MadLevel.LoadLevelByName(levelName); //Note this is a hack
 	}
 	public void QuitGame() {
